@@ -103,10 +103,10 @@ if(isset($_GET['id'])){
             <?php
     
             $gRegionales = $comision->getvendedores(null);
-            $cclaves = $comision->getCuentasClaves('01',null);
+            $cclaves = $comision->getCuentasClaves('000004',null);
 
             $presupuesto = $comision->getMetasClaves(null,$id,$desde,$hasta);
-            $claveSeleccionada = $comision->getCuentasClaves('01', $presupuesto[0]['co_ven'] ); 
+            $claveSeleccionada = $comision->getCuentasClaves('000004', $presupuesto[0]['co_ven'] ); 
             $nPresupuesto =  str_replace(".", ",", $presupuesto[0]['presupuesto'])
              ?>
             <div class="form-group">

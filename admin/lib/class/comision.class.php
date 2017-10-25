@@ -1962,6 +1962,7 @@
       return $totales;
     }
     public function getCuentasClaves($segmento,$id) {
+
      $sel = "
        SELECT DISTINCT
         ven.co_ven,
@@ -1970,14 +1971,13 @@
       INNER JOIN saCliente AS cli ON cli.co_ven= ven.co_ven
       INNER JOIN saSegmento AS sg ON cli.co_seg=sg.co_seg
       INNER JOIN saZona  AS zn ON zn.co_zon= cli.co_zon
-      where cli.co_seg = '".$segmento."'";
+      where cli.co_seg = '".$this->segmentoClave."'";
          
           if ($id!=null) {
             $sel.=" and ven.co_ven='".$id."' ";
 
           }
-      $conn = conectarSQlSERVER();
-     
+      $conn = conectarSQlSERVER();    
 
       $i=0;
       $claves = array();
@@ -1990,8 +1990,7 @@
         $i++;
       }
 
-
-         $cuentasTradicionales = $this->getCuentasNoClaves('01',null);
+        $cuentasTradicionales = $this->getCuentasNoClaves($this->segmentoClave,null);
         $codClaves = array();
          for ($i=0; $i < count($claves) ; $i++) { 
            $codClaves[] = $claves[$i]['co_ven'];
@@ -7553,5 +7552,25 @@ public function getFacturaEditada($documento,$condicion){
          }
            return $resultado;
       }
+  
+   public function getFacturaHistorico($factura) {
+
+        $conn = $this->getConMYSQL(); 
+        $sel ="SELECT * FROM `cmshistorialuno` WHERE `factura` = '$factura'";
+  
+        $rs = mysqli_query($conn,$sel) or die(mysqli_error($conn));
+        $documento = array();
+
+        $i=0;
+        while($row=mysqli_fetch_array($rs)) {
+       
+          foreach($row as $key=>$value) {
+            $documento[$i][$key]=$value;
+          }
+          $i++;
+        }
+        return $documento;
+        
+  }
   }
 ?>
