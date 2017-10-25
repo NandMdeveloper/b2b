@@ -37,7 +37,7 @@
 									        <td>
 									            <b style=\'color:#384291;\'>NUMERO DE CONTROL: </b> #".$df2[0]['n_control']."
 									        </td>
-                                            <td rowspan=2 colspan=5  style=\'text-align: left;\'>
+                                            <td rowspan=2 colspan=5  style=\'text-align: rigth;\'>
                                                 <img src=\'http://200.71.189.252/fcmail/proventas-logotipo-512.png\' height=\'120\' width=\'120\'  style=\'text-align: left;\'>
                                             </td>
                                        </tr>
@@ -63,10 +63,10 @@
 									<td colspan=6><b style=\'color:#384291;\'>RIF: </b> ". $df2[0]['rif']."</td>
 								</tr>
 								<tr>
-									<td colspan=6><b style=\'color:#384291;\'>DIRECCIÓN </b> ". $df2[0]['direc1']."</td>
+									<td colspan=6><b style=\'color:#384291;\'>DIRECCION </b> ". $df2[0]['direc1']."</td>
 								</tr>
 								<tr>
-									<td colspan=6><b style=\'color:#384291;\'>DIRECCIÓN DE ENTREGA: </b> ". $df2[0]['dir_entrega']."</td>
+									<td colspan=6><b style=\'color:#384291;\'>DIRECCION DE ENTREGA: </b> ". $df2[0]['dir_entrega']."</td>
 								</tr>
 								<tr>
 									<td colspan=6><b style=\'color:#384291;\'>TELEFONO: </b> ". $df2[0]['telefonos']."</td>
@@ -80,9 +80,11 @@
 									<tr>
 										<td colspan=6>&nbsp;</td>
 									</tr>
+								</table>
+								<table width=\'100%\' border=0>
 									<tr>
-										<th style=\'color:#384291;  text-align: left;\'>CO ART</th>
-										<th style=\'color:#384291; text-align: left;\'>ARTICULO</th>
+										<th style=\'color:#384291;  text-align: left;\' width=\'5%\' border=0>CO ART</th>
+										<th style=\'color:#384291; text-align: left;\'  width=\'45%\'>ARTICULO</th>
 										<th style=\'color:#384291; text-align: left;\'>MODELO</th>
 										<th style=\'color:#384291; text-align: left;\'>UNIDAD</th>
 										<th style=\'color:#384291; text-align: right;\'>CANT</th>
@@ -117,7 +119,7 @@
                 $total_iva = number_format($monto_iva, 2, ",", ".");
                 $total_neto = number_format($df2[0]['total_neto'], 2, ",", ".");
                 $body.="	</table>
-	                                        <table>
+	                                        <table width=\'100%\' border=0>
 	                                                <tr>
 														<td colspan=6 style=\'border-bottom:1px solid black;\'></td>
 													</tr>
@@ -143,15 +145,13 @@
 														<td colspan=6>&nbsp;</td>
 													</tr>
 													<tr> 
-													<td>
-													<img height=\'80px\' src=\'http://200.71.189.252/fcmail/reciclar.png\' width=\'80px\' /></td> 
-													<td   colspan=4><b><span style=\'color: darkgreen; font-family: &quot;arial&quot; , &quot;helvetica&quot; , sans-serif; font-size: x-small;\'>Antes de imprimir este correo electrónico, piense bien si es necesario hacerlo: El medio ambiente es cuestión de todos.</span></b></td></tr>
+													    <td>
+													        <img height=\'80px\' src=\'http://200.71.189.252/fcmail/reciclar.png\' width=\'80px\' /></td> 
+													    <td   colspan=4><b><span style=\'color: darkgreen; font-family: &quot;arial&quot; , &quot;helvetica&quot; , sans-serif; font-size: x-small;\'>Antes de imprimir este correo electrónico, piense bien si es necesario hacerlo: El medio ambiente es cuestión de todos.</span></b></td>
+                                                    </tr>
 											</table>
 										</body>
 										</html>";
-                echo $body;
-                exit();
-				
 				$datos = array(				
 					'From' =>"facturas@grupopro.com.ve",
 					'FromName' =>$nombre,
