@@ -23,127 +23,17 @@ if(isset($_GET['desde'])){
 if(isset($_GET['hasta'])){
     $hasta = $_GET['hasta'];
 }
-$cobros = $_GET['cobros'];
-$recibido = $_GET['recibido'];
-$saldado = $_GET['saldado'];
 
 
-$cambios = $comision->getFacturaEditada($_GET['factura'],null);
 
-$factura = $reporte->getDetallefactura($nfactura);
-    if($factura->dias < 0 ){
-            $class =" class='text-danger'";
-    }
-        $nComision = array(
-            "comision"=> 0,
-            "reserva"=> 0,
-            "porcentaje"=> 0,
-            "porcentajeR"=> 0,
-            "calculado"=> 0,
-            "cal_comision"=> 0,
-            "cal_reserva"=> 0,
-            "idParametro"=> 0,
-            );
+//$cambios = $comision->getFacturaEditada($_GET['factura'],null);
 
+$factura = $reporte->getDetallefactura($_GET['factura']);
+$nfactura = $comision->getFacturaHistorico($_GET['factura']);
+//var_dump($factura);exit();
 
-        $fechafactVencimiento = $factura->fec_venc->format('Y-m-d H:i:s');
-        if ($cobros==1 and $recibido==1 and $saldado==1) {
-            $parametros = array();
-
-            $lista_parametros_desfasados = array();
-            $lista_parametros_desfasados = $comision->getParametros('2017-02-01','2016-12-31');
-            $parametros_desfasados = $lista_parametros_desfasados[12]['datos'];
-
-            $saldo = $reporte->saldoUnaFactura(trim($factura->co_ven),trim($_GET['factura']));      
-
-            $facturaRecibido = $comision->fechaRecibidoFactura(intval($_GET['factura']));
-
-             if (count($facturaRecibido) > 0) {
-                    
-                //$fcobro = $comision->fechaCobroDocumento($_GET['factura'],$desde,$hasta);    
-                 $nfcobro = $comision->fechaCobrofactura($factura->co_cli,$_GET['factura'],$desde,$hasta); 
-                 $fcobro = date_format(date_create($nfcobro),'d/m/Y');                
-
-                $condiciones = $comision->condicionTipoDefactura($_GET['factura']);
-                $cneg =  $condiciones['dias_cred'];
-                $facturaRecibido   = $facturaRecibido[0]['fecha_recibido'];
-                
-                /* CREAMOS FECHA DE VENCIMIENTO SEGUN MODO DE CREDITO Y FECHA EMISION*/
-                $fec_venc_creada = $factura->fec_emis->format('Y-m-d');
-              
-                $fec_venc_creada = date_create($fec_venc_creada);
-                date_add($fec_venc_creada, date_interval_create_from_date_string($cneg.' days'));
-                $fec_venc_creada = date_format($fec_venc_creada, 'Y-m-d');              
-
-                $fec_recibido = date_create($facturaRecibido);
-                
-                date_add($fec_recibido, date_interval_create_from_date_string($cneg.' days'));
-                $fVcto=  date_format($fec_recibido, 'd/m/Y');
-                $nfVcto=  date_format($fec_recibido, 'Y-m-d');
-
-                $fechafactVencimiento =$nfVcto;
-
-                 /*SE CALCULAN LOS DIAS CALLE */
-                    $diascalle = "?";
-                    if (!empty($fcobro)) {
-                        $fecha1 = new DateTime($nfVcto);
-                        $fecha2 = new DateTime($nfcobro);
-                        $fecha = $fecha1->diff($fecha2);
-                        $diascalle =  $fecha->format('%a') + $condiciones['dias_cred'];                      
-                    }
-                $saldor = 0;
-                $saldor = $comision->getSaldoReal(trim($_GET['factura']), $saldor,$desde,$hasta,$factura->co_cli);
-                   
-                    $datos = array(
-                        'co_seg'=>$factura->co_seg,
-                        'co_ven'=>$factura->co_ven,
-                        'condicion'=>$saldo['cond'],
-                        'saldo_factura'=> $saldor,
-                        'diascalle'=> $diascalle,
-                        'total_bruto'=>$factura->total_bruto,
-                        'fVencimiento'=>$fVcto,
-                        'fcobro '=>$fcobro,
-                        'cneg '=>$cneg
-                    );
-
-                    $lista_parametros = array();
-                    $lista_parametros = $comision->getParametros($desde,$hasta);
-
-                    $mes_doc =  date("m", strtotime($factura->fec_emis->format('Y-m-d')));
-                    $mes_doc = (int)$mes_doc;                                     
- 
-                    $cann = $lista_parametros[$mes_doc]['cortes'];
-
-                if ($cann == 1) {
-                    $parametros = $lista_parametros[$mes_doc]['datos'];
-                    $entra = 1;
-                }else{
-                    
-                    for ($l=0; $l <= count($cann) ; $l++) {                     
-
-                        /* comparamos fecha */
-                        $fecha_desde = new DateTime($lista_parametros[$mes_doc]['datos'][$l]['desde']);
-                        $fecha_hasta = new DateTime($lista_parametros[$mes_doc]['datos'][$l]['hasta']);
-                        $fecha_emision = new DateTime($factura->fec_emis->format('Y-m-d'));
-
-                        if($fecha_emision >= $fecha_desde and  $fecha_emision <= $fecha_hasta){
-                         $parametros = $lista_parametros[$mes_doc]['datos'][$l];
-                         $entra = 1;
-                        }
-                    }                     
-                }
-
-                if(count($parametros) == 0){
-                     $parametros = $parametros_desfasados;
-                }
-                //print_r($parametros);
-            
-                $nComision = $comision->calculoBasico2($datos,$parametros,null);
-              }
-
-            }
-
-
+$fec_emis = date_format(date_create($factura->fec_emis->format('Y-m-d')),'d/m/Y');
+$fecha_venc = date_format(date_create($nfactura[0]['fecha_venc']),'d/m/Y');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -185,8 +75,8 @@ $factura = $reporte->getDetallefactura($nfactura);
                 </tr>
                 <tr>
                     <td><?php echo $factura->descrip; ?></td>
-                    <td><?php echo $factura->fec_emis->format('Y-m-d H:i:s'); ?></td>
-                    <td><?php echo $factura->fec_venc->format('Y-m-d H:i:s'); ?></td>
+                    <td><?php echo $fec_emis; ?></td>
+                    <td><?php echo $fecha_venc; ?></td>
                     <td><?php echo $factura->cond_des; ?></td>
                 </tr>
                 <tr>
