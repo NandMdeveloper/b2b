@@ -24,7 +24,7 @@ $arr_pedidos=$obj_pedidos->get_ped_sql();
                 <div class="col-lg-12">
                          <h1>
                     Comisiones
-                    <small>lista vendedores</small>
+                    <small>Calculo</small>
 
                   </h1>
                 </div>
