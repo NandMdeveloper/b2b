@@ -14,7 +14,7 @@ function add_pedidos($idn,$co_ven,$descrip,$co_cli,$status,$fecha_emis,$total_br
 }
 function add_pedidos_detalles($reng_num,$doc_num,$co_art,$des_art,$total_art,$prec_vta,$total_sub,$monto_imp,$reng_neto,$uniCodP,$co_precio){
 		$query="INSERT INTO pedidos_detalles (reng_num,doc_num,co_art,des_art,total_art,prec_vta,total_sub,monto_imp,reng_neto,UniCodPrincipal,co_precio) 
-				  VALUES ($reng_num,$doc_num,'$co_art','$des_art',$total_art,$prec_vta,$total_sub,$monto_imp,$reng_neto,'$uniCodP',$co_precio)";
+				  VALUES ($reng_num,$doc_num,'$co_art','$des_art',$total_art,$prec_vta,$total_sub,$monto_imp,$reng_neto,'$uniCodP','$co_precio')";
 		$result=mysql_query($query);
 		return $result;
 }
@@ -97,17 +97,13 @@ if($_REQUEST['id']){
 		$monto_imp=($sub_total*$iva)/100;
 		$reng_neto=$sub_total+$monto_imp;
 
-		echo "precio_new".$precio_new."<br>";
-		echo "sub_total".$sub_total."<br>";
-		echo "monto_imp".$monto_imp."<br>";
-
 		$insert_d=add_pedidos_detalles($reng_num,$doc_num,$co_art,$des_art,$total_art,$precio_new,$sub_total,$monto_imp,$reng_neto,$uniCodP,$co_precio);
 		if($insert_d){
 			$fecha=date("Y-m-d H:i:s");
         	add_log($fecha, $user, 'Insercion de renglones del pedido '.$doc_num.' desde la tabla pedidos_detalles_app a pedidos_detalles');
 		}
 	}
-	?>}  <script language="javascript" type="text/javascript">window.location="home.php?status=e";</script> <?php
+	?>} <script language="javascript" type="text/javascript">window.location="home.php?status=e";</script><?php
 }else{
 	?> <script language="javascript" type="text/javascript">alert("No se recibieron datos...");window.location="home.php?status=e";</script> <?php
 }
