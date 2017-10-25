@@ -7490,5 +7490,25 @@ public function getFacturaEditada($documento,$condicion){
          }
            return $resultado;
       }
+  
+   public function getFacturaHistorico($factura) {
+
+        $conn = $this->getConMYSQL(); 
+        $sel ="SELECT * FROM `cmshistorialuno` WHERE `factura` = '$factura'";
+  
+        $rs = mysqli_query($conn,$sel) or die(mysqli_error($conn));
+        $documento = array();
+
+        $i=0;
+        while($row=mysqli_fetch_array($rs)) {
+       
+          foreach($row as $key=>$value) {
+            $documento[$i][$key]=$value;
+          }
+          $i++;
+        }
+        return $documento;
+        
+  }
   }
 ?>
