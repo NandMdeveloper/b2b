@@ -837,142 +837,125 @@
         }
         return $facturas;
    }
-     public function nuevoparametro($campos) {
-
+  public function nuevoparametro($campos) {
       $usuario=$_SESSION['user'];
       $nombre = $campos['nombre'];
       $limite1 = $campos['limite1'];
       $limite2 = $campos['limite2'];
       $limite3 = $campos['limite3'];
-       $porcentaje = $campos['porcentaje'];
+      $porcentaje = $campos['porcentaje'];
       $cuenta = $campos['cuenta'];
       $tipo = $campos['tipo'];
       $finicio = $campos['finicio'];
       $ffinal = $campos['ffinal'];
-      if(!empty($nombre) and !empty($cuenta) and !empty($tipo)) {      
-            $cortes = array();
-            /* BUSCAMOS CORTES EN LOS PARAMETROS PARA UN RANGO DE FECHA */
-            $bsql ="SELECT desde,hasta FROM `parametros` 
-            where month(desde) = month('".$finicio."') and YEAR(desde) =  YEAR('".$finicio."') and estatus=1
-            group by desde";
-           $conn = $this->getConMYSQL() ;
-            $rs = mysqli_query($conn,$bsql) or die(mysqli_error($conn));
-            if (mysqli_num_rows($rs)==0) {
-                $sel ="
-                  INSERT INTO `parametros`
-                  (`id`, `nombre`, `cuenta`,
-                  `tipo`, `limite1`, `limite2`,
-                  `limite3`, `porcentaje`, `usuario`,
-                  `usuarioModificacion`, `modificacion`, `creacion`, `desde`, `hasta`) VALUES 
-                  (null,'".$nombre."','".$cuenta."',
+   if(!empty($nombre) and !empty($cuenta) and !empty($tipo)) {      
+      $cortes = array();
+      /* BUSCAMOS CORTES EN LOS PARAMETROS PARA UN RANGO DE FECHA */
+      $bsql ="SELECT desde,hasta FROM `parametros` 
+      where month(desde) = month('".$finicio."') and YEAR(desde) =  YEAR('".$finicio."') and estatus=1
+      group by desde,hasta ";
+       $conn = $this->getConMYSQL() ;
+       $rs = mysqli_query($conn,$bsql) or die(mysqli_error($conn));
+      if (mysqli_num_rows($rs)==0) {
+        $sel ="
+        INSERT INTO `parametros`(`id`, `nombre`, `cuenta`,`tipo`, `limite1`, `limite2`,`limite3`,
+         `porcentaje`, `usuario`,`usuarioModificacion`, `modificacion`, `creacion`, `desde`, `hasta`)
+          VALUES(null,'".$nombre."','".$cuenta."',
                   '".$tipo."','".$limite1."','".$limite2."',
                   '".$limite3."','".$porcentaje."','".$usuario."',
                   '".$usuario."',CURRENT_TIME(),CURRENT_TIME(),'".$finicio."','".$ffinal."')";
-               $rs = mysqli_query($conn,$sel);
-              if (mysqli_errno($conn)) {
-                $mensa = "Ocurrio un error ".mysqli_errno($conn).": ". mysqli_error($conn);
-                $this->setMensajes('danger',$mensa);
-              }else{
-                $msn = array(
-                  "error"=>"no"
-                );
+          $rs = mysqli_query($conn,$sel);
+          if (mysqli_errno($conn)) {
+              $mensa = "Ocurrio un error ".mysqli_errno($conn).": ". mysqli_error($conn);
+              $this->setMensajes('danger',$mensa);
+          }else{
+              $msn = array(
+              "error"=>"no"
+                         );
                 $this->setMensajes('success','Parametro  Ingresado');
-              }
-            } else {
-
-             $cortes = array();
+                $this->add_log($usuario,"Agrego","Agrego el <strong>#parametro</strong>   ".$nombre." Tipo".$tipo.", cuenta:".$cuenta." En el periodo".$campos['finicio']." ".$campos['ffinal']);
+            }
+      } else {
+              $cortes = array();
               $i=0;
               while($row=mysqli_fetch_array($rs)) {
-                foreach($row as $key=>$value) {
-                  $cortes[$i][$key]=$value;
-                }
-                $i++;
+                                                  foreach($row as $key=>$value) {
+                                                    $cortes[$i][$key]=$value;
+                                                  }
+                                                  $i++;
               }
-
-            }
-
-
-            foreach ($cortes as $corte) {
-                $fecha1 = new DateTime($corte['desde']);
-                $fecha2 = new DateTime($corte['hasta']);
-                $Nfinicio = new DateTime($finicio);
-                $Nffinal = new DateTime($ffinal);
-              if ($Nfinicio ==  $fecha1 and $fecha2 ==  $Nffinal ) {
-                  $sel ="
-                  INSERT INTO `parametros`
-                  (`id`, `nombre`, `cuenta`,
-                  `tipo`, `limite1`, `limite2`,
-                  `limite3`, `porcentaje`, `usuario`,
-                  `usuarioModificacion`, `modificacion`, `creacion`, `desde`, `hasta`) VALUES 
-                  (null,'".$nombre."','".$cuenta."',
-                  '".$tipo."','".$limite1."','".$limite2."',
-                  '".$limite3."','".$porcentaje."','".$usuario."',
-                  '".$usuario."',CURRENT_TIME(),CURRENT_TIME(),'".$finicio."','".$ffinal."')";
-
-                  $in = mysqli_query($conn,$sel);
-                   $this->setMensajes('success','Parametro  Ingresado');
-                   $this->add_log($usuario,"Agrego","%#parametro%: ".$nombre." Tipo".$tipo.", cuenta:".$cuenta);
-
-              } else { 
-                $fecha=count($cortes); 
-                //var_dump($fecha2);exit(); 
-                if ($fecha>1){
-                  $comparar=array_pop($cortes) ;
-                  //var_dump(array_pop($comparar));exit(); 
-                  if ($Nfinicio>array_pop($comparar)) {
-                    $sel ="
+              foreach ($cortes as $corte) {
+                   $fecha1 = new DateTime($corte['desde']);
+                   $fecha2 = new DateTime($corte['hasta']);
+                   $Nfinicio = new DateTime($finicio);
+                   $Nffinal = new DateTime($ffinal);
+                  if ($Nfinicio ==  $fecha1 and $fecha2 ==  $Nffinal ) {
+                      $sel ="
                       INSERT INTO `parametros`
                       (`id`, `nombre`, `cuenta`,
                       `tipo`, `limite1`, `limite2`,
                       `limite3`, `porcentaje`, `usuario`,
                       `usuarioModificacion`, `modificacion`, `creacion`, `desde`, `hasta`) VALUES 
-                      (null,'".$nombre."','".$cuenta."',
-                      '".$tipo."','".$limite1."','".$limite2."',
-                      '".$limite3."','".$porcentaje."','".$usuario."',
-                      '".$usuario."',CURRENT_TIME(),CURRENT_TIME(),'".$finicio."','".$ffinal."')";
-
-                    $in = mysqli_query($conn,$sel);
-                   $this->setMensajes('success','Parametro  Ingresado');
+                       (null,'".$nombre."','".$cuenta."',
+                        '".$tipo."','".$limite1."','".$limite2."',
+                        '".$limite3."','".$porcentaje."','".$usuario."',
+                        '".$usuario."',CURRENT_TIME(),CURRENT_TIME(),'".$finicio."','".$ffinal."')";
+                         $in = mysqli_query($conn,$sel);
+                        $this->setMensajes('success','Parametro  Ingresado');
+                        $this->add_log($usuario,"Agrego","Agrego el <strong>#parametro</strong>   ".$nombre." Tipo ".$tipo.", cuenta: ".$cuenta." En el periodo ".$campos['finicio']."  ".$campos['ffinal']);
+                      exit(header("Location: comisonparametros.php?desde=".$finicio."&hasta=".$ffinal."")); 
+                  } else { 
+                        $fecha=count($cortes); 
+                           //var_dump($fecha2);exit(); 
+                     if ($fecha>1){
+                        $comparar=array_pop($cortes) ;
+                        //var_dump(($finicio));exit(); 
+                        if ($finicio>array_pop($comparar)) {
+                           $sel ="
+                           INSERT INTO `parametros`
+                           (`id`, `nombre`, `cuenta`,
+                           `tipo`, `limite1`, `limite2`,
+                           `limite3`, `porcentaje`, `usuario`,
+                           `usuarioModificacion`, `modificacion`, `creacion`, `desde`, `hasta`) VALUES 
+                            (null,'".$nombre."','".$cuenta."',
+                            '".$tipo."','".$limite1."','".$limite2."',
+                            '".$limite3."','".$porcentaje."','".$usuario."',
+                            '".$usuario."',CURRENT_TIME(),CURRENT_TIME(),'".$finicio."','".$ffinal."')";
+                            $in = mysqli_query($conn,$sel);
+                            $this->setMensajes('success','Parametro  Ingresado');
+                             $this->add_log($usuario,"Agrego","Agrego el <strong>#parametro</strong>   ".$nombre." Tipo".$tipo.", cuenta:".$cuenta." En el periodo".$campos['finicio']." ".$campos['ffinal']);
                    
-                exit(header("Location: comisonparametros.php?desde=".$finicio."&hasta=".$ffinal."")); 
-                  }
+                          exit(header("Location: comisonparametros.php?desde=".$finicio."&hasta=".$ffinal."")); 
+                        }else{
+                              $this->setMensajes('danger','Parametro  No Ingresado');
+                          }
+                      } else{
+                          if ($Nfinicio>$fecha2) {
+                           $sel ="
+                            INSERT INTO `parametros`
+                            (`id`, `nombre`, `cuenta`,
+                            `tipo`, `limite1`, `limite2`,
+                            `limite3`, `porcentaje`, `usuario`,
+                             `usuarioModificacion`, `modificacion`, `creacion`, `desde`, `hasta`) VALUES 
+                               (null,'".$nombre."','".$cuenta."',
+                               '".$tipo."','".$limite1."','".$limite2."',
+                                '".$limite3."','".$porcentaje."','".$usuario."',
+                                 '".$usuario."',CURRENT_TIME(),CURRENT_TIME(),'".$finicio."','".$ffinal."')";
 
-                   
-                else{
-                  
-                   $this->setMensajes('danger','Parametro  No Ingresado');
-                }
-                }
-                else{
-                 if ($Nfinicio>$fecha2) {
-                    $sel ="
-                      INSERT INTO `parametros`
-                      (`id`, `nombre`, `cuenta`,
-                      `tipo`, `limite1`, `limite2`,
-                      `limite3`, `porcentaje`, `usuario`,
-                      `usuarioModificacion`, `modificacion`, `creacion`, `desde`, `hasta`) VALUES 
-                      (null,'".$nombre."','".$cuenta."',
-                      '".$tipo."','".$limite1."','".$limite2."',
-                      '".$limite3."','".$porcentaje."','".$usuario."',
-                      '".$usuario."',CURRENT_TIME(),CURRENT_TIME(),'".$finicio."','".$ffinal."')";
-
-                    $in = mysqli_query($conn,$sel);
-                   $this->setMensajes('success','Parametro  Ingresado');
-                  
-                    }
-
-                   
-                else{
-                  
-                   $this->setMensajes('danger','Parametro  No Ingresado');
+                                    $in = mysqli_query($conn,$sel);
+                                    $this->setMensajes('success','Parametro  Ingresado');
+                                    $this->add_log($usuario,"Agrego","Agrego el <strong>#parametro</strong>   ".$nombre." Tipo".$tipo.", cuenta:".$cuenta." En el periodo".$campos['finicio']." ".$campos['ffinal']);
+                          }  
+                          else{
+                            $this->setMensajes('danger','Parametro  No Ingresado');
+                          } 
+                       } 
                    } 
-                   } 
-                  } 
-                }  
-          }
-
+                } 
+        }  
     }
-    public function editarparametro($campos) {
+  }
+    public function editarparametro($campos){
       $id = $campos['id'];
       $nombre = utf8_decode($campos['nombre']);
       $limite1 = $campos['limite1'];
@@ -990,9 +973,29 @@
 
       if (!empty($nombre) and !empty($cuenta) and !empty($tipo)) {
      
+ $bsql ="SELECT desde,hasta FROM `parametros` 
+            where month(desde) = month('".$finicio."') and YEAR(desde) =  YEAR('".$finicio."') and estatus=1
+            group by desde,hasta ";
+           $conn = $this->getConMYSQL() ;
+            $rs = mysqli_query($conn,$bsql) or die(mysqli_error($conn));
+              $usuario=$_SESSION['user'];
+              $cortes = array();
+              $i=0;
+              while($row=mysqli_fetch_array($rs)) {
+                foreach($row as $key=>$value) {
+                  $cortes[$i][$key]=$value;
+                }
+                $i++;
+              }
 
-      $conn = $this->getConMYSQL() ;
-        $usuario=$_SESSION['user'];
+            }
+
+            foreach ($cortes as $corte) {
+                $fecha1 = new DateTime($corte['desde']);
+                $fecha2 = new DateTime($corte['hasta']);
+                $Nfinicio = new DateTime($finicio);
+                $Nffinal = new DateTime($ffinal);
+              if ($Nfinicio ==  $fecha1 and $fecha2 ==  $Nffinal ) {
         $sel="
           UPDATE `parametros` SET
           `nombre`='".$nombre."',
@@ -1017,37 +1020,96 @@
           $msn = array(
             "error"=>"no"
           );
-          $this->setMensajes('success','Comisión editada');
+          $this->setMensajes('success','Parametro editado');
           
         }
-      } else {
+     
+       } else { 
+                                   $fecha=count($cortes); 
+                                   //var_dump($fecha2);exit(); 
+        if ($fecha>1){
+          $comparar=array_pop($cortes) ;
+                                     //var_dump(($finicio));exit(); 
+                 if ($finicio>array_pop($comparar)) {
+                     $sel="
+                     UPDATE `parametros` SET
+                     `nombre`='".$nombre."',
+                     `cuenta`='".$cuenta."',
+                     `tipo`='".$tipo."',
+                     `limite1`='".$limite1."',
+                     `limite2`='".$limite2."',
+                     `limite3`='".$limite3."',
+                     `porcentaje`='".$porcentaje."',
+                     `usuarioModificacion`='".$usuario."',
+                     `modificacion`=CURRENT_TIME,
+                     `desde`='".$finicio."',
+                     `hasta`='".$ffinal."'
+                      WHERE id='".$id."' ";
+                    $in = mysqli_query($conn,$sel);
+                   $this->setMensajes('success','Parametro  Ingresado');
+                   $this->add_log($usuario,"Agrego","Agrego el <strong>#parametro</strong>   ".$nombre." Tipo".$tipo.", cuenta:".$cuenta." En el periodo".$campos['finicio']." ".$campos['ffinal']);
+                   
+                exit(header("Location: comisonparametros.php?desde=".$finicio."&hasta=".$ffinal."")); 
+                  }
 
-        $this->setMensajes('warning','Debe llenar datos');
-      }
-      return $msn;
-    }
+                   
+                else{
+                  
+                   $this->setMensajes('danger','Parametro  No Ingresado');
+                }
+                }
+                else{
+                 if ($Nfinicio>$fecha2) {
+                     $sel="
+          UPDATE `parametros` SET
+          `nombre`='".$nombre."',
+          `cuenta`='".$cuenta."',
+          `tipo`='".$tipo."',
+          `limite1`='".$limite1."',
+          `limite2`='".$limite2."',
+          `limite3`='".$limite3."',
+          `porcentaje`='".$porcentaje."',
+          `usuarioModificacion`='".$usuario."',
+          `modificacion`=CURRENT_TIME,
+          `desde`='".$finicio."',
+          `hasta`='".$ffinal."'
+           WHERE id='".$id."' ";
 
+                    $in = mysqli_query($conn,$sel);
+                   $this->setMensajes('success','Parametro  Ingresado');
+                   $this->add_log($usuario,"Agrego","Agrego el <strong>#parametro</strong>   ".$nombre." Tipo".$tipo.", cuenta:".$cuenta." En el periodo".$campos['finicio']." ".$campos['ffinal']);
+                  exit(header("Location: comisonparametros.php?desde=".$finicio."&hasta=".$ffinal.""));
+                    }
 
+                   
+                else{
+                  
+                   $this->setMensajes('danger','Parametro  No Ingresado');
+                   } 
+                   } 
+                   } //foreach
+              } //ifempety
+            
+      }//funcion
 
  public function eliminarparametros($campos){
    //var_dump($campos); exit();
-      $usuario = $_SESSION['user'];
-      if ($usuario=="javier" OR $usuario=="njose") { 
-     $id = $campos['id'];
-      $conn = $this->getConMYSQL() ;
-      $query="UPDATE `parametros` SET 
-      `Borrado`=CURRENT_TIME,
-       `estatus`='0'
-       WHERE id ='".$id."'";
-      $res=mysqli_query($conn,$query) or die(mysqli_error($conn));
-       $mensa = "Parametro eliminado ";
+    $usuario = $_SESSION['user'];
+   if ($usuario=="javier" OR $usuario=="njose") { 
+         $id = $campos['id'];
+          $conn = $this->getConMYSQL() ;
+          $query="UPDATE `parametros` SET 
+          `borrado`=CURRENT_TIME,
+           `estatus`='0'
+            WHERE id ='".$id."'";
+          $res=mysqli_query($conn,$query) or die(mysqli_error($conn));
+          $mensa = "Parametro eliminado ";
           $this->setMensajes('warning',$mensa);
-          
-          }else{
-$mensa = "No tiene permisos para realizar esta accion"; 
-          $this->setMensajes('danger',$mensa);}
+    }else{ 
+       $mensa = "No tiene permisos para realizar esta accion"; 
+       $this->setMensajes('danger',$mensa);
       }
-
+  }
     public function getCalculoNCR_NDB_cliente($doc_num,$monto,$tipo,$co_cli){
         $conn = conectarSQlSERVER(); 
         $sel=" SELECT
@@ -1486,7 +1548,7 @@ $mensa = "No tiene permisos para realizar esta accion";
     /* BUSCAMOS CORTES EN LOS PARAMETROS PARA UN RANGO DE FECHA */
     $bsql ="SELECT desde,hasta FROM `parametros` 
     where month(desde) =   month('".$desde."')  and YEAR(desde) =  YEAR('".$desde."') and estatus=1
-    group by desde";
+    group by desde,hasta";
     
 
      $conn = $this->getConMYSQL() ;
