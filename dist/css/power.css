@@ -1,0 +1,16 @@
+.text-negro{
+	color: #000000;
+	
+}
+.text-small{
+	font-size: 10px;
+	
+}
+.cliente-oculto{
+	color: #F9F9F9;
+	font-size: 0px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	
+}

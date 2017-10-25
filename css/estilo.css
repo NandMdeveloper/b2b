@@ -1,0 +1,25 @@
+body {
+	background: url(../image/login.gif) no-repeat center center fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    
+}
+
+.text-negro{
+	color: #000000;
+	
+}
+.text-small{
+	font-size: 10px;
+	
+}
+.cliente-oculto{
+	color: #F9F9F9;
+	font-size: 0px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	
+}

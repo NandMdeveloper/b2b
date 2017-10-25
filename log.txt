@@ -1,0 +1,309 @@
+commit 554b6d8e3abadf96ea288aef0a5ea84a5634d81b
+Merge: 053b4a8 59de379
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Tue Oct 24 15:39:45 2017 -0400
+
+    Parametros listado
+
+commit 053b4a81b0c051b17b0eb9d03c808f612ffe1dfe
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Tue Oct 24 15:37:30 2017 -0400
+
+    dgdf
+
+commit 8f526df2b78b8c5bfd3e63fc145bc63fbd5776dd
+Merge: 71abc6c 4196ddc
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Tue Oct 24 15:37:16 2017 -0400
+
+    Merge branch 'master' of http://srvgpgit001.prohome.local/develand01/b2bfc
+    
+    # Conflicts:
+    #       admin/lib/class/comision.class.php
+
+commit 59de37973e511339cb85cad489b7ac69920fbb12
+Merge: 839f587 4196ddc
+Author: develweb02 <jose.nassr@grupopro.com.ve>
+Date:   Tue Oct 24 15:28:35 2017 -0400
+
+    Merge branch 'master' of http://srvgpgit001.prohome.local/develand01/b2bfc
+
+commit 71abc6c84872376bb74892f6ae9940335729c070
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Tue Oct 24 15:23:50 2017 -0400
+
+    paramtros por ventas
+
+commit 839f5871c0fdab67a16748b0a7407e83c8fcce31
+Author: develweb02 <jose.nassr@grupopro.com.ve>
+Date:   Tue Oct 24 15:17:04 2017 -0400
+
+    parametros corregido
+
+commit 4196ddc75484e109ab9a6ac70fce94807e5e4777
+Merge: 11bedee f18bdbc
+Author: Luis Lopez <luis.lopez@grupopro.com.ve>
+Date:   Tue Oct 24 15:00:22 2017 -0400
+
+    Merge branch 'master' of srvgpgit001.prohome.local:develand01/b2bfc
+
+commit 11bedeed6beb84eff251a308e4ad8c6ad837d7c0
+Author: Luis Lopez <luis.lopez@grupopro.com.ve>
+Date:   Tue Oct 24 15:00:15 2017 -0400
+
+    cambios generales
+
+commit f18bdbcbd3dee9f527328786ec4c9089617507f7
+Author: develweb02 <jose.nassr@grupopro.com.ve>
+Date:   Tue Oct 24 14:39:37 2017 -0400
+
+    parametros y usuarios b2b
+
+commit 087872045194b42cb9006effa87d55481a12cf2c
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Tue Oct 24 14:17:42 2017 -0400
+
+    se busca los parametros con base la funcion la fecha hasta del rango
+
+commit 89cc1f0f41db56507d8ed466892fdf87caffa28d
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Tue Oct 24 14:04:41 2017 -0400
+
+    Rango de fecha ya no es por periodo si no por el rango directo,
+
+commit cede9e7bb2a38b508b07eed74833777cc471626e
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Mon Oct 23 11:26:48 2017 -0400
+
+    comisiones por ventas validados por condicion de pago es decir dias de la condicion, excel con hoja nueva para imprimir parametros usados en la corrida, crea actividades de vendedores en masivo por mes en la funcion agregaractividad de controlcomisiones.php
+
+commit ff16d45fe979dc0cd8fecead16142600b83aeb78
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Fri Oct 20 16:50:38 2017 -0400
+
+    porcentaje de comision a notas de credito, excel con porcentaje de comision para nota de credito
+
+commit cbb19938e791583994ad342cd73fed84b9ec73af
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Fri Oct 20 11:07:24 2017 -0400
+
+    Se agrega funcion de select2 para buscar en select de formularios facilmente, comiciones por ventas se le agregan las notas de credito, neto e impuesto en los resultados
+
+commit 9be87a852ea29d1e7391aac2f8f4e94576a7c680
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Fri Oct 20 11:05:38 2017 -0400
+
+    Filtra correos ya emviados para no ser re cargados
+
+commit e95e53d099a8517507951b85b1417d927e244c04
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Fri Oct 20 11:04:27 2017 -0400
+
+    se agrega funcion que limpia las direcciones de correos
+
+commit 9ce864497c81d3fd607fc487b2e68c8fc92bb93e
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Thu Oct 19 16:53:23 2017 -0400
+
+    comision: parametros y listado, muestra de parametros, correo masivo listo para facturas menuT con analisis de vencimiento
+
+commit d43d6711dd22c4abc183d4efab55d6125a3032dd
+Author: Luis Lopez <luis.lopez@grupopro.com.ve>
+Date:   Thu Oct 19 13:22:44 2017 -0400
+
+    corrigiendo archivo cron job que trae los pedidos nuevos de la apk
+
+commit 260ff645dd6f3a3db881758abb350c6e6dcb05a0
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Wed Oct 18 16:41:22 2017 -0400
+
+    Se agrega a reporte de analisis la diferencia de vencimiento por recepcion y por emision, se envian correos de facturas
+
+commit 14de7f04e097594e31e026eb4860d559410ab028
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Wed Oct 18 11:16:58 2017 -0400
+
+    Se agrego fecha vencimiento segun recepcion en el reporte
+
+commit 27dce89a4d56fc90ae672c20ba2f207adc12a0b5
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Wed Oct 18 11:07:57 2017 -0400
+
+    Archivos y controlladores para el manejo de correos masivos, en BD se agrega una tabla para manejar los correos masivos
+
+commit 2c0eebfbd814e02aa921c75baf3b45fc31b53fc6
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Wed Oct 18 11:06:50 2017 -0400
+
+    Se modifico coneccion con servidor en el webservice
+
+commit 8f4bf65f7fed554e4c9363adbadf5802c898cfc4
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Wed Oct 18 11:05:55 2017 -0400
+
+    Se agrego fecha vencimiento segun recepcion en el reporte
+
+commit 23401956dd573844101ef0479661000c4f8e0975
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Tue Oct 17 11:09:18 2017 -0400
+
+    Se agrego select2.js para busqueda en select del sistema mejorando velocidad para encontrar elementos
+
+commit 139c5da8f9c6de0a8838a5ec5c7cc86daea793fc
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Tue Oct 17 11:08:15 2017 -0400
+
+    Se agrego historico de modificaciones
+
+commit 897c8c75f6f2085aaa5e705145804bfd4ea34a03
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Tue Oct 17 11:07:46 2017 -0400
+
+    busqueda rapida de vendedores
+
+commit 87414d4f075d1ca477835a3deb07347f44c97e5d
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Tue Oct 17 09:05:50 2017 -0400
+
+    Modales con detalles de vendedores en cartera de clientes, grafico mejorado para cartera de clientes, css se agrago cursor para label, mejoras en fechas de js
+
+commit dbf359a545a219b08a112449559bdb8dfb8e55ab
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Mon Oct 16 14:29:27 2017 -0400
+
+    Cartera de clientes con usuario 12 para ventas, login que validad tipo 9 o 12 para cartera de clientes, nuevo menuV para usuarios de ventas
+
+commit 33085f5ea5b84b69b00115365034f71d0752ee17
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Mon Oct 16 08:33:23 2017 -0400
+
+    Historico mejoras
+
+commit 99080462945bb5216a84ecd867e1f80d581d2e01
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Wed Oct 11 16:29:27 2017 -0400
+
+    Totales dinamicos
+
+commit 0133944fc95fc071af7a69026e7b556400d94cad
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Wed Oct 11 16:03:49 2017 -0400
+
+    mejoras parametros, coneccion con validador de servidor
+
+commit f11b0b1d44eb6339f3233962f8772e7f7b8c6e33
+Merge: ced33ef 0e04e92
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Wed Oct 11 15:36:13 2017 -0400
+
+    parametros
+
+commit ced33effe7febba1f192c4ffdd6a81d54593b0f2
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Wed Oct 11 15:22:55 2017 -0400
+
+    Mejoras ventas
+
+commit 096f2730cc6a3f0d78c504e85da6d8d2dbf79c55
+Merge: 0f4b10a 41d4b66
+Author: Luis Lopez <luis.lopez@grupopro.com.ve>
+Date:   Wed Oct 11 14:39:03 2017 -0400
+
+    Merge branch 'master' of srvgpgit001.prohome.local:develand01/b2bfc
+
+commit 41d4b669e63b286755ce91d40f0aabf3c7a2cc22
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Wed Oct 11 14:37:24 2017 -0400
+
+    Validar gerentes regionales y oficina no generen comisiones por ventas, totales dinamicos, excel para exportar
+
+commit 0f4b10acd8c7ba9f6c612e6af2c03c6db4b458c4
+Author: Luis Lopez <luis.lopez@grupopro.com.ve>
+Date:   Wed Oct 11 14:36:35 2017 -0400
+
+    agregado los select para los terminos de negociacion en la pre-aprobacion
+    agregado el estado de cuenta del cliente en la aprobacion del pedido
+
+commit 26cd9576ad4639d1813ae8cb8a458b1bf8dc3493
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Wed Oct 11 09:58:42 2017 -0400
+
+    Totalizar en comisiones por cobro dinamico, separacion con decimales, modificacion de botones de documentos eleccionados arbitrariamente, registro de rango de comisiones al historial
+
+commit df7c5a2bd0c5497c349b30cb5f3752ec7d284c8b
+Author: Luis Lopez <luis.lopez@grupopro.com.ve>
+Date:   Tue Oct 10 15:25:03 2017 -0400
+
+    cambios en la insercion de pedidos con profit
+
+commit 5100832cc8aa4fbd36436706700781877c379fe9
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Tue Oct 10 15:06:28 2017 -0400
+
+    Comisiones ventas
+
+commit 0e04e92d8ca7f9b661a1d5dbb35c4d44bf235d73
+Author: Jose Ojeda <jose.f.ojeda@gmail.com>
+Date:   Tue Oct 10 11:57:27 2017 -0400
+
+    parametrosactualizado
+
+commit ff80552b702f715c84d4d78ab7a52d72d00d5af1
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Tue Oct 10 11:00:37 2017 -0400
+
+    mejoras en la muestra
+
+commit 4f0bf4318fa34839f86b4ae026774a434ba2ed2d
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Tue Oct 10 11:00:11 2017 -0400
+
+    Eliminacion de espacio en fechas al retornar de creaciones de parametros
+
+commit 8a68d328f4d1d4422691fa893f1f606fef153254
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Tue Oct 10 10:35:57 2017 -0400
+
+    Comisiones ventas y cobros,
+
+commit af233de6b4623fecef8870f187f31bf4729d9de3
+Author: Jose Ojeda <jose.f.ojeda@gmail.com>
+Date:   Tue Oct 10 10:27:54 2017 -0400
+
+    parametros
+
+commit c8132706a8858d6e1c82687ad0c818cc95fea6af
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Fri Oct 6 16:12:00 2017 -0400
+
+    Filtrado por fecha
+
+commit 259dbe80b71d5c93dbe5b85fbf6f2f453af1f6eb
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Fri Oct 6 16:11:21 2017 -0400
+
+    Filtrado de pedidos despachados por fecha
+
+commit 4e5f547f30984ff4557bddc9765b251510da75ca
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Fri Oct 6 16:10:30 2017 -0400
+
+    Se habilito filtro por fechas, recalculado dinamico
+
+commit 598e556bbe85fed453745066fa7a59a892662cb4
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Fri Oct 6 10:42:43 2017 -0400
+
+    cabezera
+
+commit 977ca624de29d6a13e2ad47664ce4d55cd6686a3
+Author: develweb01 <javier.rodriguez@grupopro.com.ve>
+Date:   Fri Oct 6 10:40:39 2017 -0400
+
+    vista de parametros
+
+commit 0abdd9e28f5349f2464bd95af191c218b6afdf5e
+Author: Luis Lopez <luis.lopez@grupopro.com.ve>
+Date:   Thu Oct 5 09:09:35 2017 -0400
+
+    Initial commit

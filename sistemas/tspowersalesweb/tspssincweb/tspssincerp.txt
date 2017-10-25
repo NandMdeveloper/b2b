@@ -1,0 +1,307 @@
+<?php
+$withup="";
+//$server = "192.168.0.138";//PRO-HOME C.A.
+//$server = "192.168.1.54";//TEODORA SOFTWARE C.A.
+//$server = "WIN-4KVSC27QLR0";//TEODORA SOFTWARE C.A.
+
+$server = "192.168.0.11";//PRO-HOME C.A.
+
+//$options = array(  "UID" => "edgar",  "PWD" => "157359",  "Database" => "PSControlDB");
+
+$options = array(  "UID" => "ps",  "PWD" => "#hGbkWpdeSD;",  "Database" => "B2BDB");
+
+$conn = sqlsrv_connect($server, $options);
+if ($conn === false) die("<pre>".print_r(sqlsrv_errors(), true));
+//echo "Conectado a Sql Server 2012 ok <br>";
+//sqlsrv_close($conn);	
+	
+	 $sql = "SELECT  TOP 1 StatusC from TSVTTControl ";//return data to sinc
+	
+	
+	
+$stmt = sqlsrv_query( $conn, $sql );
+if( $stmt === false) {
+    die( print_r( sqlsrv_errors(), true) );
+}  
+while( $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_ASSOC) ) {
+//    echo "<br>".$row['StatusC']."<br>";
+    $withup=    $row['StatusC'];
+    }
+
+//$withup THIS CONTROL IF CHANGE
+//$withup='0000';
+
+if ($withup!='0000') {
+    //INI MY
+    $tsid=strftime( "%Y%m%d%H%M%S", time() );
+    $randx=  rand(0,100);
+    $tsid="t".$randx.$tsid;
+
+    echo "<br>WITH DATA:".$withup;
+    $TSObjProdure = new TSFProcedurex();   
+    $TSObjProdure->tsFTSPSENLIST($conn,1,$tsid);//$sCod_Id = 1 PREPARE DATE
+
+    include("../lib/core.lib.php");
+    $ObjBdQ= new BdQuery(); 
+    $act=FALSE;
+
+    if ($withup[0]=='1'){
+    //$sql = "read PSTMsaArticulo ";--------------------------------------------
+        $sql = "SELECT IdArticulo, co_art,  art_des, tipo, anulado, co_lin, co_subl, co_cat, co_color, co_ubicacion,
+            cod_proc, item, modelo, ref, comentario, campo1, campo2, campo3, campo4, campo5, campo6, campo7,
+            campo8, PSStatusSinc, co_precio, monto, stock, co_alma, tipoAlm, co_uni, tipo_imp, porc_tasa,'bdsit'+CONVERT(varchar(20), GETDATE(), 109) AS tssit"    
+            . " FROM  PSTMsaArticulo WHERE PSStatusSinc = 1";
+    
+        $stmt3 = sqlsrv_query( $conn, $sql );
+        if( $stmt3 === false) {
+            die( print_r( sqlsrv_errors(), true) );
+            }
+        $valuesArtControl="";
+        $valuesArtControlb="";
+        $comma="";
+        while( $row = sqlsrv_fetch_array( $stmt3, SQLSRV_FETCH_ASSOC) ) {
+            //echo "<br>".$row['IdArticulo']."<br>";
+            $msit = $row['tssit'];
+            $msit=str_replace(" ","",$msit);
+            $msit=str_replace(":","",$msit);
+            $msit = $tsid.$msit.$randx;
+            
+            $valuesArtControl="('".$row['co_art']."','".utf8_encode($row['art_des'])."','".$row['tipo']."','".$row['anulado']."','"
+                .$row['co_lin']."','".$row['co_subl']."','".$row['co_cat']."','".$row['co_color']."','".$row['co_ubicacion']
+                ."','".$row['cod_proc']."','".$row['item']."','".$row['modelo']."','".$row['ref']."','".$row['comentario']
+                ."','".$row['campo1']."','".$row['campo2']."','".$row['campo3']."','".$row['campo4']."','".$row['campo5']
+                ."','".$row['campo6']."','".$row['campo7']."','".$row['campo8']."','".$row['co_precio']."',".$row['monto']
+                .",".$row['stock'].",'".$row['co_alma']."','".$row['tipoAlm']."','".$row['co_uni']."','".$row['tipo_imp']
+                ."',".$row['porc_tasa'].", 1, '".$msit."')";
+            
+            $valuesArtControlb=$valuesArtControlb.$comma.$valuesArtControl; 
+            $comma=",";
+            }
+        //echo "<hr>f".$valuesArtControlb."<hr>";
+        //INSERT INTO 
+        $table2="art_control";    
+        $select2="co_art,  art_des, tipo, anulado, co_lin, co_subl, co_cat, co_color, ubicacion,
+                  cod_proc, item, modelo, ref, comentario, campo1, campo2, campo3, campo4, campo5, campo6, campo7,
+                  campo8, co_precio, monto, stock, co_alma, tipoAlm, co_uni, tipo_imp, porc_tasa,TSSincStatus,tssit "  ; 
+        $values2=$valuesArtControlb; 
+        $r2=$ObjBdQ->Query_InsertMV($table2,$select2,$values2);//into bd
+        $act=TRUE;
+        }//END INSERT PSTMsaArticulo--------------------------------------------
+
+    if ($withup[1]=='1'){
+	echo "<hr>con 1<hr>";
+    //$sql = "read PSTMsaCliente ";--------------------------------------------
+        $sql = "SELECT co_cli, cli_des, tip_cli AS tipo_cli, 0 AS limite, 0 AS deuda, co_zon, co_ven, direc1 AS direc,  "
+               . "telefonos,rif,  tip_cli,  "               ."contrib,  email,  ciudad, co_pais,  respons, inactivo, "
+               . " CONVERT(varchar(20), GETDATE(), 109) AS tssit"    
+               ." FROM  PSTMsaCliente WHERE PSStatusSinc = 1";
+    
+        $stmt4 = sqlsrv_query( $conn, $sql );
+        if( $stmt4 === false) {
+            die( print_r( sqlsrv_errors(), true) );
+            }
+        $valuesCustControl="";
+        $valuesCustControlb="";
+        $comma="";
+		$sf="";
+        while( $row = sqlsrv_fetch_array( $stmt4, SQLSRV_FETCH_ASSOC) ) {
+            //echo "<br>".$row['IdArticulo']."<br>";
+            $msit = $row['tssit'];      $msit=str_replace(" ","",$msit);        $msit=str_replace(":","",$msit);
+            $msit = $tsid.$msit.$randx;
+			$sf = $tsid.$msit.$randx;
+            $msit=substr($sf, 1, 2).substr($sf, 6, 11).substr($sf, 19, 3).substr($sf, -7);
+            
+            $valuesCustControl="('".$row['co_cli']."','".utf8_encode($row['cli_des'])."','".$row['tipo_cli']."','".$row['limite']."','"
+					   .$row['deuda']."','".$row['co_zon']."','".$row['co_ven']."','".utf8_encode($row['direc'])."','".$row['telefonos']."','"
+					   .$row['rif']."','".$row['tip_cli']."','".$row['contrib']."','".$row['email']."','".$row['ciudad']."','"
+					   .$row['co_pais']."','".$row['respons']."','".$row['inactivo']."', 1, '".$msit."')";
+
+            $valuesCustControlb=$valuesCustControlb.$comma.$valuesCustControl; 
+            $comma=",";
+            }
+        //        echo "<hr>f".$valuesCustControlb."<hr>";
+        //INSERT INTO 
+        $table2="clientes_control";    
+        $select2="co_cli,  cli_des,  tipo_cli,  limite,  deuda,  co_zon,  co_ven,  direc,  telefonos,rif,  tip_cli,  "
+                . "contrib,  email,  ciudad, co_pais,  respons,inactivo,TSSincStatus,tssit "  ;
+        $values2=$valuesCustControlb; 
+        $r2=$ObjBdQ->Query_InsertMV($table2,$select2,$values2);//into bd
+        $act=TRUE;
+        }//END INSERT PSTMsaCliente---------------------------------------------
+
+    if ($withup[2]=='1'){
+	echo "<hr>con 2<hr>";
+    //$sql = "read PSTMsaTipoPrecio ";--------------------------------------------
+        $sql = "SELECT co_precio, des_precio, incluye_imp, campo1, campo2, campo3, campo4, campo5, campo6, campo7, campo8,"
+               . " 'bdsit'+CONVERT(varchar(20), GETDATE(), 109) AS tssit"    
+               ." FROM  PSTMsaTipoPrecio WHERE PSStatusSinc = 1";
+    
+        $stmt4 = sqlsrv_query( $conn, $sql );
+        if( $stmt4 === false) {
+            die( print_r( sqlsrv_errors(), true) );
+            }
+        $valuesTypePriceControl="";
+        $valuesTypePriceControlb="";
+        $comma="";
+        while( $row = sqlsrv_fetch_array( $stmt4, SQLSRV_FETCH_ASSOC) ) {
+            //echo "<br>".$row['IdArticulo']."<br>";
+            $msit = $row['tssit'];      $msit=str_replace(" ","",$msit);        $msit=str_replace(":","",$msit);
+            $msit = $tsid.$msit.$randx;
+            
+            $valuesTypePriceControl="('".$row['co_precio']."','".utf8_encode($row['des_precio'])."','".$row['incluye_imp']."','"
+                    .$row['campo1']."','".$row['campo2']."','".$row['campo3']."','".$row['campo4']."','".$row['campo5']."','"
+                    .$row['campo6']."','".$row['campo7']."','".$row['campo8']."', 1, '".$msit."')";
+           
+            $valuesTypePriceControlb=$valuesTypePriceControlb.$comma.$valuesTypePriceControl; 
+            $comma=",";
+            }
+        //echo "<hr>f".$valuesTypePriceControlb."<hr>";
+        //INSERT INTO 
+        $table2="tipoprecio_control";    
+        $select2=" co_precio, des_precio, incluye_imp, campo1, campo2, campo3, campo4, campo5, campo6, "
+                . "campo7, campo8,TSSincStatus,tssit ";
+        $values2=$valuesTypePriceControlb; 
+        $r2=$ObjBdQ->Query_InsertMV($table2,$select2,$values2);//into bd
+        $act=TRUE;
+        }//END INSERT PSTMsaTipoPrecio------------------------------------------
+        
+    if ($withup[3]=='1'){
+	echo "<hr>con 3<hr>";
+    //$sql = "read PSTMsaVendedor ";--------------------------------------------
+        $sql = "SELECT co_ven,tipo,ven_des,inactivo,email,"
+               . " 'bdsit'+CONVERT(varchar(20), GETDATE(), 109) AS tssit"    
+               ." FROM  PSTMsaVendedor WHERE PSStatusSinc = 1";
+    
+        $stmt4 = sqlsrv_query( $conn, $sql );
+        if( $stmt4 === false) {
+            die( print_r( sqlsrv_errors(), true) );
+            }
+        $valuesSellerControl="";
+        $valuesSellerControlb="";
+        $comma="";
+        while( $row = sqlsrv_fetch_array( $stmt4, SQLSRV_FETCH_ASSOC) ) {
+            //echo "<br>".$row['IdArticulo']."<br>";
+            $msit = $row['tssit'];      $msit=str_replace(" ","",$msit);        $msit=str_replace(":","",$msit);
+            $msit = $tsid.$msit.$randx;
+            
+            $valuesSellerControl="('".$row['co_ven']."','".$row['tipo']."','".utf8_encode($row['ven_des'])."','"
+                    .$row['inactivo']."','".$row['email']."', 1, '".$msit."')";
+           
+            $valuesSellerControlb=$valuesSellerControlb.$comma.$valuesSellerControl; 
+            $comma=",";
+            }
+        //echo "<hr>f".$valuesSellerControlb."<hr>";
+        //INSERT INTO 
+        $table2="vendedor_control";    
+        $select2=" co_ven,tipo,ven_des,inactivo,email,TSSincStatus,tssit ";
+        $values2=$valuesSellerControlb; 
+        $r2=$ObjBdQ->Query_InsertMV($table2,$select2,$values2);//into bd
+        $act=TRUE;
+        }
+    if ($withup[4]=='1'){
+	echo "<hr>con 4<hr>";
+    //$sql = "read PSTMsaArtUnidad ";--------------------------------------------
+        $sql = "SELECT co_art, co_uni, relacion, equivalencia, uso_venta, uso_compra, uni_principal,
+					uso_principal, uni_secundaria, uso_secundaria,"    
+                    . " 'bdsit'+CONVERT(varchar(20), GETDATE(), 109) AS tssit"    
+               ." FROM  PSTMsaArtUnidad"
+                . " WHERE PSStatusSinc = 1";
+    
+        $stmt4 = sqlsrv_query( $conn, $sql );
+        if( $stmt4 === false) {
+            die( print_r( sqlsrv_errors(), true) );
+            }
+        $valuesArtUnidadControl="";
+        $valuesArtUnidadControlb="";
+        $comma="";
+        while( $row = sqlsrv_fetch_array( $stmt4, SQLSRV_FETCH_ASSOC) ) {
+            //echo "<br>".$row['IdArticulo']."<br>";
+            $msit = $row['tssit'];      $msit=str_replace(" ","",$msit);        $msit=str_replace(":","",$msit);
+            $msit = $tsid.$msit.$randx;
+            
+            $valuesArtUnidadControl="('".$row['co_art']."','".$row['co_uni']."','".$row['relacion']."','"
+                .$row['equivalencia']."','"	.$row['uso_venta']."','".$row['uso_compra']."','".$row['uni_principal']
+		."','".$row['uso_principal']."','".$row['uni_secundaria']."','".$row['uso_secundaria']
+                ."', 1, '".$msit."')";
+          
+            $valuesArtUnidadControlb=$valuesArtUnidadControlb.$comma.$valuesArtUnidadControl; 
+            $comma=",";
+            }
+//        echo "<hr>f".$valuesArtUnidadControlb."<hr>";
+        //INSERT INTO 
+        $table2="artunidad_control";  
+        
+        $select2=" co_art, co_uni, relacion, equivalencia, uso_venta, uso_compra, uni_principal,
+					uso_principal, uni_secundaria, uso_secundaria,TSSincStatus,tssit "  ; 
+        $values2=$valuesArtUnidadControlb; 
+        $r2=$ObjBdQ->Query_InsertMV($table2,$select2,$values2);//into bd
+        $act=TRUE;
+        }
+//END INSERT PSTMsaArtUnidad-----------------------------------------------------
+        
+        
+//END INSERT PSTMsaVendedor-----------------------------------------------------
+        
+         $OP= new TSBdQueryProcedure(); 
+         //INSERT-UPDATE HERE ONLY MYSQL TABLE  art
+         if ($withup[0]=='1'){
+             $r3=$OP->TSBdQueryProcedureMain("art");//REN VAR = TABLE UPDATE HERE IN THIS CASE MYSQL
+            }   
+        //INSERT-UPDATE HERE ONLY MYSQL TABLE  clientes            
+        if ($withup[1]=='1'){            
+             $r3=$OP->TSBdQueryProcedureMain("clientes");//REN VAR = TABLE UPDATE HERE IN THIS CASE MYSQL
+            }               
+        //INSERT-UPDATE HERE ONLY MYSQL TABLE TYPE PRICE
+        if ($withup[2]=='1'){
+              $r3=$OP->TSBdQueryProcedureMain("tipoprecio");//REN VAR = TABLE UPDATE HERE IN THIS CASE MYSQL
+            }  
+        //INSERT-UPDATE HERE ONLY MY SQL TABLE TYPE SELLER
+        if ($withup[3]=='1'){
+            $r3=$OP->TSBdQueryProcedureMain("vendedor");//REN VAR = TABLE UPDATE HERE IN THIS CASE MYSQL
+        }
+
+        //INSERT-UPDATE HERE ONLY MY SQL TABLE TYPE SELLER
+        if ($withup[4]=='1'){
+            $r3=$OP->TSBdQueryProcedureMain("artunidad");//REN VAR = TABLE UPDATE HERE IN THIS CASE MYSQL
+        }
+        //----------------------------------------------------------------------
+        if($act){
+            $TSObjProdure->tsFTSPSENLIST($conn,2,$tsid);//$sCod_Id = 2 UPDATE 
+            } 
+}
+else echo "<br>WITHOUT DATA REN:".$withup;
+sqlsrv_close($conn);
+
+class TSFProcedurex{
+	function tsFTSPSENLIST($conn,$TSParId,$sCod_Id){//SQLSERVER
+            // specify params - MUST be a variable that can be passed by reference!
+            $myparams['TSParId'] = $TSParId;//$sCod_Id = 1 PREPARE DATE, $sCod_Id = 1 PREPARE DATE, $sCod_Id = 2 READ DATE 
+            $myparams['TSL_Id'] = $sCod_Id;
+            $myparams['sCod_Id'] = $sCod_Id;
+            
+            // Set up the proc params array - be sure to pass the param by reference
+            $procedure_params = array(
+                array(&$myparams['TSParId'], SQLSRV_PARAM_IN),
+                array(&$myparams['TSL_Id'], SQLSRV_PARAM_IN),
+                array(&$myparams['sCod_Id'], SQLSRV_PARAM_OUT)
+                );
+            $sql = "EXEC ERPTSPSENLIST @TSParId = ?, @TSL_Id = ?, @sCod_Id = ?";
+            $stmt2 = sqlsrv_prepare($conn, $sql, $procedure_params);
+            if( !$stmt2 ) {
+                die( print_r( sqlsrv_errors(), true));
+            }
+            //work---------------------------
+            if(sqlsrv_execute($stmt2)){
+            $row = sqlsrv_fetch_array($stmt2);
+            //echo "<br>row:".$row;
+//                while($res = sqlsrv_next_result($stmt2)){
+//                    echo "<br>respuesta:".$res;  // erncheck it
+//                    echo "<br>myparams:".$myparams['sCod_Id'];
+//                    }
+                }
+            }
+//	function tsFUpDataMySql($conn,$TSParId,$sCod_Id){//SQLSERVER
+
+        }
+//------------------------------------------------------------------------------        
+?>
