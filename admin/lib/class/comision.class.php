@@ -848,7 +848,7 @@
       $tipo = $campos['tipo'];
       $finicio = $campos['finicio'];
       $ffinal = $campos['ffinal'];
-   if(!empty($nombre) and !empty($cuenta) and !empty($tipo)) {      
+   if (!empty($nombre) and !empty($cuenta) and !empty($tipo)) {      
       $cortes = array();
       /* BUSCAMOS CORTES EN LOS PARAMETROS PARA UN RANGO DE FECHA */
       $bsql ="SELECT desde,hasta FROM `parametros` 
@@ -868,7 +868,7 @@
           if (mysqli_errno($conn)) {
               $mensa = "Ocurrio un error ".mysqli_errno($conn).": ". mysqli_error($conn);
               $this->setMensajes('danger',$mensa);
-          }else{
+          } else {
               $msn = array(
               "error"=>"no"
                          );
@@ -926,10 +926,10 @@
                              $this->add_log($usuario,"Agrego","Agrego el <strong>#parametro</strong>   ".$nombre." Tipo".$tipo.", cuenta:".$cuenta." En el periodo".$campos['finicio']." ".$campos['ffinal']);
                    
                           exit(header("Location: comisonparametros.php?desde=".$finicio."&hasta=".$ffinal."")); 
-                        }else{
+                        } else {
                               $this->setMensajes('danger','Parametro  No Ingresado');
                           }
-                      } else{
+                      } else {
                           if ($Nfinicio>$fecha2) {
                            $sel ="
                             INSERT INTO `parametros`
