@@ -34,6 +34,17 @@ $nfactura = $comision->getFacturaHistorico($_GET['factura']);
 
 $fec_emis = date_format(date_create($factura->fec_emis->format('Y-m-d')),'d/m/Y');
 $fecha_venc = date_format(date_create($nfactura[0]['fecha_venc']),'d/m/Y');
+
+$fecha_venc = date_format(date_create($nfactura[0]['fecha_venc']),'d/m/Y');
+$facturaRecibido = "";
+if ($nfactura[0]['fech_recepcion']) {
+    $facturaRecibido =  date_format(date_create($nfactura[0]['fech_recepcion']),'d/m/Y');;
+}
+
+$fcobro = "";
+if ($nfactura[0]['fech_cobro']) {
+    $fcobro =  date_format(date_create($nfactura[0]['fech_cobro']),'d/m/Y');;
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -131,7 +142,6 @@ $fecha_venc = date_format(date_create($nfactura[0]['fecha_venc']),'d/m/Y');
                           <th class="text-right">Recepcion</th>
                           <th class="text-right">comision</th>
                           <th class="text-right">Reserva</th>
-                          <th class="text-right">Opcion</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -145,59 +155,21 @@ $fecha_venc = date_format(date_create($nfactura[0]['fecha_venc']),'d/m/Y');
                             </td>               
                             <td class="text-right lead">
                                 <?php
-                                if (isset($facturaRecibido)) {
-                                     $facturaRecibido = date_format(date_create($facturaRecibido),'d/m/Y');             
+                                if (isset($facturaRecibido)) {           
                                      echo $facturaRecibido ;
                                 }
                                 ?>
                             </td>
                             <td class="text-right lead">
-                                <?php echo number_format($nComision['comision'], 2, ",", "."); ?> 
-                                 <small class="label label-info"><?php echo $nComision['porcentaje']  ?> %</small>
+                                <?php echo number_format($nfactura[0]['comision'], 2, ",", "."); ?> 
+                                 <small class="label label-info"><?php echo $nfactura[0]['porcentaje']  ?> %</small>
                             </td>
                             <td class="text-right lead">
-                                <?php echo number_format($nComision['reserva'], 2, ",", "."); ?>
-                                <small class="label label-info"><?php echo $nComision['porcentajeR']  ?> %</small>
+                                <?php echo number_format($nfactura[0]['reserva'], 2, ",", "."); ?>
                             </td>
                             </tr>
 
-                                <?php if(count($cambios) > 0) {
-                                    $comisionN = ($factura->total_bruto *  $cambios[0]['comision'] ) / 100;
-                                    $reservaN = ($factura->total_bruto * $cambios[0]['reserva']) / 100 ;
-
-                                    ?>
-                             <tr>
-                                <td class="text-right lead">
-                                    <i class="fa fa-pencil-square-o pull-left" aria-hidden="true"></i>  
-
-                                    <?php
-                                    if (isset($cambios[0]['cobro'])) {
-                                         $cobrado = date_format(date_create($cambios[0]['cobro']),'d/m/Y');             
-                                         echo $cobrado ;
-                                    }
-                                    ?>
-                                </td>
-                            <td class="text-right lead">
-                                
-                            </td>
-                            <td class="text-right lead">
-                                            
-                           <?php echo number_format($comisionN, 2, ",", "."); ?>
-                           <small class="label label-info"><?php echo $cambios[0]['comision']  ?> %</small>
-                            </td>
-                            <td class="text-right lead">
-                                
-                            <?php echo number_format($reservaN, 2, ",", "."); ?> 
-                                 <small class="label label-info"><?php echo $cambios[0]['reserva']  ?> %</small>
-                            </td>
-                            <td class="text-right lead">
-                         <a href="controlcomisiones.php?opcion=eliminarCambio&id=<?php   echo $cambios[0]['id'];?>&documento=<?php   echo $_GET['factura'];?>" class="text-danger fa fa-trash-o link-borrar "></a>
-                            </td>
-                            </tr>
-                            <?php } 
-
-
-                            ?>
+                         
                         </tbody>
                         <tfoot>
                             <tr>
@@ -211,10 +183,9 @@ $fecha_venc = date_format(date_create($nfactura[0]['fecha_venc']),'d/m/Y');
                 </div> 
                         <?php
                             $ncobros = array();
-                            if($cobros==1){
-                                $ncobros = $comision->cobrosfactura2($factura->doc_num,$factura->co_cli);
-                            }
                            
+                                $ncobros = $comision->cobrosfactura2($factura->doc_num,$factura->co_cli);
+                        
                             $tabla ="";
                                 if(count($ncobros) > 0){
                                         $tabla ="example1";
@@ -299,8 +270,7 @@ $fecha_venc = date_format(date_create($nfactura[0]['fecha_venc']),'d/m/Y');
                     $ediciones =  $comision->getauditoriaDocumento($_GET['factura']); 
                     if (count($ediciones)) {
                     
-                ?>
-                        
+                ?>                   
                                 <div class="container">
                                         <div class="col-md-12">
                                             <h3 class="box-title">Auditoria <small>interna</small></h3>
@@ -353,7 +323,6 @@ $fecha_venc = date_format(date_create($nfactura[0]['fecha_venc']),'d/m/Y');
         
                     }
                 ?>
-
 
         <div id="myModal" class="modal fade in">
             <div class="modal-dialog">
