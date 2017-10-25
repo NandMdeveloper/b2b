@@ -1900,6 +1900,7 @@ $mensa = "No tiene permisos para realizar esta accion";
       return $totales;
     }
     public function getCuentasClaves($segmento,$id) {
+
      $sel = "
        SELECT DISTINCT
         ven.co_ven,
@@ -1908,7 +1909,7 @@ $mensa = "No tiene permisos para realizar esta accion";
       INNER JOIN saCliente AS cli ON cli.co_ven= ven.co_ven
       INNER JOIN saSegmento AS sg ON cli.co_seg=sg.co_seg
       INNER JOIN saZona  AS zn ON zn.co_zon= cli.co_zon
-      where cli.co_seg = '".$segmento."'";
+      where cli.co_seg = '".$this->segmentoClave."'";
          
           if ($id!=null) {
             $sel.=" and ven.co_ven='".$id."' ";
