@@ -517,7 +517,7 @@
 			if ($msn['error']=='no') {
 				$comision->add_log($usuario,"Editar","comisionActividad: ".$campos['co_ven']."  fecha: ".$campos['desde']." - ".$campos['hasta']." -> ".$campos['tipo']." -> ".$campos['estatus']);
 			}
-		header("Location: comisionActividadEditar.php?id=".$campos['id']);	
+		header("Location: comisionActividadEditar.php?id=".$campos['id']."&desde=".$campos['desde']."&hasta=".$campos['desde']);	
 		break;
 		case "agregarActividadesUsuarios":
 			//exit();

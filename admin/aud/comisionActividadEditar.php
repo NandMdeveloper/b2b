@@ -98,7 +98,7 @@ if (isset($_GET['id'])) {
         if(isset($_SESSION["msn-tipo"])){
         $comision->getMensajes();
         }
-        $periodo = $comision->getPeriodos($id);
+        $periodo = $comision->getPeriodos($id,null,null);
         $chk_a ="";
         $chk_i ="";
         if ($periodo[0]['estatus'] == "Activo") {
@@ -260,7 +260,7 @@ if (isset($_GET['id'])) {
                       </thead>
                       <tbody>
                         <?php
-                          $periodos = $comision->getPeriodos(null);
+                          $periodos = $comision->getPeriodos(null,$desde,$hasta);
 
                           for($i=0;$i<sizeof($periodos);$i++){
                                 $desde = $comision->fechaNormalizada($periodos[$i]['desde']);
@@ -283,7 +283,7 @@ if (isset($_GET['id'])) {
                                 <td><?php echo $desde ; ?></td>
                                 <td><?php echo $hasta; ?></td>
                                 <td>
-                                  <a href="comisionActividadEditar.php?id=<?php echo $periodos[$i]['id']; ?>" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> Ver</a>
+                                   <a href="comisionActividadEditar.php?id=<?php echo $periodos[$i]['id']; ?>&desde=<?php echo $periodos[$i]['desde']; ?>&hasta=<?php echo $periodos[$i]['hasta']; ?>" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> Ver</a>
                                 </td>
 
                               </tr>
