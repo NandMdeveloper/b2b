@@ -1915,8 +1915,7 @@ $mensa = "No tiene permisos para realizar esta accion";
             $sel.=" and ven.co_ven='".$id."' ";
 
           }
-      $conn = conectarSQlSERVER();
-     
+      $conn = conectarSQlSERVER();    
 
       $i=0;
       $claves = array();
@@ -1929,8 +1928,7 @@ $mensa = "No tiene permisos para realizar esta accion";
         $i++;
       }
 
-
-         $cuentasTradicionales = $this->getCuentasNoClaves('01',null);
+        $cuentasTradicionales = $this->getCuentasNoClaves($this->segmentoClave,null);
         $codClaves = array();
          for ($i=0; $i < count($claves) ; $i++) { 
            $codClaves[] = $claves[$i]['co_ven'];
