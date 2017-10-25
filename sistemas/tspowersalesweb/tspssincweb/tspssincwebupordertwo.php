@@ -50,7 +50,8 @@ $od="";
 
 if ($TSPar==1){//REQUESTING DATA
     $response = array();
-    $ObjBdQ= new BdQuery(); 
+    $ObjBdQ= new BdQuery();
+    $json = file_get_contents('php://input');
     //TSUSER--------------------------------------------------------------------
     if ($tsr!="0"){//REQUESTING DATA USER CHECK STATUS
         if ($tssit!="0"){//REQUESTING DATA USER CHECK STATUS
