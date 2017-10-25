@@ -37,6 +37,16 @@
             <div class="navbar-default sidebar" role="navigation">
                 <div id="sidebar" class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
+                       <?php $us = $_SESSION['user']; ?>
+                     <?php if ($us=="javier"or $us=="njose" or $us=="jvera") { ?>
+                        <li>
+                            <a href="#"><i class="fa fa-user "></i> <span>Usuarios</span>
+                            </a>
+                           <ul class="nav nav-second-level">
+                           <li><a href="usuarioshome.php"><i class="fa fa-user-plus "></i> Creacion de Usuario</a></li>
+                           </ul>
+                           </li>  
+                            <?php } ?>  
                         <li>
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i><span> Pedidos</span></a>
                             <ul class="nav nav-second-level">

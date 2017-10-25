@@ -98,7 +98,7 @@ if (isset($_GET['desde'])) {
             <?php
 
             $gRegionales = $comision->getvendedores(null);
-            $cclaves = $comision->getCuentasClaves('01',null);
+            $cclaves = $comision->getCuentasClaves('000004',null);
             
              ?>
             <div class="form-group">

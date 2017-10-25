@@ -1,6 +1,6 @@
 <?php
 class usuario {
-	    public  $servidor = 0; // 1 conecta servidor 134 0 servidor local 
+      public  $servidor = 0; // 1 conecta servidor 134 0 servidor local 
    public function  getConMYSQL() {
      $conn = conectarServ($this->servidor);    
       return $conn;
@@ -11,28 +11,28 @@ class usuario {
       $_SESSION["msn-mensaje"]=$mensaje;
     }
 /*genera la lista de todos los usuarios*/
-	 public function getusuarioslista() {
+   public function getusuarioslista() {
         
         $lista_usuarios = array();
 
 
-        $sel_r ="SELECT usuario.id as id_usuario ,usuario.usuario,usuario.nombre,usuario.apellido,usuario.sucursal, usuario.tipo,  usuario_tipo.id, usuario_tipo.descripcion FROM psdb.usuario, psdb.usuario_tipo where usuario.estatus=1 and usuario.tipo = usuario_tipo.id order by usuario.id";
-
-        $conn = $this->getConMYSQL() ;
-        $rs_r = mysqli_query($conn,$sel_r) or die(mysqli_error($conn));
-       $f=0;
+        $sel_r ="SELECT usuario.id as id_usuario ,usuario.uname,usuario.nombre,usuario.sucursal,usuario.email, usuario.tipo, usuario.supervisor, usuario_tipo.id, usuario_tipo.descripcion FROM b2bfc.usuario, b2bfc.usuario_tipo where usuario.status=1 and usuario.tipo = usuario_tipo.id order by usuario.id";
+          $conn = $this->getConMYSQL() ;
+          $rs_r = mysqli_query($conn,$sel_r) or die(mysqli_error($conn));
+          $f=0;
         while($linea=mysqli_fetch_array($rs_r)) {
-            foreach($linea as $key=>$value) {
-              $lista_usuarios[$f][$key]=$value;
+          foreach($linea as $key=>$value) {
+            $lista_usuarios[$f][$key]=$value;
             }
             $f++;
-        }       
+        }  
+        //var_dump($lista_usuarios);exit();     
       return $lista_usuarios;
            
  }
  /*genera el registro de los nuevos usuarios*/
  public function nuevousuario($campos) {
-$usuarios =  new usuario();
+       $usuarios =  new usuario();
       $usuario=$_SESSION['user'];
       $registrousuario = $campos['usuario'];
       $clave = $campos['contraseña'];
@@ -46,40 +46,65 @@ $usuarios =  new usuario();
       $email = $campos['email'];
       $pass= md5($clave);
 
-
-    
-
       $conn = $this->getConMYSQL() ;
-  /*validacion para evitar el registro de un usuario exitente*/
-$sQuery="SELECT `usuario` FROM `usuario` where usuario='$registrousuario' ";
-$result = mysqli_query($conn,$sQuery);
+      /*validacion para evitar el registro de un usuario exitente*/
+      $sQuery="SELECT `uname` FROM `usuario` where uname='$registrousuario' ";
+      $result = mysqli_query($conn,$sQuery);
  
-if(mysqli_num_rows($result)>0){  
-/*echo "este usuario ya existe "; exit();*/
-  header("Location: usuarioshome.php");
-  $usuarios->setMensajes('warning','Este usuario ya existe');
-}
-else
-{
+    if(mysqli_num_rows($result)>0){  
+                   /*echo "este usuario ya existe "; exit();*/
+              header("Location: usuarioshome.php");
+              $usuarios->setMensajes('warning','Este usuario ya existe');
+    }
+    else
+    {
  
-   if (!empty($registrousuario) and !empty($clave) and !empty($tipo)) {     
-         $sel = "INSERT INTO `usuario`
-            (`id`,`usuario`,  `clave`,  `estatus`, `tipo`, `equipo`,  `supervisor`,   `nombre`, 
-            `apellido`, `sucursal`, `correo`) 
+      if (!empty($registrousuario) and !empty($clave) and !empty($tipo)) {     
+             $sel = "INSERT INTO `usuario` set
+             id= null,
+           `uname`='".$registrousuario."',
+          `passwd`='".$pass."',
+          `status`='".$estatus."',
+          `tipo`='".$tipo."',
+          `team`='".$equipo."',
+          `supervisor`='".$supervisor."',
+          `nombre`='".$nombre." ".$apellido."',
+          `sucursal`='".$sucursal."',
+          `email`='".$email."'"; 
  
-            VALUES (null,'".$registrousuario."','".$pass."','".$estatus."','".$tipo."','".$equipo."','".$supervisor."','".$nombre."','".$apellido."','".$sucursal."','".$email."')";
-         $rs = mysqli_query($conn,$sel);
-        /*condicion solo insertar los usuarios tipo vendedor en el apk*/
-         if ($tipo==1) {
-        /*inserta el usuario en la tabla del apk*/
-         
-         $apk= "INSERT INTO `tmuser`(`Userid`,`UserCode`,`UserPassword`,`UserName`,`UserName2`,`UserLastName`,`UserLastName2`,`UserIdenCard`,`UserEmail`,`UserStatus`,`UserBranchOfficeId`,`UserLogErr`,`UserType`)
-
-               VALUES (null,'".$registrousuario."','".$clave."','".$registrousuario."',NULL,null,'0','0','0','".$estatus."','0','0','0')";
-                 $insert = mysqli_query($conn,$apk);
-                 }else {
-
-
+              $rs = mysqli_query($conn,$sel);
+             /*condicion solo insertar los usuarios tipo vendedor en el apk*/
+              if ($tipo==1) {
+               /*inserta el usuario en la tabla del apk*/
+                 
+                 $apk= "INSERT INTO `tmuser`set
+             `UserId`= null,
+           `UserCode`='".$registrousuario."',
+          `UserPassword`='".$clave."',
+          `UserName`='".$registrousuario."',
+          `UserName2`=NULL,
+          `UserLastName`=null,
+          `UserLastName2`='0',
+          `UserIdenCard`='0',
+          `UserEmail`='0',
+          `UserStatus`='".$estatus."',
+          `UserBranchOfficeId`= '0',
+          `UserLogErr`='0',
+          `UserType`= '0',
+          `UserNameOther`='0'";
+                                     $insert = mysqli_query($conn,$apk);
+                  //var_dump($apk);exit();
+                 if (mysqli_errno($conn)) {
+                     $mensa = "Ocurrio un error ".mysqli_errno($conn).": ". mysqli_error($conn);
+                     $this->setMensajes('danger',$mensa);
+          }//if error de coneccion
+          else{
+             $msn = array(
+            "error"=>"no");
+             $this->setMensajes('success','Usuario Ingresado');
+              $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Agrego","Creo el <strong>#usuario</strong> ".$registrousuario);  exit();       }
+      }//if tipo vendedor
+      else {
         if (mysqli_errno($conn)) {
           $mensa = "Ocurrio un error ".mysqli_errno($conn).": ". mysqli_error($conn);
           $this->setMensajes('danger',$mensa);
@@ -88,15 +113,14 @@ else
           $msn = array(
             "error"=>"no"
 
-          );
-          /*$this->add_log($usuario,"Agrego","usuario: ".$registrousuario." Tipo".$tipo.", contraseña:".$clave);
-          $this->setMensajes('success','Usuario Ingresado');*/
-       }
-        }
-        
-}
-      }
-    }
+          );$this->setMensajes('success','Usuario Ingresado');
+          $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Agrego","Creo el <strong>#usuario</strong> ".$registrousuario);
+          
+       }//error  conexion 
+      }//else tipo vendedor
+     }//if empety
+    }//else validacion existe usuario
+  }//funcion 
     /*editas los  usuarios*/
     public function editarusuario($campos) {
       //var_dump($campos); exit();
@@ -114,66 +138,156 @@ else
      
       $email = $campos['email'];
       $pass= md5($clave);
-     if ( !empty($tipo))
-     {
-     
-  $conn = $this->getConMYSQL() ;
-        $usuario=$_SESSION['usuario'];
+  if ( !empty($tipo))
+  {
+    if ( !empty($clave))
+    {  
+      $conn = $this->getConMYSQL() ;
+        $usuario=$_SESSION['user'];
         $sel="
           UPDATE `usuario` SET
-          `usuario`='".$registrousuario."',
-          `clave`='".$pass."',
-          `estatus`='".$estatus."',
+         /*`uname`='/*.$registrousuario*/
+          `passwd`='".$pass."',
+          `status`='".$estatus."',
           `tipo`='".$tipo."',
-          `equipo`='".$equipo."',
+          `team`='".$equipo."',
           `supervisor`='".$supervisor."',
-          `nombre`='".$nombre."',
-          `apellido`='".$apellido."',
+          `nombre`='".$nombre." ".$apellido."',
           `sucursal`='".$sucursal."',
-          `correo`='".$email."'
+          `email`='".$email."' 
            WHERE id='".$id."' ";
 
     
         $rs = mysqli_query($conn,$sel);
-
+      if ($tipo==1) {
+           $apk="
+          UPDATE `tmuser` SET
+          
+          `UserPassword`='".$clave."',
+          `UserStatus`='".$estatus."',
+          `UserName`=,
+                     WHERE Userid='".$id."' ";
         if (mysqli_errno($conn)) {
           $mensa = "Ocurrio un error ".mysqli_errno($conn).": ". mysqli_error($conn);
           $this->setMensajes('danger',$mensa);
-        }else{
+        }//if error conexion
+        else{
           $msn = array(
             "error"=>"no"
           );
           $this->setMensajes('success','Usuario editado');
-        }
-      } else {
-
-        $this->setMensajes('warning','Debe llenar datos');
-      }
-      return $msn;
-    }
-    public function eliminarusuario($campos) {
-      //var_dump($campos); exit();
-		
-      $id = $campos['id'];
-    $usuario=$_SESSION['usuario'];
-     
-  $conn = $this->getConMYSQL() ;
-        $usuario=$_SESSION['user'];
-        $sel="
+          $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Edito","Edito el <strong>#usuario</strong> ".$registrousuario);
+                  }//else error conexion
+      }//if tipo vendedor
+      else {
+        if (mysqli_errno($conn)) {
+          $mensa = "Ocurrio un error ".mysqli_errno($conn).": ". mysqli_error($conn);
+          $this->setMensajes('danger',$mensa);
+        }//if error conexion
+        else{
+          $msn = array(
+            "error"=>"no"
+          );
+          $this->setMensajes('success','Usuario editado');
+          $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Edito","Edito el <strong>#usuario</strong> ".$registrousuario);
+        }//else error conexion
+      }//else tipo vendedor
+       }//if clave
+      else {
+          $conn = $this->getConMYSQL() ;
+           $usuario=$_SESSION['user'];
+            $sel="
           UPDATE `usuario` SET
-          `estatus`='0'
+         /*`uname`='/*.$registrousuario*/
+                   `status`='".$estatus."',
+          `tipo`='".$tipo."',
+          `team`='".$equipo."',
+          `supervisor`='".$supervisor."',
+          `nombre`='".$nombre." ".$apellido."',
+          `sucursal`='".$sucursal."',
+          `email`='".$email."' 
            WHERE id='".$id."' ";
 
     
         $rs = mysqli_query($conn,$sel);
-$this->setMensajes('Danger','Usuario eliminado');
-        
+        if ($tipo==1) {
+           $apk="
+          UPDATE `tmuser` SET
+                    `UserStatus`='".$estatus."',
+          `UserName`='".$nombre."',
+           WHERE Userid='".$id."' ";
+        if (mysqli_errno($conn)) {
+          $mensa = "Ocurrio un error ".mysqli_errno($conn).": ". mysqli_error($conn);
+          $this->setMensajes('danger',$mensa);
+        }//if error conexion
+        else{
+          $msn = array(
+            "error"=>"no"
+          );
+          $this->setMensajes('success','Usuario editado');
+          $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Edito","Edito el <strong>#usuario</strong> ".$registrousuario);
+        }//else error conexion
+      }//if tipo vendedor
+      else {
+        if (mysqli_errno($conn)) {
+          $mensa = "Ocurrio un error ".mysqli_errno($conn).": ". mysqli_error($conn);
+          $this->setMensajes('danger',$mensa);
+        }//if error conexion
+        else{
+          $msn = array(
+            "error"=>"no"
+          );
+          $this->setMensajes('success','Usuario editado');
+          $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Edito","Edito el <strong>#usuario</strong> ".$registrousuario);
+        }//else error conexion
+      }//else tipo vendedor
+       }//else clave
+  }//if datos vacios 
+  else {
+
+        $this->setMensajes('warning','Debe llenar datos');
+      }//else daots vacios
+      return $msn;
+}//funcion
+public function eliminarusuario($campos) {
+      //var_dump($campos); exit();
+   $usuario = $_SESSION['user'];
+      if ($usuario=="javier" OR $usuario=="njose" or $usuario=="jvera" ) { 
+      $id = $campos['id'];
+      $tipo = $campos['tipo'];
+             $registrousuario= $campos['usuario'];
+  $conn = $this->getConMYSQL() ;
+        $usuario=$_SESSION['user'];
+        $sel="
+          UPDATE `usuario` SET
+          `status`='0'
+           WHERE id='".$id."' ";
+
+    
+        $rs = mysqli_query($conn,$sel);
+       
+         if ($tipo==1) {
+        /*inserta el usuario en la tabla del apk*/
+         
+         $apk= "UPDATE  `tmuser` SET 
+         `UserStatus`='0' 
+         WHERE `UserCode`='".$registrousuario."' ";
+         $rs = mysqli_query($conn,$apk);
+         $this->setMensajes('danger','Usuario eliminado');
+         $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Elimino","Elimino el <strong>#usuario</strong> ".$registrousuario);
+
+    }else{
+     $this->setMensajes('danger','Usuario eliminado');
+     $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Elimino","Elimino el <strong>#usuario</strong> ".$registrousuario);
+
+    }  
+       }else{
+$mensa = "No tiene permisos para realizar esta accion"; 
+          $this->setMensajes('danger',$mensa);}
     }  
     /*envia los datos del usuario a editar*/
  public function detalleddeusuarios($id) {
-      $sel ="SELECT * FROM `usuario` WHERE `id` = ".$id."";
-     
-
+      $sel ="SELECT  `nombre`FROM `usuario` WHERE `id` = ".$id."";
       $conn = $this->getConMYSQL() ;
         $rs = mysqli_query($conn,$sel) or die(mysqli_error($conn));
         $res_array = array();
@@ -185,7 +299,7 @@ $this->setMensajes('Danger','Usuario eliminado');
           }
           $i++;
         }
-
+       
         return $res_array;
 
     }/*envia los mensajes*/
@@ -204,13 +318,13 @@ $this->setMensajes('Danger','Usuario eliminado');
       unset($_SESSION['msn-mensaje']);
     }
     /*hace el registro del historico de acciones crear usuario editar usuario*/
-    function add_log($fecha,$user,$accion) {
+    function add_log($fecha,$usuario,$tipo,$accion) {
       $conn = $this->getConMYSQL() ;
-      	$query = "
-      		INSERT INTO log_data_pow (id,fecha,user,accion)";
-    	$query .= "  VALUES (NULL,NOW(),'$user','$accion')";
-    	$res=mysqli_query($conn,$query) or die(mysqli_error($conn));
-	
+        $query = "
+          INSERT INTO log_data_pow (id,fecha,user,tipo,accion)";
+      $query .= "  VALUES (NULL,NOW(),'$usuario','$tipo','$accion')";
+      $res=mysqli_query($conn,$query) or die(mysqli_error($conn));
+  
     }
 function getInformation($SO,$login,$ip)
 { 
@@ -222,6 +336,45 @@ function getInformation($SO,$login,$ip)
   $insert = mysqli_query($conn,$apk);
 
 }
+   public function getauditoriaUsuarios() {
+        
+        $conn = $this->getConMYSQL(); 
+        $sel ="SELECT * FROM `log_data_pow` WHERE `accion` LIKE '%#usuario%' 
+        and month(fecha) = month(CURRENT_DATE)
+        ORDER BY `id` DESC ";
+  
+        $rs = mysqli_query($conn,$sel) or die(mysqli_error($conn));
+        $facturas = array();
+
+        $i=0;
+        while($row=mysqli_fetch_array($rs)) {
+       
+          foreach($row as $key=>$value) {
+            $facturas[$i][$key]=$value;
+          }
+          $i++;
+        }
+        return $facturas;
+   }
+    public function fechaNormalizada($fecha){
+      $fechaTiempo = array(
+        "fecha"=>"No Aplica",
+        "hora"=>""
+      );
+      if($fecha!='0'){
+        $partes = explode(" ",$fecha);
+        $meses = array("",
+        "Ene","Feb","Mar","Abr",
+        "May","Jun","Jul","Ago",
+        "Sep","Oct","Nov","Dic");
+
+        $fechas = explode("-",$partes[0]);
+        $mes = intval($fechas[1]);
+        $nuevaFecha = $fechas[2]." ".$meses[$mes]." ".$fechas[0];
+      }
+      return $nuevaFecha;
+    }
+
   }
 
  ?>

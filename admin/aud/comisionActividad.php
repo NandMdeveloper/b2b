@@ -251,7 +251,7 @@ if (isset($_GET['desde'])) {
                                 <td><?php echo $desde ; ?></td>
                                 <td><?php echo $hasta; ?></td>
                                 <td>
-                                  <a href="comisionActividadEditar.php?id=<?php echo $periodos[$i]['id']; ?>" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> Ver</a>
+                                  <a href="comisionActividadEditar.php?id=<?php echo $periodos[$i]['id']; ?>&desde=<?php echo $periodos[$i]['desde']; ?>&hasta=<?php echo $periodos[$i]['hasta']; ?>" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> Ver</a>
                                 </td>
 
                               </tr>

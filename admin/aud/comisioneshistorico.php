@@ -140,7 +140,7 @@
                                             %</span>
                                 </td>
                                 <td> 
-                                    <a href="£"  class="btn btn-primary btn-xs" target="_blank"><i class="fa fa-eye"></i>  Ver</a>
+                                    <a href="comisionFacturaHistorico.php?factura=<?php echo $documentos[$i]['factura']; ?>"  class="btn btn-primary btn-xs" target="_blank"><i class="fa fa-eye"></i>  Ver</a>
                                     <?php
                                     // echo $documentos[$i]['fcobro']." (".$documentos[$i]['diascalle'].")";
                                      ?>
