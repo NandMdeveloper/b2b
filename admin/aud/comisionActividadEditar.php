@@ -122,7 +122,7 @@ if (isset($_GET['id'])) {
             <div class="form-group">
               <label for="select" class="col-lg-2 control-label">Vendedor</label>
               <div class="col-lg-10">
-                <select class="form-control nombreGerente" id="co_ven" required="" name="co_ven">
+                <select class="form-control nombreGerente  select-vendedor" id="co_ven" required="" name="co_ven">
                   <option value="<?php echo $periodo[0]['co_ven']; ?>"><?php echo $periodo[0]['ven_des']; ?></option>
                   <option value="VACANTE">VACANTE</option>
                   <?php
@@ -342,6 +342,7 @@ if (isset($_GET['id'])) {
 
     <!-- Metis Menu Plugin JavaScript -->
     <script src="../../bower_components/metisMenu/dist/metisMenu.min.js"></script>
+    <script src="../../js/select2.min.js"></script>
 
     <!-- Custom Theme JavaScript -->
     <script src="../../dist/js/sb-admin-2.js"></script>
@@ -357,6 +358,8 @@ if (isset($_GET['id'])) {
         $('#dataTables-example').DataTable({
                 responsive: true
         });
+
+         $('.select-vendedor').select2();
     });
     </script>
 </body>
