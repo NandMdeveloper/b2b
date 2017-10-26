@@ -71,7 +71,7 @@ $arr_condp=$obj_pedidos->get_condpago(1);
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-8 .col-md-push-4 text-right"><label>IVA 12%:</label></div>
+                                    <div class="col-md-8 .col-md-push-4 text-right"><label>IVA  <?php echo $arr_pedidos[0]['OrderNumberTax'] ?>%:</label></div>
                                     <div class="col-md-4 .col-md-pull-8">
                                         <input id="iva" name="iva" class="form-control" value="<?php echo number_format($arr_pedidos[0]['monto_imp'], 2, ",", "."); ?>" readonly/>
                                     </div>

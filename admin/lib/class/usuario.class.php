@@ -298,7 +298,9 @@ $mensa = "No tiene permisos para realizar esta accion";
     }  
     /*envia los datos del usuario a editar*/
  public function detalledeusuarios($id) {
-      $sel ="SELECT * FROM `usuario` WHERE `id` = ".$id."";
+      $sel ="SELECT * FROM `usuario` as u 
+      inner join usuario_tipo as t on t.id=u.tipo
+      WHERE u.id = ".$id."";
       $conn = $this->getConMYSQL() ;
         $rs = mysqli_query($conn,$sel) or die(mysqli_error($conn));
         $res_array = array();
