@@ -81,20 +81,39 @@ $apellido=$nombre[1];
               </div>
             </div>
             <div class="form-group">
-              <label for="select" class="col-lg-2 control-label" >Equipo</label>
+               <label for="select" class="col-lg-2 control-label" >Equipo</label>
               <div class="col-lg-4">
-                <select class="form-control" name="equipo"  required value="<?php echo utf8_encode($edituser[0]['team']); ?>">
+                <select class="form-control" name="equipo" required>
+                   <?php if ($usuario=="manuel" ) {?>
                   <option value=""></option>
-                  <option value="1">Vendedor</option>
-                  <option value="2">Administrador</option>
-                  <option value="3">Supervisor</option>
-                
+                  <option value="Vendedor">Vendedor</option>
+                  <option value="Ventas">Ventas</option>
+                  <option value="Telemarketing">Telemarketing</option>
+
+                   <?php }else{?>
+                   <option value=""></option>
+                  <option value="Vendedor">Vendedor</option>
+                  <option value="Ventas">Ventas</option>
+                  <option value="Coordinador">Coordinador</option>
+                  <option value="cxc">Cuentas por cobrar</option>
+                  <option value="Auditoria">Auditoria</option>
+                  <option value="Telemarketing">Telemarketing</option>
+                  <option value="Despacho">Despacho</option>
+                  <option value="Distribuidor">Distribuidor</option>
+                  <option value="Eventual">Eventual</option>
+                <?php }?>
                 </select>
               </div>
               <label for="select" class="col-lg-2 control-label" >Tipo</label>
               <div class="col-lg-4">
                 <select class="form-control" name="tipo" required>
+                <?php if ($usuario=="manuel" ) {?>
                   <option value=""></option>
+                  <option value="1">Vendedor</option>
+                  <option value="12">Ventas</option>
+                  <option value="11">Telemercadeo</option>
+                   <?php }else{?>
+                   <option value=""></option>
                   <option value="1">Vendedor</option>
                   <option value="2">Coordinador</option>
                   <option value="3">Gerente de Ventas</option>
@@ -104,6 +123,11 @@ $apellido=$nombre[1];
                   <option value="7">Gerencia de mercadeo</option>
                   <option value="8">Presidencia</option>
                   <option value="9">Auditoria</option>
+                  <option value="10">Eventual</option>
+                  <option value="11">Telemercadeo</option>
+                  <option value="12">Ventas</option>
+
+                   <?php }?>
                 </select>
               </div>
             </div>

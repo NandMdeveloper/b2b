@@ -20,11 +20,16 @@ function conectarServ($servidor){
 		$bd = "b2bfc"; //psdb
 
 	} else {
-
+		$host = "localhost";
+		$usuario = "jnassr";
+		$clave = "Js123456";
+		$bd = "b2bfc"; //psdb
+/*
 		$host = "localhost";
 		$usuario = "root";
 		$clave = "";
 		$bd = "b2bfc"; //psdb
+		*/
 	}
 
 	$conexion = mysqli_connect($host, $usuario,$clave,$bd) or die(mysqli_error($conexion));
