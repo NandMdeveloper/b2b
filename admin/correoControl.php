@@ -135,7 +135,7 @@
 													</tr>
 													<tr>
 														<td colspan=4></td>
-														<td style=\'text-align: right;\'><b style=\'color:#384291;\'>I.V.A. ".$porc_iva."%:  </b>".$total_ivas."</td>
+														<td style=\'text-align: right;\'><b style=\'color:#384291;\'>I.V.A. ".$porc_iva."%:  </b>".$total_iva."</td>
 													</tr>
 													<tr>
 														<td colspan=4></td>
