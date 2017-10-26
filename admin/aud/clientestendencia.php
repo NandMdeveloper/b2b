@@ -51,7 +51,7 @@ $detalle_tipo = array(
 $cartera = array();
 
 $cartera = $cliente->getClientescarteraTotales($getzona,null,$hasta);
- //echo json_encode($cartera, JSON_PRETTY_PRINT) 
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
