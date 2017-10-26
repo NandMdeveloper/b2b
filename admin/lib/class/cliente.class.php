@@ -84,7 +84,7 @@
         if (!empty($zona)) {
             $sel .= " and ven.co_zon in(".$zona.") order by ven.ven_des";         
         }
-        //echo  $sel;
+        echo  $sel;
         $i=0;
         $conn = conectarSQlSERVER();
         $result=sqlsrv_query($conn,$sel);

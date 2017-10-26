@@ -16,7 +16,7 @@ class usuario {
         $lista_usuarios = array();
 
 
-        $sel_r ="SELECT usuario.id as id_usuario ,usuario.uname,usuario.nombre,usuario.sucursal,usuario.email, usuario.tipo, usuario.supervisor, usuario_tipo.id, usuario_tipo.descripcion FROM b2bfc.usuario, b2bfc.usuario_tipo where usuario.status=1 and usuario.tipo = usuario_tipo.id order by usuario.id";
+        $sel_r ="SELECT usuario.id as id_usuario ,usuario.uname,usuario.nombre,usuario.sucursal,usuario.email,usuario.tipo, usuario.supervisor,usuario_tipo.id, usuario_tipo.descripcion FROM b2bfc.usuario, b2bfc.usuario_tipo where usuario.status=1 and usuario.tipo = usuario_tipo.id order by usuario.id";
           $conn = $this->getConMYSQL() ;
           $rs_r = mysqli_query($conn,$sel_r) or die(mysqli_error($conn));
           $f=0;
@@ -44,8 +44,8 @@ class usuario {
       $supervisor = $campos['supervisor'];
       $estatus = $campos['estatus'];
       $email = $campos['email'];
-      $pass= md5($clave);
-
+      $pass= password_hash($clave, PASSWORD_DEFAULT);
+//var_dump($campos);exit();
       $conn = $this->getConMYSQL() ;
       /*validacion para evitar el registro de un usuario exitente*/
       $sQuery="SELECT `uname` FROM `usuario` where uname='$registrousuario' ";
@@ -59,7 +59,7 @@ class usuario {
     else
     {
  
-      if (!empty($registrousuario) and !empty($clave) and !empty($tipo)) {     
+      if (!empty($registrousuario) and !empty($clave) ) {     
              $sel = "INSERT INTO `usuario` set
              id= null,
            `uname`='".$registrousuario."',
@@ -69,10 +69,12 @@ class usuario {
           `team`='".$equipo."',
           `supervisor`='".$supervisor."',
           `nombre`='".$nombre." ".$apellido."',
+          `nombres`='".$nombre."',
+          `apellido`='".$apellido."',
           `sucursal`='".$sucursal."',
           `email`='".$email."'"; 
- 
-              $rs = mysqli_query($conn,$sel);
+ //var_dump($sel);exit();
+              $rs = mysqli_query($conn,$sel) or die(mysql_error());
              /*condicion solo insertar los usuarios tipo vendedor en el apk*/
               if ($tipo==1) {
                /*inserta el usuario en la tabla del apk*/
@@ -92,7 +94,7 @@ class usuario {
           `UserLogErr`='0',
           `UserType`= '0',
           `UserNameOther`='0'";
-                                     $insert = mysqli_query($conn,$apk);
+                                     $insert = mysqli_query($conn,$apk)or die(mysql_error());
                   //var_dump($apk);exit();
                  if (mysqli_errno($conn)) {
                      $mensa = "Ocurrio un error ".mysqli_errno($conn).": ". mysqli_error($conn);
@@ -102,7 +104,8 @@ class usuario {
              $msn = array(
             "error"=>"no");
              $this->setMensajes('success','Usuario Ingresado');
-              $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Agrego","Creo el <strong>#usuario</strong> ".$registrousuario);  exit();       }
+              $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Agrego","Creo el <strong>#usuario</strong> ".$registrousuario);  exit();  
+                   }
       }//if tipo vendedor
       else {
         if (mysqli_errno($conn)) {
@@ -115,7 +118,7 @@ class usuario {
 
           );$this->setMensajes('success','Usuario Ingresado');
           $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Agrego","Creo el <strong>#usuario</strong> ".$registrousuario);
-          
+        
        }//error  conexion 
       }//else tipo vendedor
      }//if empety
@@ -137,7 +140,7 @@ class usuario {
       $supervisor = $campos['supervisor'];
      
       $email = $campos['email'];
-      $pass= md5($clave);
+      $pass= password_hash($clave, PASSWORD_DEFAULT);
   if ( !empty($tipo))
   {
     if ( !empty($clave))
@@ -153,8 +156,11 @@ class usuario {
           `team`='".$equipo."',
           `supervisor`='".$supervisor."',
           `nombre`='".$nombre." ".$apellido."',
+          `nombres`='".$nombre."',
+          `apellido`='".$apellido."',
           `sucursal`='".$sucursal."',
           `email`='".$email."' 
+  
            WHERE id='".$id."' ";
 
     
@@ -176,7 +182,7 @@ class usuario {
             "error"=>"no"
           );
           $this->setMensajes('success','Usuario editado');
-          $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Edito","Edito el <strong>#usuario</strong> ".$registrousuario);
+          $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Edito","Edito el <strong>#usuario</strong> con el id ".$id);
                   }//else error conexion
       }//if tipo vendedor
       else {
@@ -189,7 +195,7 @@ class usuario {
             "error"=>"no"
           );
           $this->setMensajes('success','Usuario editado');
-          $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Edito","Edito el <strong>#usuario</strong> ".$registrousuario);
+          $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Edito","Edito el <strong>#usuario</strong> con el id".$id);
         }//else error conexion
       }//else tipo vendedor
        }//if clave
@@ -203,10 +209,14 @@ class usuario {
           `tipo`='".$tipo."',
           `team`='".$equipo."',
           `supervisor`='".$supervisor."',
-          `nombre`='".$nombre." ".$apellido."',
+             `nombre`='".$nombre." ".$apellido."',
+          `nombres`='".$nombre."',
+          `apellido`='".$apellido."',
           `sucursal`='".$sucursal."',
           `email`='".$email."' 
+  
            WHERE id='".$id."' ";
+
 
     
         $rs = mysqli_query($conn,$sel);
@@ -225,7 +235,7 @@ class usuario {
             "error"=>"no"
           );
           $this->setMensajes('success','Usuario editado');
-          $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Edito","Edito el <strong>#usuario</strong> ".$registrousuario);
+         $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Edito","Edito el <strong>#usuario</strong> con el id".$id);
         }//else error conexion
       }//if tipo vendedor
       else {
@@ -238,7 +248,7 @@ class usuario {
             "error"=>"no"
           );
           $this->setMensajes('success','Usuario editado');
-          $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Edito","Edito el <strong>#usuario</strong> ".$registrousuario);
+          $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Edito","Edito el <strong>#usuario</strong> con el id".$id);
         }//else error conexion
       }//else tipo vendedor
        }//else clave
@@ -283,11 +293,12 @@ public function eliminarusuario($campos) {
     }  
        }else{
 $mensa = "No tiene permisos para realizar esta accion"; 
-          $this->setMensajes('danger',$mensa);}
+          $this->setMensajes('danger',$mensa);
+        }
     }  
     /*envia los datos del usuario a editar*/
- public function detalleddeusuarios($id) {
-      $sel ="SELECT  `nombre`FROM `usuario` WHERE `id` = ".$id."";
+ public function detalledeusuarios($id) {
+      $sel ="SELECT * FROM `usuario` WHERE `id` = ".$id."";
       $conn = $this->getConMYSQL() ;
         $rs = mysqli_query($conn,$sel) or die(mysqli_error($conn));
         $res_array = array();
@@ -321,8 +332,9 @@ $mensa = "No tiene permisos para realizar esta accion";
     function add_log($fecha,$usuario,$tipo,$accion) {
       $conn = $this->getConMYSQL() ;
         $query = "
-          INSERT INTO log_data_pow (id,fecha,user,tipo,accion)";
-      $query .= "  VALUES (NULL,NOW(),'$usuario','$tipo','$accion')";
+          INSERT INTO log_data_pow (id,fecha,user,tipo,accion) 
+          VALUES (NULL,NOW(),'$usuario','$tipo','$accion')";
+          //var_dump($query);exit();
       $res=mysqli_query($conn,$query) or die(mysqli_error($conn));
   
     }

@@ -1,7 +1,8 @@
 <?php
 function conectar()
 {
-        $con = mysql_connect('localhost', 'root', '');
+	$con = mysql_connect('localhost', 'jnassr', 'Js123456');
+        //$con = mysql_connect('localhost', 'root', '');
         //$con = mysql_connect('localhost', 'power_db', '#hGbkWpdeSD;');
 	//$con = mysql_connect('192.168.0.127', 'root', 'ph2016..');
         //$con = mysql_connect('192.168.0.128', 'root', 'prohome2016');

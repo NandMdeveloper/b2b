@@ -127,11 +127,8 @@ $cartera = $cliente->getClientescartera($getzona,null,$hasta);
 
                                                   $ttlClientes = 0;                   
                                                   if(count($cartera) > 0){
-                                                  foreach ($cartera as $clien) {                           
-                                                    
-                                                           
-                                                  
-                                                ?>
+                                                  foreach ($cartera as $clien) {                         
+                                                 ?>
                                                       <tr id="<?php echo  trim($clien['co_ven']);?>">
                                                         <td><?php echo  $clien['co_ven'];?></td>
                                                         <td><?php echo  utf8_encode($clien['ven_des']);?></td>
@@ -192,7 +189,7 @@ $cartera = $cliente->getClientescartera($getzona,null,$hasta);
     <!-- DataTables JavaScript -->
     <script src="../../bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="../../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
-<script src="../../js/fc.js"></script>
+    <script src="../../js/fc.js"></script>
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
     $(document).ready(function() {
