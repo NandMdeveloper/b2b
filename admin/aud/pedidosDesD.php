@@ -1,4 +1,5 @@
 <?php
+//echo 12 ; exit();
 require_once("../lib/seg.php");
 if($_SESSION['tipo']!='9') header('Location: ../lib/php/common/logout.php');
 require_once('../lib/conex.php');
@@ -7,7 +8,7 @@ include("../lib/class/pedidos.class.php");
 $obj_pedidos= new class_pedidos;//LLAMADO A LA CLASE DE PEDIDOS
 $tot=0;
  $desde = null;
- $hasta = null
+ $hasta = null;
 if(isset($_GET['desde'])){
 
         $desde = $_GET['desde'];
