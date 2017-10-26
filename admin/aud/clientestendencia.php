@@ -73,7 +73,7 @@ $cartera = $cliente->getClientescarteraTotales($getzona,null,$hasta);
                          <h1>
                     Clientes
                     <small>registros</small>
-<a href="excelClienteActivos.php?zona=<?php echo $getzona ?>&desde=<?php echo $desde ?>&hasta=<?php echo $hasta ?>" class="fa fa-file-excel-o excel text-info" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="" data-original-title="Descargar para Excel"></a>
+                        <a href="excelClienteActivos.php?zona=<?php echo $getzona ?>&desde=<?php echo $desde ?>&hasta=<?php echo $hasta ?>" class="fa fa-file-excel-o excel text-info" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="" data-original-title="Descargar para Excel"></a>
                   </h1>
                 </div>
                 <div class="col-lg-12">
