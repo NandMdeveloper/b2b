@@ -1,4 +1,5 @@
 <?php
+
 		session_start();
 
 	if ($_SESSION['tipo'] != 9 ) {
@@ -38,7 +39,7 @@ case "agregarusuario":
 				
 					
 			}
-			header("Location: usuarioshome.php");
+			header("Location: usuarioshome.php?id=".$_POST['id']);
         break;
         /*recoge los datos de el formulario y los envia a la class para hacer la edicion  del   usuario seleccionado*/
         case "editarusuario":

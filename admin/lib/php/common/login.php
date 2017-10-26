@@ -8,9 +8,10 @@ conectar();
 if($_POST){
             $usuario=strip_tags($_POST['usuario']);
             $pass=$_POST['pass'];
+           // var_dump($pass);exit();
             unset($_POST);
             if(($usuario==true) || ($usuario!=" ")){
-                $sQuery=@mysql_query("SELECT * FROM usuario WHERE uname='$usuario'");
+                $sQuery=mysql_query("SELECT * FROM usuario WHERE uname='$usuario'");
                 if(mysql_num_rows($sQuery) == 1){
                     $fila_usuario=mysql_fetch_array($sQuery);
                     $fecha = getdate();

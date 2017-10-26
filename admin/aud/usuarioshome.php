@@ -1,4 +1,5 @@
 <?php
+ini_set('display_errors', '1');
 require_once("../lib/seg.php");
 require_once('../lib/conex.php');
 require_once('../lib/conecciones.php');
@@ -14,7 +15,7 @@ $usuarios = new usuario ();
 
 <body>
 
-    <?php require_once('../lib/php/common/menuA.php'); ?>
+    <?php require_once('../lib/php/common/menuC.php'); ?>
 <!-- Content Wrapper. Contains page content -->
 
 
@@ -87,10 +88,12 @@ $usuarios = new usuario ();
               <label for="select" class="col-lg-2 control-label" >Equipo</label>
               <div class="col-lg-4">
                 <select class="form-control" name="equipo" required>
-                   <?php if ($usuario=="rojasj" ) {?>
+                   <?php if ($usuario=="manuel" ) {?>
                   <option value=""></option>
-                     <option value="Vendedor">Vendedor</option>
+                  <option value="Vendedor">Vendedor</option>
                   <option value="Ventas">Ventas</option>
+                  <option value="Telemarketing">Telemarketing</option>
+
                    <?php }else{?>
                    <option value=""></option>
                   <option value="Vendedor">Vendedor</option>
@@ -108,10 +111,11 @@ $usuarios = new usuario ();
               <label for="select" class="col-lg-2 control-label" >Tipo</label>
               <div class="col-lg-4">
                 <select class="form-control" name="tipo" required>
-                <?php if ($usuario=="rojasj" ) {?>
+                <?php if ($usuario=="manuel" ) {?>
                   <option value=""></option>
                   <option value="1">Vendedor</option>
                   <option value="12">Ventas</option>
+                  <option value="11">Telemercadeo</option>
                    <?php }else{?>
                    <option value=""></option>
                   <option value="1">Vendedor</option>
