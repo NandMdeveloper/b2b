@@ -1,7 +1,7 @@
 <?php
   class comision {
     public $co_ven = null;
-    public  $servidor = 0; // 1 conecta servidor 134 0 servidor local 
+    public  $servidor = 1; // 1 conecta servidor 134 0 servidor local 
     public  $segmentoClave = '000004'; //  
     public  $segmentoTradicional = '000005'; // 
     public  $segmentoDetal = 'DET'; // 
@@ -2935,32 +2935,29 @@
         $nfacturas = array();
         for ($i=0; $i < count($facturas) ; $i++) { 
            $nfacturas[] = trim($facturas[$i]['doc_num']);
-           // echo $facturas[$i]['doc_num']."<br>";
         }
-       // var_dump($nfacturas);
-         // echo  "<br>================================================================================<br>";
-  
+     
         /* SE AGREGAN LAS NOTAS DE CREDITOS QUE ESTAN RELACIONADAS CON LAS FACTURAS DEL PERIODO */
         $sq_ncr = "select
-dcr.doc_num, nfv.co_ven as covendedor, ven.ven_des, nfv.co_cli, cli.cli_des,
-  sum(dcr.reng_neto) as total_bruto,
-   sum(dcr.monto_imp) as monto_imp,
- sum(dcr.reng_neto) + sum(dcr.monto_imp)  as total_neto,
-seg.co_seg, seg.seg_des, zon.co_zon,
-zon.zon_des, nfv.fec_emis, '' as fec_venc, '' as dias, '' as co_cond, '' as cond_des, '' as dias_cred,
-dcr.num_doc as factura from saDevolucionClientereng as dcr 
-INNER JOIN saDocumentoVenta as nfv on nfv.nro_doc = dcr.num_doc 
-inner JOIN saCliente as cli on nfv.co_cli = cli.co_cli 
-inner JOIN saVendedor as ven on ven.co_ven = nfv.co_ven 
-inner JOIN saSegmento as seg on cli.co_seg = seg.co_seg 
-inner JOIN saZona as zon on zon.co_zon = ven.co_zon 
-where dcr.num_doc in 
-(select doc_num from saFacturaVenta as fv where fv.fec_emis >= '".$desde."' and fv.fec_emis <= '".$hasta."' and fv.anulado = 0)
-and dcr.fe_us_in >= '".$desde."' and dcr.fe_us_in <= '".$hasta."'
-group by doc_num, nfv.co_ven,ven.ven_des,nfv.co_cli,cli.cli_des, 
-seg.co_seg, seg.seg_des, zon.co_zon,seg.co_seg, seg.seg_des, zon.co_zon,
-zon.zon_des, nfv.fec_emis, 
-dcr.num_doc";
+                dcr.doc_num, nfv.co_ven as covendedor, ven.ven_des, nfv.co_cli, cli.cli_des,
+                  sum(dcr.reng_neto) as total_bruto,
+                   sum(dcr.monto_imp) as monto_imp,
+                 sum(dcr.reng_neto) + sum(dcr.monto_imp)  as total_neto,
+                seg.co_seg, seg.seg_des, zon.co_zon,
+                zon.zon_des, nfv.fec_emis, '' as fec_venc, '' as dias, '' as co_cond, '' as cond_des, '' as dias_cred,
+                dcr.num_doc as factura from saDevolucionClientereng as dcr 
+                INNER JOIN saDocumentoVenta as nfv on nfv.nro_doc = dcr.num_doc 
+                inner JOIN saCliente as cli on nfv.co_cli = cli.co_cli 
+                inner JOIN saVendedor as ven on ven.co_ven = nfv.co_ven 
+                inner JOIN saSegmento as seg on cli.co_seg = seg.co_seg 
+                inner JOIN saZona as zon on zon.co_zon = ven.co_zon 
+                where dcr.num_doc in 
+                (select doc_num from saFacturaVenta as fv where fv.fec_emis >= '".$desde."' and fv.fec_emis <= '".$hasta." 23:59:59' and fv.anulado = 0)
+                and dcr.fe_us_in >= '".$desde."' and dcr.fe_us_in <= '".$hasta." 23:59:59'
+                group by doc_num, nfv.co_ven,ven.ven_des,nfv.co_cli,cli.cli_des, 
+                seg.co_seg, seg.seg_des, zon.co_zon,seg.co_seg, seg.seg_des, zon.co_zon,
+                zon.zon_des, nfv.fec_emis, 
+                dcr.num_doc";
               // echo $sq_ncr;
         $resulta=sqlsrv_query($conn,$sq_ncr);
         $pedidos = $this->listaPedidosBasico(null,$desde,$hasta);
@@ -3005,9 +3002,8 @@ dcr.num_doc";
             }
 
             $i++;
-
           }
-        $resultado = array_merge($facturas, $notascr);
+      $resultado = array_merge($facturas, $notascr);
       return $resultado;
 
     }
