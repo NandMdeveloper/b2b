@@ -2835,7 +2835,7 @@
               inner JOIN saZona as zon on zon.co_zon = ven.co_zon
               inner JOIN saCondicionPago as cp on cp.co_cond = fv.co_cond
               where 
-               fv.fec_emis  >= '".$desde."' and fv.fec_emis <=  '".$hasta."' 
+               fv.fec_emis  >= '".$desde."' and fv.fec_emis <= '".$hasta." 23:59:59' 
               and fv.anulado = 0
               ";
         $i=0;
