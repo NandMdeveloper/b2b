@@ -10,11 +10,9 @@
 
    
 	$facturas = $comision->listadoFacturaComisionVentas('2017-09-01','2017-10-02');
-	//var_dump($facturas); exit();
-	/*$fcobro = $comision->fechaCobroDocumento(4610);
-	var_dump($fcobro);*/
+	//print_r($facturas); 
+	exit();
 
-	//exit();
 /* ENTORNO DE PRUEBA DE DATA */
 // $data = serialize($facturas); echo strlen($data) . " bytes";
 echo "<link rel='stylesheet' href='prueba.css'>";
