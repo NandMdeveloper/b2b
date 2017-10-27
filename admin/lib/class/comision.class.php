@@ -2937,7 +2937,7 @@
            $nfacturas[] = trim($facturas[$i]['doc_num']);
         }
      
-        /* SE AGREGAN LAS NOTAS DE CREDITOS QUE ESTAN RELACIONADAS CON LAS FACTURAS DEL PERIODO */
+        /* SE AGREGAN LAS NOTAS DE CREDITOS QUE ESTAN RELACIONADAS POR DEVOLUCION CON LAS FACTURAS DEL PERIODO */
         $sq_ncr = "select
                 dcr.doc_num, nfv.co_ven as covendedor, ven.ven_des, nfv.co_cli, cli.cli_des,
                   sum(dcr.reng_neto) as total_bruto,
@@ -3003,7 +3003,70 @@
 
             $i++;
           }
-      $resultado = array_merge($facturas, $notascr);
+          
+           $fact_doc = "";
+          for($x=0;$x < count($nfacturas); $x++) {
+              $fact_doc.="'".$nfacturas[$x]."',";
+            }
+            $fact_doc = substr($fact_doc, 0, -1);
+
+          // NOTAS DE CREDITOS RELAZIONADOS CON LAS FACTURAS  
+          $sq_cr_n = "select dv.nro_doc as doc_num,dv.co_ven as covendedor,ven.ven_des, dv.co_cli, cli.cli_des,dv.total_bruto,
+            dv.monto_imp, dv.total_neto, seg.co_seg, seg.seg_des, zon.co_zon, zon.zon_des, dv.fec_emis,
+            '' as fec_venc, '' as dias, '' as co_cond, '' as cond_des, '' as dias_cred,dv.nro_orig as factura 
+            from saDocumentoVenta as dv 
+            inner JOIN saCliente as cli on dv.co_cli = cli.co_cli 
+            inner JOIN saVendedor as ven on ven.co_ven = dv.co_ven 
+            inner JOIN saSegmento as seg on cli.co_seg = seg.co_seg 
+            inner JOIN saZona as zon on zon.co_zon = ven.co_zon 
+            where dv.nro_orig in(". $fact_doc.") 
+            and dv.co_tipo_doc = 'N/CR' and dv.anulado = 0";
+      
+     
+          $resulta2=sqlsrv_query($conn,$sq_cr_n);
+          $notascr2 = array();
+          $i=0;
+          while($row=sqlsrv_fetch_array($resulta2)) {
+
+            $idRegistroFacura = array_search(trim($row['factura']),$nfacturas);  
+          
+            if (is_numeric($idRegistroFacura)) {  
+
+              $nuevosDatos = $facturas[$idRegistroFacura];
+
+              $porcenjateCal = $nuevosDatos['porcentaje'];
+              $comisionCal = $this->porcentaje($row['total_bruto'],$nuevosDatos['porcentaje']);
+              $comisionCal =  $comisionCal * -1;
+              $cal_comision = 1;
+            } else {
+              $comisionCal = 0;
+              $idRegistroFacura = 0;
+              $porcenjateCal = 0;
+              $cal_comision = 0;
+
+            }
+          
+
+            foreach($row as $key=>$value) {   
+
+              if ($key == 'total_bruto' or $key == 'total_neto' or  $key == 'monto_imp' ) {
+                
+                $notascr2[$i][$key] = $value * -1;
+
+              } else {
+                $notascr2[$i][$key] = $value;
+              }
+
+              $notascr2[$i]['comision']= $comisionCal;
+              $notascr2[$i]['porcentaje']=  $porcenjateCal;
+              $notascr2[$i]['cal_comision']=  $cal_comision;
+              $notascr2[$i]['tipodoc']="N/CR";
+
+            }
+            $i++;
+          }
+          //var_dump($notascr2);
+      $resultado = array_merge($facturas, $notascr,$notascr2);
       return $resultado;
 
     }
