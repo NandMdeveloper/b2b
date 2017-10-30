@@ -77,37 +77,42 @@
 		$objPHPExcel->setActiveSheetIndex(0) ->setCellValue('A2', "NÚMERO");
 		$objPHPExcel->setActiveSheetIndex(0) ->setCellValue('B2', "TIPO");
 		$objPHPExcel->setActiveSheetIndex(0) ->setCellValue('C2', "EMISIÓN");
-		$objPHPExcel->setActiveSheetIndex(0) ->setCellValue('D2', "COVEN");
+		$objPHPExcel->setActiveSheetIndex(0) ->setCellValue('D2', "DESPACHO");
+		$objPHPExcel->setActiveSheetIndex(0) ->setCellValue('E2', "RECIBIDO");
 
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('E2', "VENDEDOR");
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('F2', "COD");
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('G2', "CLIENTE");
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('H2', "SEGMENTO");
+		$objPHPExcel->setActiveSheetIndex(0) ->setCellValue('F2', "COVEN");
 
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('I2', "ZONA");
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('J2', "BASE");
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('K2', "IMP");
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('L2', "NETO");
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('M2', "COMISION");
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('N2', "PORCENTAJE");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('G2', "VENDEDOR");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('H2', "COD");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('I2', "CLIENTE");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('J2', "SEGMENTO");
+
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('K2', "ZONA");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('L2', "BASE");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('M2', "IMP");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('N2', "NETO");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('O2', "COMISION");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('P2', "PORCENTAJE");
 
 		//anchos de columnas
 		$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(11);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(12);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(12);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(12);
-
-		$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(40);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(12);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(12);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(70);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(18);
 
-		$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(16);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(22);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(22);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(40);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(12);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(70);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(18);
+
+		$objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(16);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(22);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(22);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(15);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(22);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(22);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('P')->setWidth(15);
 
 
 		$lineas = count($mDatos);
@@ -134,6 +139,9 @@
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('M'.$pos, $mDatos[$i]['comision']);
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('N'.$pos, $mDatos[$i]['porcentaje']);
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('O'.$pos, $mDatos[$i]['factura']);
+
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$pos, $mDatos[$i]['fecha_despacho']);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$pos, $mDatos[$i]['fecha_despacho']);
 
 		}
 	//filtrado de informacion
