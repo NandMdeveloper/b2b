@@ -285,9 +285,7 @@
         }else{
           $datos = array();
           $i=0;
-          while($row=mysqli_fetch_array($rs)) {
-
-        
+          while($row=mysqli_fetch_array($rs)) {        
             foreach($row as $key=>$value) {
               $datos[$i][$key]=$value;
             }
@@ -2920,7 +2918,7 @@
                 }
 
                  /* ELIMINAMOS LOS PARAMETROS DE DESDE Y HASTA YA QUE NO SE USARAN */
-                unset($parametros['datos'][0]['desde'],$parametros['datos'][0]['hasta']);
+           unset($parametros['datos'][0]['desde'],$parametros['datos'][0]['hasta']);
 
            $nComision = array(
               "comision"=> 0,
@@ -3043,7 +3041,7 @@
             inner JOIN saZona as zon on zon.co_zon = ven.co_zon 
             where dv.nro_orig in(". $fact_doc.") 
             and dv.co_tipo_doc = 'N/CR' and dv.anulado = 0";
-      
+
      
           $resulta2=sqlsrv_query($conn,$sq_cr_n);
           $notascr2 = array();
