@@ -2978,7 +2978,7 @@
                 dcr.num_doc";
               // echo $sq_ncr;
         $resulta=sqlsrv_query($conn,$sq_ncr);
-        $pedidos = $this->listaPedidosBasico(null,$desde,$hasta);
+        //$pedidos = $this->listaPedidosBasico(null,$desde,$hasta);
 
          $notascr = array();
          $i=0;
