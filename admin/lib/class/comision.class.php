@@ -2836,14 +2836,14 @@
               and fv.anulado = 0
               ";
         $i=0;
-        
+        //echo  $sql;
         $conn = conectarSQlSERVER();
         $result=sqlsrv_query($conn,$sql);
        // echo $sql;
         $facturas = array();
         $lista_parametros = array();
         $lista_parametros = $this->getParametros($desde,$hasta);
-       
+
         /* Se lista pedididos despachadoa */
         $pedidos = $this->listaPedidosBasico(null,$desde,$hasta);
 
@@ -2852,19 +2852,19 @@
           $facturas_des[] = $pedidos[$g]['factura'];             
         }
 
+
         //$gerentesregionales = $this->getGerentesRegional(null);
         $gerentesregionales = $this->getGerentesRegional2(null,$desde,$hasta);
         $vendedores_ex = array('','010');         
-
            
          for ($g=0; $g < count($gerentesregionales['datos']) ; $g++) { 
            if (!empty($gerentesregionales['datos'][$g]['co_ven'])) { 
              $vendedores_ex[] = $gerentesregionales['datos'][$g]['co_ven'];
            }
          }
-          //var_dump($vendedores_ex);
+ 
            while($row=sqlsrv_fetch_array($result)) {
-              $idRegistroFacura = array_search(trim($row['doc_num']),$facturas_des);           
+              $idRegistroFacura = array_search(trim((int)$row['doc_num']),$facturas_des);           
               $fecha_despacho = "";
               $fecha_recibido = "";
 
@@ -2932,7 +2932,7 @@
             );
 
             $idvend = array_search(trim($row['covendedor']),$vendedores_ex); 
-
+            //var_dump($parametros);
             if ($idvend == FALSE) {
                  $nComision = $this->calculoBasico2($datos,$parametros,"ventas");
             }
