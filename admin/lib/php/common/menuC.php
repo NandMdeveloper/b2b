@@ -38,7 +38,7 @@
                 <div id="sidebar" class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                    <?php $us = $_SESSION['user']; ?>
-                     <?php if ($us=="javier"or $us=="njose" or $us=="jvera" or $us=="manuel") { ?>
+                     <?php if ($us=="javier"or $us=="njose" or $us=="jvera" or $us=="manuel" or $us=="enmary" ) { ?>
                         <li>
                             <a href="#"><i class="fa fa-user "></i> <span>Usuarios</span>
                             </a>
@@ -48,6 +48,22 @@
                            </li>  
                             <?php } ?>  
                         <li>
+                        <?php $us = $_SESSION['user']; ?>
+                     <?php if ($us=="enmary") { ?>
+                                 <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i><span> Pedidos</span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a href="home.php?status=e"><span>En Espera</span></a></li>
+                                <li><a href="home.php?status=r"><span>Pre-Aprobados</span></a></li>
+                                <li><a href="home.php?status=a"><span>Aprobados</span></a></li>
+                                <li><a href="home.php?status=n"><span>Clientes Nuevos</span></a></li>
+                                <li><a href="home.php?status=l"><span>Anulados</span></a></li>
+                                <li><a href="pedidosDes.php"><span>Retenido</span></a></li>
+                                <li><a href="pedidosDesA.php"><span>En Apartado</span></a></li>
+                                <li><a href="pedidosDesF.php"><span>Facturado</span></a></li>
+                                <li><a href="pedidosDesD.php"><span>Despachados</span></a></li>
+                                <li><a href="pedidosDesR.php"><span>Entregados</span></a></li>
+                            </ul>
+                              <?php } else  { ?>
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i><span> Pedidos</span></a>
                             <ul class="nav nav-second-level">
                                 <li><a href="adminT.php?status=e"><span>En Espera</span></a></li>
@@ -62,6 +78,7 @@
                                 <li><a href="pedidosDesD.php"><span>Despachados</span></a></li>
                                 <li><a href="pedidosDesR.php"><span>Entregados</span></a></li>
                             </ul>
+                            <?php } ?>
                             <!-- /.nav-second-level -->
                         </li>
                         <li>

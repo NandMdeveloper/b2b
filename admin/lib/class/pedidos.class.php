@@ -292,6 +292,7 @@ function get_ped_desp($id=''){
 	pedidos_des.fecha_aprobado,
 	pedidos_des.factura,
 	pedidos_des.imp,
+	pedidos_des.anulado,
 	vendedor.ven_des,
 (SELECT cli_des FROM clientes WHERE clientes.co_cli=pedidos_des.co_cli) as cli_des,
 (SELECT ciudad FROM clientes WHERE clientes.co_cli=pedidos_des.co_cli) as ciudad
@@ -299,7 +300,7 @@ FROM
 	pedidos_des
 INNER JOIN vendedor ON pedidos_des.co_ven = vendedor.co_ven
 WHERE
-	STATUS = 1 ";
+	STATUS = 1 and pedidos_des.anulado= 1";
             if($id){ $sQuery.="AND doc_num = '$id' ";      }
             $result=mysql_query($sQuery) or die(mysql_error());
 		$i=0;

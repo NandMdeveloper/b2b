@@ -14,6 +14,8 @@
     <!-- MetisMenu CSS -->
     <link href="../../bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
 
+<link href="../../bower_components/datatables/media/css/dataTables.bootstrap.min.css" rel="stylesheet">
+
     <!-- Timeline CSS -->
     <link href="../../dist/css/timeline.css" rel="stylesheet">
 

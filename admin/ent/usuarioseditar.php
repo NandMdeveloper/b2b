@@ -1,24 +1,24 @@
-<?php
+<?php 
+ini_set('display_errors', '1');
 require_once("../lib/seg.php");
 require_once('../lib/conex.php');
 require_once('../lib/conecciones.php');
 include("../lib/class/usuario.class.php");
 $usuarios= new usuario ();
 
-$usuario=$_SESSION['usuario'];
+$usuario=$_SESSION['user'];
 if (isset($_GET['id'])) {
   $id=$_GET['id'];
+
 }else{
 $id=$_POST['id'];
 
 }
-$edituser = $usuarios->detalleddeusuarios($id);
-$nombre=explode('',$edituser[0]['nombre']);
-$name=$nombre[0];
-$apellido=$nombre[1];
+$edituser = $usuarios->detalledeusuarios($id);
+
 ?>
 <?php require_once '../lib/php/common/headA.php'; ?>
-<?php require_once '../lib/php/common/menuA.php'; ?>
+<?php require_once '../lib/php/common/menuC.php'; ?>
 <!-- Content Wrapper. Contains page content -->
   <link rel="stylesheet" href="dist/css/jquery.tagit.css">
 
@@ -52,7 +52,7 @@ $apellido=$nombre[1];
                 <label for="inputEmail" class="col-lg-2 control-label">Usuario</label>
               <div class="col-lg-4">
                        <input class="form-control " condicion="1" name="usuario" id="usuario" placeholder="Nuevo usuario" type="text"  value="<?php echo utf8_encode($edituser[0]['uname']); ?>" disabled>
-                       <input class="form-control" name="id"  id="id"  type="hidden"   value="<?php echo $edituser[0]['id']; ?>">
+                       <input class="form-control" name="id"  id="id"  type="hidden"   value="<?php echo $edituser[0]['id_usuario']; ?>">
               </div>
               
               <label for="inputEmail" class="col-lg-2 control-label">Contraseña</label>
@@ -81,17 +81,17 @@ $apellido=$nombre[1];
               </div>
             </div>
             <div class="form-group">
-               <label for="select" class="col-lg-2 control-label" >Equipo</label>
+           <label for="select" class="col-lg-2 control-label" >Equipo</label>
               <div class="col-lg-4">
                 <select class="form-control" name="equipo" required>
-                   <?php if ($usuario=="manuel" ) {?>
+                   <?php if ($usuario=="manuel" or $usuario=="enmary" ) {?>
                   <option value="<?php echo utf8_encode($edituser[0]['team']); ?>"><?php echo utf8_encode($edituser[0]['team']); ?></option>
                   <option value="Vendedor">Vendedor</option>
                   <option value="Ventas">Ventas</option>
                   <option value="Telemarketing">Telemarketing</option>
 
                    <?php }else{?>
-                 <option value="<?php echo utf8_encode($edituser[0]['team']); ?>"><?php echo utf8_encode($edituser[0]['team']); ?></option>
+                   <option value="<?php echo utf8_encode($edituser[0]['team']); ?>"><?php echo utf8_encode($edituser[0]['team']); ?></option>
                   <option value="Vendedor">Vendedor</option>
                   <option value="Ventas">Ventas</option>
                   <option value="Coordinador">Coordinador</option>
@@ -107,13 +107,13 @@ $apellido=$nombre[1];
               <label for="select" class="col-lg-2 control-label" >Tipo</label>
               <div class="col-lg-4">
                 <select class="form-control" name="tipo" required>
-                <?php if ($usuario=="manuel" ) {?>
+                <?php if ($usuario=="manuel" or $usuario=="enmary" ) {?>
                   <option value="<?php echo utf8_encode($edituser[0]['tipo']); ?>"><?php echo utf8_encode($edituser[0]['descripcion']); ?></option>
                   <option value="1">Vendedor</option>
                   <option value="12">Ventas</option>
                   <option value="11">Telemercadeo</option>
                    <?php }else{?>
-                   <option value="<?php echo utf8_encode($edituser[0]['tipo']); ?>"><?php echo utf8_encode($edituser[0]['descripcion']); ?></option>
+                  <option value="<?php echo utf8_encode($edituser[0]['tipo']); ?>"><?php echo utf8_encode($edituser[0]['descripcion']); ?></option>
                   <option value="1">Vendedor</option>
                   <option value="2">Coordinador</option>
                   <option value="3">Gerente de Ventas</option>
