@@ -154,8 +154,8 @@
 	$suma = $lineas + 3;
 	$hasta = $suma - 1;
 
-	$objPHPExcel->getActiveSheet()->getStyle('K3:K'.$lineas)->getNumberFormat()->setFormatCode('#,##0.00');
-	$objPHPExcel->getActiveSheet()->getStyle('J3:J'.$lineas)->getNumberFormat()->setFormatCode('#,##0.00');
+	$objPHPExcel->getActiveSheet()->getStyle('O3:O'.$lineas)->getNumberFormat()->setFormatCode('#,##0.00');
+	$objPHPExcel->getActiveSheet()->getStyle('N3:N'.$lineas)->getNumberFormat()->setFormatCode('#,##0.00');
 	$objPHPExcel->getActiveSheet()->getStyle('L3:L'.$lineas)->getNumberFormat()->setFormatCode('#,##0.00');
 	$objPHPExcel->getActiveSheet()->getStyle('M3:M'.$lineas)->getNumberFormat()->setFormatCode('#,##0.00');
 
@@ -189,10 +189,10 @@ $objPHPExcel->getActiveSheet()
         ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
 	//#.##0,00
-	$objPHPExcel->getActiveSheet()->getStyle('JL'.$suma.':P'.$suma)->applyFromArray($estilofactura);
+	$objPHPExcel->getActiveSheet()->getStyle('L'.$suma.':O'.$suma)->applyFromArray($estilofactura);
 	$objPHPExcel->getActiveSheet()->getStyle('A1')->applyFromArray($estilofactura);
 	$objPHPExcel->getActiveSheet()->getStyle('A2:N2')->applyFromArray($styleArray);
-	$objPHPExcel->getActiveSheet()->getStyle('J'.$suma.':M'.$suma)->getNumberFormat()->setFormatCode('#,##0.00');
+	$objPHPExcel->getActiveSheet()->getStyle('L'.$suma.':O'.$suma)->getNumberFormat()->setFormatCode('#,##0.00');
 	// Nombre la hoja de calculo
 	$objPHPExcel->getActiveSheet()->setTitle("Comisiones");
 
