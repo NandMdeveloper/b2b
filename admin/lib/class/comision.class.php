@@ -2973,7 +2973,7 @@
                 inner JOIN saZona as zon on zon.co_zon = ven.co_zon 
                 where dcr.num_doc in 
                 (select doc_num from saFacturaVenta as fv where fv.fec_emis >= '".$desde."' and fv.fec_emis <= '".$hasta." 23:59:59' and fv.anulado = 0)
-                and dcr.fe_us_in >= '".$desde."' and dcr.fe_us_in <= '".$hasta." 23:59:59'
+                and dcr.fe_us_in >= '".$desde."' and dcr.fe_us_in <= '".$hasta." 23:59:59' and nfv.anulado = 0
                 group by doc_num, nfv.co_ven,ven.ven_des,nfv.co_cli,cli.cli_des, 
                 seg.co_seg, seg.seg_des, zon.co_zon,seg.co_seg, seg.seg_des, zon.co_zon,
                 zon.zon_des, nfv.fec_emis, 
