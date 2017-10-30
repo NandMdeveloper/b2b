@@ -576,8 +576,7 @@
       $apellido = trim(ucwords(strtolower($datos['apellido'])));
 
       if (!empty($nombre) and !empty($apellido)) {
-
-     
+ 
 
       $conn = $this->getConMYSQL() ;
         $usuario=$_SESSION['user'];
@@ -2800,7 +2799,7 @@
     return false;
 }
     /**
-     * [listadoFacturaComisionSaldoBasico2 description]
+     * [listadoFacturaComisionVentas description]
      * @param  Date $desde Fecha inicion
      * @param  Date $hasta Feha limite
      * @return Arry        facturas
@@ -2853,7 +2852,8 @@
           $facturas_des[] = $pedidos[$g]['factura'];             
         }
 
-        $gerentesregionales = $this->getGerentesRegional(null);
+        //$gerentesregionales = $this->getGerentesRegional(null);
+        $gerentesregionales = $this->getGerentesRegional2(null,$desde,$hasta);
         $vendedores_ex = array('','010');         
 
            
@@ -2862,7 +2862,7 @@
              $vendedores_ex[] = $gerentesregionales['datos'][$g]['co_ven'];
            }
          }
-           
+          //var_dump($vendedores_ex);
            while($row=sqlsrv_fetch_array($result)) {
               $idRegistroFacura = array_search(trim($row['doc_num']),$facturas_des);           
               $fecha_despacho = "";
@@ -3785,15 +3785,15 @@
         $gerentes = $this->getGerenteRegion(null,$desde,$hasta);
 
         /* VENDEDORES QUE NO PRODUCEN COMISIONES */
-       // $gerentesregionales = $this->getGerentesRegional(null);
+        // $gerentesregionales = $this->getGerentesRegional(null);
         $gerentesregionales = $this->getGerentesRegional2(null,$desde,$hasta);
         $vendedores_ex = array('','010');
-        
         for ($i=0; $i < count($gerentesregionales['datos']) ; $i++) { 
           if (!empty($gerentesregionales['datos'][$i]['co_ven'])) { 
             $vendedores_ex[] = $gerentesregionales['datos'][$i]['co_ven'];
           }
         }
+
      
         for($i=0; $i < count( $facturas) ; $i++) {
 
