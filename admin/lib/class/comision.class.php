@@ -2846,42 +2846,64 @@
         $facturas = array();
         $lista_parametros = array();
         $lista_parametros = $this->getParametros($desde,$hasta);
+       
+        /* Se lista pedididos despachadoa */
+        $pedidos = $this->listaPedidosBasico(null,$desde,$hasta);
 
-         $gerentesregionales = $this->getGerentesRegional(null);
-          $vendedores_ex = array('','010');
+        /* Se crea indice de pedidos */
+        for ($g=0; $g < count($pedidos) ; $g++) {             
+          $facturas_des[] = $pedidos[$g]['factura'];             
+        }
+
+        $gerentesregionales = $this->getGerentesRegional(null);
+        $vendedores_ex = array('','010');         
+
            
-           for ($g=0; $g < count($gerentesregionales['datos']) ; $g++) { 
-             if (!empty($gerentesregionales['datos'][$g]['co_ven'])) { 
-               $vendedores_ex[] = $gerentesregionales['datos'][$g]['co_ven'];
-             }
+         for ($g=0; $g < count($gerentesregionales['datos']) ; $g++) { 
+           if (!empty($gerentesregionales['datos'][$g]['co_ven'])) { 
+             $vendedores_ex[] = $gerentesregionales['datos'][$g]['co_ven'];
            }
+         }
            
            while($row=sqlsrv_fetch_array($result)) {
-               
-                $datos = array(
-                  'co_seg'=> trim($row['co_seg']),
-                  'co_ven'=> trim($row['covendedor']),
-                  'condicion'=>trim($row['co_cond']),
-                  'saldo_factura'=>0,
-                  'diascalle'=> null,
-                  'total_bruto'=>$row['total_bruto'],
-                  'fVencimiento'=>null,
-                  'fcobro'=>null,
-                  'cneg'=> trim($row['dias_cred'])
-                );
-                $fe = explode("-",$row['fec_emis']->format("Y-m-d"));
-      
+              $idRegistroFacura = array_search(trim($row['doc_num']),$facturas_des);           
+              $fecha_despacho = "";
+              $fecha_recibido = "";
 
+              if (!empty($idRegistroFacura)) {
 
-                $mes_doc = (int)$fe[1];
+                $facturaRecibido = $pedidos[$idRegistroFacura];       
+                if ($facturaRecibido['fecha_despacho']!="0000-00-00" and $facturaRecibido['fecha_despacho']!=null) {
+                  $fecha_despacho = date_format(date_create($facturaRecibido['fecha_despacho']),'d/m/Y');
+                }       
+                if ($facturaRecibido['fecha_recibido']!="0000-00-00" and $facturaRecibido['fecha_recibido']!=null) {                
+                  $fecha_recibido = date_format(date_create($facturaRecibido['fecha_recibido']),'d/m/Y');
+                }   
 
-                $cann = $lista_parametros[$mes_doc]['cortes'];
+              }
+
+              $datos = array(
+                'co_seg'=> trim($row['co_seg']),
+                'co_ven'=> trim($row['covendedor']),
+                'condicion'=>trim($row['co_cond']),
+                'saldo_factura'=>0,
+                'diascalle'=> null,
+                'total_bruto'=>$row['total_bruto'],
+                'fVencimiento'=>null,
+                'fcobro'=>null,
+                'cneg'=> trim($row['dias_cred'])
+              );
+                
+              $fe = explode("-",$row['fec_emis']->format("Y-m-d"));
+              $mes_doc = (int)$fe[1];
+
+              $cann = $lista_parametros[$mes_doc]['cortes'];
 
                 if ($cann == 1) {
                     $parametros = $lista_parametros[$mes_doc]['datos'];
                     $facturas[$i]['corte'] = "unico";
                     $entra = 1;
-                }else{                    
+                } else {                    
                     for ($l=0; $l <  $cann  ; $l++) {    
                       /* comparamos fecha */
                         $fecha_desde = new DateTime($lista_parametros[$mes_doc]['datos'][$l]['desde']);
@@ -2899,12 +2921,7 @@
 
                  /* ELIMINAMOS LOS PARAMETROS DE DESDE Y HASTA YA QUE NO SE USARAN */
                 unset($parametros['datos'][0]['desde'],$parametros['datos'][0]['hasta']);
-           /* $cuentasClaves = $this->getCuentasClaves('01',null);
 
-          for($c=0;$c < count($cuentasClaves); $c++) {
-               $vendedores_ex[]= $cuentasClaves[$c]['co_ven'];
-            }
-*/
            $nComision = array(
               "comision"=> 0,
               "reserva"=> 0,
@@ -2926,7 +2943,10 @@
               $facturas[$i]['comision']=$nComision['comision'];
               $facturas[$i]['porcentaje']=$nComision['porcentaje'];
               $facturas[$i]['cal_comision']=$nComision['cal_comision'];
+
               $facturas[$i]['tipodoc']="Factura";
+              $facturas[$i]['fecha_despacho']=$fecha_despacho;
+              $facturas[$i]['fecha_recibido']=$fecha_recibido;
 
             }
             $i++;
@@ -2998,6 +3018,8 @@
               $notascr[$i]['porcentaje']=  $porcenjateCal;
               $notascr[$i]['cal_comision']=  $cal_comision;
               $notascr[$i]['tipodoc']="N/CR";
+              $notascr[$i]['fecha_despacho']= "";
+              $notascr[$i]['fecha_recibido']= "";
 
             }
 
@@ -3060,7 +3082,10 @@
               $notascr2[$i]['comision']= $comisionCal;
               $notascr2[$i]['porcentaje']=  $porcenjateCal;
               $notascr2[$i]['cal_comision']=  $cal_comision;
+
               $notascr2[$i]['tipodoc']="N/CR";
+              $notascr2[$i]['fecha_despacho']="";
+              $notascr2[$i]['fecha_recibido']="";
 
             }
             $i++;
