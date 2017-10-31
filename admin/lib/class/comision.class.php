@@ -1,7 +1,7 @@
 <?php
   class comision {
     public $co_ven = null;
-    public  $servidor = 0; // 1 conecta servidor 134 0 servidor local 
+    public  $servidor = 1; // 1 conecta servidor 134 0 servidor local 
     public  $segmentoClave = '000004'; //  
     public  $segmentoTradicional = '000005'; // 
     public  $segmentoDetal = 'DET'; // 
@@ -285,9 +285,7 @@
         }else{
           $datos = array();
           $i=0;
-          while($row=mysqli_fetch_array($rs)) {
-
-        
+          while($row=mysqli_fetch_array($rs)) {        
             foreach($row as $key=>$value) {
               $datos[$i][$key]=$value;
             }
@@ -578,8 +576,7 @@
       $apellido = trim(ucwords(strtolower($datos['apellido'])));
 
       if (!empty($nombre) and !empty($apellido)) {
-
-     
+ 
 
       $conn = $this->getConMYSQL() ;
         $usuario=$_SESSION['user'];
@@ -2802,7 +2799,7 @@
     return false;
 }
     /**
-     * [listadoFacturaComisionSaldoBasico2 description]
+     * [listadoFacturaComisionVentas description]
      * @param  Date $desde Fecha inicion
      * @param  Date $hasta Feha limite
      * @return Arry        facturas
@@ -2835,11 +2832,11 @@
               inner JOIN saZona as zon on zon.co_zon = ven.co_zon
               inner JOIN saCondicionPago as cp on cp.co_cond = fv.co_cond
               where 
-               fv.fec_emis  >= '".$desde."' and fv.fec_emis <=  '".$hasta."' 
+               fv.fec_emis  >= '".$desde."' and fv.fec_emis <= '".$hasta." 23:59:59' 
               and fv.anulado = 0
               ";
         $i=0;
-        
+        //echo  $sql;
         $conn = conectarSQlSERVER();
         $result=sqlsrv_query($conn,$sql);
        // echo $sql;
@@ -2847,41 +2844,64 @@
         $lista_parametros = array();
         $lista_parametros = $this->getParametros($desde,$hasta);
 
-         $gerentesregionales = $this->getGerentesRegional(null);
-          $vendedores_ex = array('','010');
+        /* Se lista pedididos despachadoa */
+        $pedidos = $this->listaPedidosBasico(null,$desde,$hasta);
+
+        /* Se crea indice de pedidos */
+        for ($g=0; $g < count($pedidos) ; $g++) {             
+          $facturas_des[] = $pedidos[$g]['factura'];             
+        }
+
+
+        //$gerentesregionales = $this->getGerentesRegional(null);
+        $gerentesregionales = $this->getGerentesRegional2(null,$desde,$hasta);
+        $vendedores_ex = array('','010');         
            
-           for ($g=0; $g < count($gerentesregionales['datos']) ; $g++) { 
-             if (!empty($gerentesregionales['datos'][$g]['co_ven'])) { 
-               $vendedores_ex[] = $gerentesregionales['datos'][$g]['co_ven'];
-             }
+         for ($g=0; $g < count($gerentesregionales['datos']) ; $g++) { 
+           if (!empty($gerentesregionales['datos'][$g]['co_ven'])) { 
+             $vendedores_ex[] = $gerentesregionales['datos'][$g]['co_ven'];
            }
-           
+         }
+ 
            while($row=sqlsrv_fetch_array($result)) {
-               
-                $datos = array(
-                  'co_seg'=> trim($row['co_seg']),
-                  'co_ven'=> trim($row['covendedor']),
-                  'condicion'=>trim($row['co_cond']),
-                  'saldo_factura'=>0,
-                  'diascalle'=> null,
-                  'total_bruto'=>$row['total_bruto'],
-                  'fVencimiento'=>null,
-                  'fcobro'=>null,
-                  'cneg'=> trim($row['dias_cred'])
-                );
-                $fe = explode("-",$row['fec_emis']->format("Y-m-d"));
-      
+              $idRegistroFacura = array_search(trim((int)$row['doc_num']),$facturas_des);           
+              $fecha_despacho = "";
+              $fecha_recibido = "";
 
+              if (!empty($idRegistroFacura)) {
 
-                $mes_doc = (int)$fe[1];
+                $facturaRecibido = $pedidos[$idRegistroFacura];       
+                if ($facturaRecibido['fecha_despacho']!="0000-00-00" and $facturaRecibido['fecha_despacho']!=null) {
+                  $fecha_despacho = date_format(date_create($facturaRecibido['fecha_despacho']),'d/m/Y');
+                }       
+                if ($facturaRecibido['fecha_recibido']!="0000-00-00" and $facturaRecibido['fecha_recibido']!=null) {                
+                  $fecha_recibido = date_format(date_create($facturaRecibido['fecha_recibido']),'d/m/Y');
+                }   
 
-                $cann = $lista_parametros[$mes_doc]['cortes'];
+              }
+
+              $datos = array(
+                'co_seg'=> trim($row['co_seg']),
+                'co_ven'=> trim($row['covendedor']),
+                'condicion'=>trim($row['co_cond']),
+                'saldo_factura'=>0,
+                'diascalle'=> null,
+                'total_bruto'=>$row['total_bruto'],
+                'fVencimiento'=>null,
+                'fcobro'=>null,
+                'cneg'=> trim($row['dias_cred'])
+              );
+                
+              $fe = explode("-",$row['fec_emis']->format("Y-m-d"));
+              $mes_doc = (int)$fe[1];
+
+              $cann = $lista_parametros[$mes_doc]['cortes'];
 
                 if ($cann == 1) {
                     $parametros = $lista_parametros[$mes_doc]['datos'];
                     $facturas[$i]['corte'] = "unico";
                     $entra = 1;
-                }else{                    
+                } else {                    
                     for ($l=0; $l <  $cann  ; $l++) {    
                       /* comparamos fecha */
                         $fecha_desde = new DateTime($lista_parametros[$mes_doc]['datos'][$l]['desde']);
@@ -2898,13 +2918,8 @@
                 }
 
                  /* ELIMINAMOS LOS PARAMETROS DE DESDE Y HASTA YA QUE NO SE USARAN */
-                unset($parametros['datos'][0]['desde'],$parametros['datos'][0]['hasta']);
-           /* $cuentasClaves = $this->getCuentasClaves('01',null);
+           unset($parametros['datos'][0]['desde'],$parametros['datos'][0]['hasta']);
 
-          for($c=0;$c < count($cuentasClaves); $c++) {
-               $vendedores_ex[]= $cuentasClaves[$c]['co_ven'];
-            }
-*/
            $nComision = array(
               "comision"=> 0,
               "reserva"=> 0,
@@ -2917,7 +2932,7 @@
             );
 
             $idvend = array_search(trim($row['covendedor']),$vendedores_ex); 
-
+            //var_dump($parametros);
             if ($idvend == FALSE) {
                  $nComision = $this->calculoBasico2($datos,$parametros,"ventas");
             }
@@ -2926,7 +2941,10 @@
               $facturas[$i]['comision']=$nComision['comision'];
               $facturas[$i]['porcentaje']=$nComision['porcentaje'];
               $facturas[$i]['cal_comision']=$nComision['cal_comision'];
+
               $facturas[$i]['tipodoc']="Factura";
+              $facturas[$i]['fecha_despacho']=$fecha_despacho;
+              $facturas[$i]['fecha_recibido']=$fecha_recibido;
 
             }
             $i++;
@@ -2935,35 +2953,32 @@
         $nfacturas = array();
         for ($i=0; $i < count($facturas) ; $i++) { 
            $nfacturas[] = trim($facturas[$i]['doc_num']);
-           // echo $facturas[$i]['doc_num']."<br>";
         }
-       // var_dump($nfacturas);
-         // echo  "<br>================================================================================<br>";
-  
-        /* SE AGREGAN LAS NOTAS DE CREDITOS QUE ESTAN RELACIONADAS CON LAS FACTURAS DEL PERIODO */
+     
+        /* SE AGREGAN LAS NOTAS DE CREDITOS QUE ESTAN RELACIONADAS POR DEVOLUCION CON LAS FACTURAS DEL PERIODO */
         $sq_ncr = "select
-dcr.doc_num, nfv.co_ven as covendedor, ven.ven_des, nfv.co_cli, cli.cli_des,
-  sum(dcr.reng_neto) as total_bruto,
-   sum(dcr.monto_imp) as monto_imp,
- sum(dcr.reng_neto) + sum(dcr.monto_imp)  as total_neto,
-seg.co_seg, seg.seg_des, zon.co_zon,
-zon.zon_des, nfv.fec_emis, '' as fec_venc, '' as dias, '' as co_cond, '' as cond_des, '' as dias_cred,
-dcr.num_doc as factura from saDevolucionClientereng as dcr 
-INNER JOIN saDocumentoVenta as nfv on nfv.nro_doc = dcr.num_doc 
-inner JOIN saCliente as cli on nfv.co_cli = cli.co_cli 
-inner JOIN saVendedor as ven on ven.co_ven = nfv.co_ven 
-inner JOIN saSegmento as seg on cli.co_seg = seg.co_seg 
-inner JOIN saZona as zon on zon.co_zon = ven.co_zon 
-where dcr.num_doc in 
-(select doc_num from saFacturaVenta as fv where fv.fec_emis >= '".$desde."' and fv.fec_emis <= '".$hasta."' and fv.anulado = 0)
-and dcr.fe_us_in >= '".$desde."' and dcr.fe_us_in <= '".$hasta."'
-group by doc_num, nfv.co_ven,ven.ven_des,nfv.co_cli,cli.cli_des, 
-seg.co_seg, seg.seg_des, zon.co_zon,seg.co_seg, seg.seg_des, zon.co_zon,
-zon.zon_des, nfv.fec_emis, 
-dcr.num_doc";
+                dcr.doc_num, nfv.co_ven as covendedor, ven.ven_des, nfv.co_cli, cli.cli_des,
+                  sum(dcr.reng_neto) as total_bruto,
+                   sum(dcr.monto_imp) as monto_imp,
+                 sum(dcr.reng_neto) + sum(dcr.monto_imp)  as total_neto,
+                seg.co_seg, seg.seg_des, zon.co_zon,
+                zon.zon_des, nfv.fec_emis, '' as fec_venc, '' as dias, '' as co_cond, '' as cond_des, '' as dias_cred,
+                dcr.num_doc as factura from saDevolucionClientereng as dcr 
+                INNER JOIN saDocumentoVenta as nfv on nfv.nro_doc = dcr.num_doc 
+                inner JOIN saCliente as cli on nfv.co_cli = cli.co_cli 
+                inner JOIN saVendedor as ven on ven.co_ven = nfv.co_ven 
+                inner JOIN saSegmento as seg on cli.co_seg = seg.co_seg 
+                inner JOIN saZona as zon on zon.co_zon = ven.co_zon 
+                where dcr.num_doc in 
+                (select doc_num from saFacturaVenta as fv where fv.fec_emis >= '".$desde."' and fv.fec_emis <= '".$hasta." 23:59:59' and fv.anulado = 0)
+                and dcr.fe_us_in >= '".$desde."' and dcr.fe_us_in <= '".$hasta." 23:59:59' and nfv.anulado = 0
+                group by doc_num, nfv.co_ven,ven.ven_des,nfv.co_cli,cli.cli_des, 
+                seg.co_seg, seg.seg_des, zon.co_zon,seg.co_seg, seg.seg_des, zon.co_zon,
+                zon.zon_des, nfv.fec_emis, 
+                dcr.num_doc";
               // echo $sq_ncr;
         $resulta=sqlsrv_query($conn,$sq_ncr);
-        $pedidos = $this->listaPedidosBasico(null,$desde,$hasta);
+        //$pedidos = $this->listaPedidosBasico(null,$desde,$hasta);
 
          $notascr = array();
          $i=0;
@@ -3001,13 +3016,80 @@ dcr.num_doc";
               $notascr[$i]['porcentaje']=  $porcenjateCal;
               $notascr[$i]['cal_comision']=  $cal_comision;
               $notascr[$i]['tipodoc']="N/CR";
+              $notascr[$i]['fecha_despacho']= "";
+              $notascr[$i]['fecha_recibido']= "";
 
             }
 
             $i++;
-
           }
-        $resultado = array_merge($facturas, $notascr);
+          
+           $fact_doc = "";
+          for($x=0;$x < count($nfacturas); $x++) {
+              $fact_doc.="'".$nfacturas[$x]."',";
+            }
+            $fact_doc = substr($fact_doc, 0, -1);
+
+          // NOTAS DE CREDITOS RELAZIONADOS CON LAS FACTURAS  
+          $sq_cr_n = "select dv.nro_doc as doc_num,dv.co_ven as covendedor,ven.ven_des, dv.co_cli, cli.cli_des,dv.total_bruto,
+            dv.monto_imp, dv.total_neto, seg.co_seg, seg.seg_des, zon.co_zon, zon.zon_des, dv.fec_emis,
+            '' as fec_venc, '' as dias, '' as co_cond, '' as cond_des, '' as dias_cred,dv.nro_orig as factura 
+            from saDocumentoVenta as dv 
+            inner JOIN saCliente as cli on dv.co_cli = cli.co_cli 
+            inner JOIN saVendedor as ven on ven.co_ven = dv.co_ven 
+            inner JOIN saSegmento as seg on cli.co_seg = seg.co_seg 
+            inner JOIN saZona as zon on zon.co_zon = ven.co_zon 
+            where dv.nro_orig in(". $fact_doc.") 
+            and dv.co_tipo_doc = 'N/CR' and dv.anulado = 0";
+
+     
+          $resulta2=sqlsrv_query($conn,$sq_cr_n);
+          $notascr2 = array();
+          $i=0;
+          while($row=sqlsrv_fetch_array($resulta2)) {
+
+            $idRegistroFacura = array_search(trim($row['factura']),$nfacturas);  
+          
+            if (is_numeric($idRegistroFacura)) {  
+
+              $nuevosDatos = $facturas[$idRegistroFacura];
+
+              $porcenjateCal = $nuevosDatos['porcentaje'];
+              $comisionCal = $this->porcentaje($row['total_bruto'],$nuevosDatos['porcentaje']);
+              $comisionCal =  $comisionCal * -1;
+              $cal_comision = 1;
+            } else {
+              $comisionCal = 0;
+              $idRegistroFacura = 0;
+              $porcenjateCal = 0;
+              $cal_comision = 0;
+
+            }
+          
+
+            foreach($row as $key=>$value) {   
+
+              if ($key == 'total_bruto' or $key == 'total_neto' or  $key == 'monto_imp' ) {
+                
+                $notascr2[$i][$key] = $value * -1;
+
+              } else {
+                $notascr2[$i][$key] = $value;
+              }
+
+              $notascr2[$i]['comision']= $comisionCal;
+              $notascr2[$i]['porcentaje']=  $porcenjateCal;
+              $notascr2[$i]['cal_comision']=  $cal_comision;
+
+              $notascr2[$i]['tipodoc']="N/CR";
+              $notascr2[$i]['fecha_despacho']="";
+              $notascr2[$i]['fecha_recibido']="";
+
+            }
+            $i++;
+          }
+          //var_dump($notascr2);
+      $resultado = array_merge($facturas, $notascr,$notascr2);
       return $resultado;
 
     }
@@ -3703,15 +3785,15 @@ dcr.num_doc";
         $gerentes = $this->getGerenteRegion(null,$desde,$hasta);
 
         /* VENDEDORES QUE NO PRODUCEN COMISIONES */
-       // $gerentesregionales = $this->getGerentesRegional(null);
+        // $gerentesregionales = $this->getGerentesRegional(null);
         $gerentesregionales = $this->getGerentesRegional2(null,$desde,$hasta);
         $vendedores_ex = array('','010');
-        
         for ($i=0; $i < count($gerentesregionales['datos']) ; $i++) { 
           if (!empty($gerentesregionales['datos'][$i]['co_ven'])) { 
             $vendedores_ex[] = $gerentesregionales['datos'][$i]['co_ven'];
           }
         }
+
      
         for($i=0; $i < count( $facturas) ; $i++) {
 
