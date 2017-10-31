@@ -6,10 +6,10 @@ conectar();
 include("../lib/class/pedidos.class.php");
 $obj_pedidos= new class_pedidos;//LLAMADO A LA CLASE DE PEDIDOS
 
-$status=strip_tags($_GET['status']);
+//$status=strip_tags($_GET['status']);
 $pedido = $_REQUEST['id'];
 $nombre=$_SESSION["nombre"];
-$team=$_SESSION["team"];
+//$team=$_SESSION["team"];
 $user=$_SESSION["user"];
 ?>
 <!DOCTYPE html>
@@ -68,7 +68,7 @@ $user=$_SESSION["user"];
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-8 .col-md-push-4 text-right"><label>IVA 12%:</label></div>
+                                    <div class="col-md-8 .col-md-push-4 text-right"><label>I.V.A. <?php echo $arr_pedidos[0]['OrderNumberTax'] ?>%:</label></div>
                                     <div class="col-md-4 .col-md-pull-8">
                                         <input id="iva" name="iva" class="form-control" value="<?php echo number_format($arr_pedidos[0]['monto_imp'], 2, ",", "."); ?>" readonly/>
                                     </div>

@@ -111,7 +111,7 @@ $user=$_SESSION["user"];
                             <tbody>
                             <?php switch($status){
                                     case "e":
-                                        $arr_pedidos=$obj_pedidos->get_ped_app(1,$user); ?>
+                                        $arr_pedidos=$obj_pedidos->get_ped_app(9,$user); ?>
                                         <?php for($i=0;$i<sizeof($arr_pedidos);$i++){ ?>
                                             <tr class="odd gradeX">
                                                 <td><?php echo $arr_pedidos[$i]['doc_num']; ?></td>
