@@ -1196,7 +1196,8 @@
             'comision'=>0,
             'comisonReserva'=>0,
             'porcentaje'=>0,
-            'porcentaje_reserva'=>0
+            'porcentaje_reserva'=>0,
+            'idParametro'=>0
         );
 
         $bu = "select doc_orig from saDocumentoVenta where co_tipo_doc='".$tipo."' and nro_doc='".$doc_num."' ";
@@ -1312,8 +1313,8 @@
             $msn = "";
 
 
-            $factura = $this->getFechaRecibidoFactura($nro_orig);
-           //var_dump($calculo['factura']); echo "<br><br>";
+            $factura = $this->getFechaRecibidoFactura((int)$nro_orig);
+           
 
             if (count($factura) > 0) {
                 $dt_factura = array();
@@ -1330,125 +1331,137 @@
                     $i++;           
                 }
 
-                $lista_parametros_desfasados = array();
-                $lista_parametros_desfasados = $this->getParametros('2016-12-01','2016-12-31');
-                $parametros_desfasados = $lista_parametros_desfasados[12]['datos'];
+                if (count($dt_factura) > 0) {              
+                  $lista_parametros_desfasados = array();
+                  $lista_parametros_desfasados = $this->getParametros('2016-12-01','2016-12-31');
+                  $parametros_desfasados = $lista_parametros_desfasados[12]['datos'];
 
-                $condiciones = $this->condicionTipoDefactura($nro_orig);          
-                $cneg = $condiciones['dias_cred'];
+                  $condiciones = $this->condicionTipoDefactura($nro_orig);          
+                  $cneg = $condiciones['dias_cred'];
 
-                $fec_recibido = date_create($factura[0]['fecha_recibido']);
-                date_add($fec_recibido, date_interval_create_from_date_string($cneg.' days'));
-                $fecha_vencimiento =  date_format($fec_recibido, 'Y-m-d');
-                  
-                $lista_parametros = array();
-                $lista_parametros = $this->getParametros($desde,$hasta);
-                $saldor = $this->getSaldoReal($nro_orig,$dt_factura[0]['total_neto'],$desde,$hasta,$dt_factura[0]['co_cli']);
-
-                $mes_doc =  date("m", strtotime($dt_factura[0]['fec_emis']->format('Y-m-d')));
-                $mes_doc = (int)$mes_doc;
-                $cann = 0;
-
-                if (isset($lista_parametros[$mes_doc]['cortes'])) {
-                    $cann = $lista_parametros[$mes_doc]['cortes'];
-                }
+                  $fec_recibido = date_create($factura[0]['fecha_recibido']);
+                  date_add($fec_recibido, date_interval_create_from_date_string($cneg.' days'));
+                  $fecha_vencimiento =  date_format($fec_recibido, 'Y-m-d');
+                    
+                  $lista_parametros = array();
                  
-                if ($cann > 0) {
+                  $lista_parametros = $this->getParametros($desde,$hasta);
+                 
+                  $saldor = $this->getSaldoReal($nro_orig,$dt_factura[0]['total_neto'],$desde,$hasta,$dt_factura[0]['co_cli']);
+                 
+                  $mes_doc = 0;
+                 
+                  if (!empty($dt_factura[0]['fec_emis'])) {
+                    $mes_doc =  date("m", strtotime($dt_factura[0]['fec_emis']->format('Y-m-d')));
+                    $mes_doc = (int)$mes_doc;
+                    $cann = 0;
+                  }
+                  if (isset($lista_parametros[$mes_doc]['cortes']) and $mes_doc > 0) {
+                      $cann = $lista_parametros[$mes_doc]['cortes'];
+                  }
+                 
+                  if ($cann > 0) {
 
-                    if ($cann == 1) {
+                      if ($cann == 1) {
 
-                        $parametros = $lista_parametros[$mes_doc]['datos'];
-                        $facturas[$i]['corte'] = "unico";
-                        $entra = 1;
+                          $parametros = $lista_parametros[$mes_doc]['datos'];
+                          $facturas[$i]['corte'] = "unico";
+                          $entra = 1;
 
-                    }else{
-                              
-                        for ($l=0; $l <   $cann  ; $l++) {    
-                            /* comparamos fecha */
-                            $fecha_desde = new DateTime($lista_parametros[$mes_doc]['datos'][$l]['desde']);
-                            $fecha_hasta = new DateTime($lista_parametros[$mes_doc]['datos'][$l]['hasta']);
-                            $fecha_emision = new DateTime($dt_factura[0]['fec_emis']->format('Y-m-d'));
+                      } else {
+                                
+                          for ($l=0; $l <   $cann  ; $l++) {    
+                              /* comparamos fecha */
+                              $fecha_desde = new DateTime($lista_parametros[$mes_doc]['datos'][$l]['desde']);
+                              $fecha_hasta = new DateTime($lista_parametros[$mes_doc]['datos'][$l]['hasta']);
+                              $fecha_emision = new DateTime($dt_factura[0]['fec_emis']->format('Y-m-d'));
 
-                            if ($fecha_emision >= $fecha_desde and $fecha_emision <= $fecha_hasta) {
-                               $parametros = $lista_parametros[$mes_doc]['datos'][$l];
-                               $entra = 1;
-                               $facturas[$i]['corte'] = $l;
-                            }
-                        }                             
-                    }
+                              if ($fecha_emision >= $fecha_desde and $fecha_emision <= $fecha_hasta) {
+                                 $parametros = $lista_parametros[$mes_doc]['datos'][$l];
+                                 $entra = 1;
+                                 $facturas[$i]['corte'] = $l;
+                              }
+                          }                             
+                      }
 
-                    if (isset($parametros['datos'][0]['desde'])) {
-                        unset($parametros['datos'][0]['desde'],$parametros['datos'][0]['hasta']);
-                    }
-                      
-                    if (count($parametros) == 0) {
-                        $parametros = $parametros_desfasados;
-                    }
-                      
-                      $saldoCero = $parametros[0];
+                      if (isset($parametros['datos'][0]['desde'])) {
+                          unset($parametros['datos'][0]['desde'],$parametros['datos'][0]['hasta']);
+                      }
+                        
+                      if (count($parametros) == 0) {
+                          $parametros = $parametros_desfasados;
+                      }
+                        
+                        $saldoCero = $parametros[0];
 
-                          $nfcobro = $this
-                          ->fechaCobrofactura(trim($dt_factura[0]['co_cli']), $nro_orig,$desde,$hasta);
-                          $fcobro = "";
-                        if (!empty($nfcobro)) {
-                           $fcobro = date_format(date_create($nfcobro),'d/m/Y');
-                        }  
+                        $nfcobro = $this
+                            ->fechaCobrofactura(trim($dt_factura[0]['co_cli']), $nro_orig,$desde,$hasta);
+                            $fcobro = "";
+                          if (!empty($nfcobro)) {
+                             $fcobro = date_format(date_create($nfcobro),'d/m/Y');
+                          }  
 
-                          /*SE CALCULAN LOS DIAS CALLE */
-                          $diascalle = "?";
-                        if (!empty($fcobro)) {
-                              //$fecha1 = new DateTime($facturaRecibido['fecha_recibido']);
+                            /*SE CALCULAN LOS DIAS CALLE */
+                            $diascalle = "?";
+                          if (!empty($fcobro)) {
+                                //$fecha1 = new DateTime($facturaRecibido['fecha_recibido']);
 
-                              $fecha1 = new DateTime($fecha_vencimiento);
-                              $fecha2 = new DateTime($nfcobro);
-                             $fecha = $fecha1->diff($fecha2);
-                            $diferencia = $fecha->format('%a');  
+                                $fecha1 = new DateTime($fecha_vencimiento);
+                                $fecha2 = new DateTime($nfcobro);
+                               $fecha = $fecha1->diff($fecha2);
+                              $diferencia = $fecha->format('%a');  
 
-                            if ($fecha1 > $fecha2) {
-                              $diferencia = $diferencia *-1;
-                            }
+                              if ($fecha1 > $fecha2) {
+                                $diferencia = $diferencia *-1;
+                              }
 
 
-                            $diascalle =   $diferencia + $cneg;  
+                              $diascalle =   $diferencia + $cneg;  
 
-                              $datos = array(
-                                'co_seg'=> $co_seg,
-                                'co_ven'=> $co_ven,
-                                'condicion'=>$condiciones['cond'],
-                                'saldo_factura'=>0,
-                                'diascalle'=> $diascalle,
-                                'total_bruto'=>$dt_factura[0]['total_bruto'],
-                                'fVencimiento'=>$fecha_vencimiento,
-                                'fcobro'=>$fcobro,
-                                'cneg'=> $cneg
-                              );
-                              
-                              $nComision = $this->calculoBasico2($datos,$parametros,null); 
+                                $datos = array(
+                                  'co_seg'=> $co_seg,
+                                  'co_ven'=> $co_ven,
+                                  'condicion'=>$condiciones['cond'],
+                                  'saldo_factura'=>0,
+                                  'diascalle'=> $diascalle,
+                                  'total_bruto'=>$dt_factura[0]['total_bruto'],
+                                  'fVencimiento'=>$fecha_vencimiento,
+                                  'fcobro'=>$fcobro,
+                                  'cneg'=> $cneg
+                                );
+                                
+                                $nComision = $this->calculoBasico2($datos,$parametros,null); 
 
-                              $comisionDoc = $this->porcentaje($monto,$nComision['porcentaje']);
-                              $comisionDocreserva = $this->porcentaje($monto,$nComision['porcentajeR']);
-                              
-                              $calculo['factura'] = $nro_orig;
-                              $calculo['tipodoc'] = $doc_num;
-                              $calculo['cobro'] = $fcobro;
+                                $comisionDoc = $this->porcentaje($monto,$nComision['porcentaje']);
+                                $comisionDocreserva = $this->porcentaje($monto,$nComision['porcentajeR']);
+                                
+                                $calculo['factura'] = $nro_orig;
+                                $calculo['tipodoc'] = $doc_num;
+                                $calculo['cobro'] = $fcobro;
 
-                              $calculo['diascalle'] = $diascalle;
-                              $calculo['comision'] = $comisionDoc;
-                              $calculo['comisonReserva'] = $comisionDocreserva;
+                                $calculo['diascalle'] = $diascalle;
+                                $calculo['comision'] = $comisionDoc;
+                                $calculo['comisonReserva'] = $comisionDocreserva;
 
-                              $calculo['porcentaje'] = $nComision['porcentaje'];
-                              $calculo['porcentaje_reserva'] = $nComision['porcentajeR'];                          
+                                $calculo['porcentaje'] = $nComision['porcentaje'];
+                                $calculo['porcentaje_reserva'] = $nComision['porcentajeR'];                          
+                                $calculo['idParametro'] = $nComision['idParametro'];                          
 
-                        }else{
-                            $msn = "Sin fecha de cobro para este periodo";
-                        }
-                    }else{
+                          } else {
+                              $msn = "Sin fecha de cobro para este periodo";
+                          }
+                    } else {
                           $msn = "Sin parametros de calculos en el sistema para ese periodo";
                     }
-                }else{
+
+                  } else {
+                    $msn = "No se encontro factura relacionada";
+
+                  }
+                } else {
                       $msn = "Sin fecha de recepion";
                 }
-        }
+          }
        
        return $calculo;
     }
@@ -3463,6 +3476,7 @@
                       $facturas[$i]['porcentaje']=0;
                       $facturas[$i]['diascalle']="";
                       $facturas[$i]['porcentajeR']=0;
+                      $facturas[$i]['idParametro']=0;
                       $facturas[$i]['editada']=0;
                     }
                     $i++;
@@ -3857,7 +3871,7 @@
                     $parametros = $lista_parametros[$mes_doc]['datos'];
                     $facturas[$i]['corte'] = "unico";
                     $entra = 1;
-                }else{
+                } else {
                     
                     for ($l=0; $l <  $cann  ; $l++) {    
                       /* comparamos fecha */
@@ -4044,8 +4058,6 @@
                         if ($nuevosDatos['reserva'] > 0) {
                             $facturas[$i]['reserva']= $this->porcentaje($datos['total_bruto'],$nuevosDatos['reserva']);
                             $facturas[$i]['porcentajeR'] = $nuevosDatos['reserva'];
-
-
                          }
                        }
                         $facturas[$i]['idParametro']=$nComision['cal_comision']."-".$nComision['cal_reserva'];                   
@@ -4061,6 +4073,7 @@
                       $facturas[$i]['fec_emis'] =$fec_emis;
                       $facturas[$i]['fec_venc'] = $fec_venc;
                       $facturas[$i]['dias_cred'] = "";
+                       $facturas[$i]['idParametro']= 0;
                 }                
             } else {
               /* DOCUMENTOS NO FACTURAS */
@@ -4071,7 +4084,7 @@
                   $facturas[$i]['fecha_despacho'] = trim($facturas[$i]['co_tipo_doc']);
                   $facturas[$i]['fecha_recibido'] = trim($facturas[$i]['nro_doc']);
                   $facturas[$i]['fec_venc_creada'] = trim($facturas[$i]['nro_orig']);
-  
+                  $facturas[$i]['idParametro']= 0;
             }
       }
 
@@ -4090,6 +4103,7 @@
 
                 $facturas[$i]['reserva'] =   $com_ncr['comisonReserva'] ; 
                 $facturas[$i]['porcentajeR'] =   $com_ncr['porcentaje_reserva'];    
+                $facturas[$i]['idParametro'] =   $com_ncr['idParametro'];    
 
             }
         }    
