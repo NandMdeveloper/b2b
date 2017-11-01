@@ -12,7 +12,7 @@ if (PHP_SAPI == 'cli')
 	die('This example should only be run from a Web Browser');
 
 function get_ped_desp_G(){
-	$conn = conectarServ();
+	$conn = conectarServ(1);
     $sQuery="SELECT pedidos_des.*,vendedor.ven_des, (SELECT cli_des FROM clientes where clientes.co_cli=pedidos_des.co_cli) AS cli_des FROM pedidos_des INNER JOIN vendedor ON pedidos_des.co_ven = vendedor.co_ven WHERE 1 = 1 ";
     //if($sup) {  $sQuery.=" AND pedidos_des.co_ven IN (SELECT usuario FROM usuario WHERE supervisor='$sup')";    }
     $sQuery.=" ORDER BY doc_num DESC";
