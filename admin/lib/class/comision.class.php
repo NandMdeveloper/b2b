@@ -1296,11 +1296,9 @@
 
         }
 
-       // echo $sel."<br><br>";
         $parametros = array();
-        $factura = array();
-          
-       //var_dump($doc[0]['nro_orig']); echo "<br><br>";
+        $factura = array();          
+     
         if (isset($doc[0]['nro_orig']) > 0) {
 
             $nro_orig= trim($doc[0]['nro_orig']);
@@ -2846,10 +2844,10 @@
               inner JOIN saCondicionPago as cp on cp.co_cond = fv.co_cond
               where 
                fv.fec_emis  >= '".$desde."' and fv.fec_emis <= '".$hasta." 23:59:59' 
-              and fv.anulado = 0
+              and fv.anulado = 0 and ven.tipo = 'A'
               ";
         $i=0;
-        //echo  $sql;
+        
         $conn = conectarSQlSERVER();
         $result=sqlsrv_query($conn,$sql);
        // echo $sql;
@@ -2970,12 +2968,12 @@
      
         /* SE AGREGAN LAS NOTAS DE CREDITOS QUE ESTAN RELACIONADAS POR DEVOLUCION CON LAS FACTURAS DEL PERIODO */
         $sq_ncr = "select
-                dcr.doc_num, nfv.co_ven as covendedor, ven.ven_des, nfv.co_cli, cli.cli_des,
+                dcr.doc_num, nfv.co_ven as covendedor, ven.ven_des, cli.co_cli, cli.cli_des,
                   sum(dcr.reng_neto) as total_bruto,
                    sum(dcr.monto_imp) as monto_imp,
                  sum(dcr.reng_neto) + sum(dcr.monto_imp)  as total_neto,
                 seg.co_seg, seg.seg_des, zon.co_zon,
-                zon.zon_des, nfv.fec_emis, '' as fec_venc, '' as dias, '' as co_cond, '' as cond_des, '' as dias_cred,
+                zon.zon_des, CONVERT(varchar, dcr.fe_us_in, 101) as fec_emis , '' as fec_venc, '' as dias, '' as co_cond, '' as cond_des, '' as dias_cred,
                 dcr.num_doc as factura from saDevolucionClientereng as dcr 
                 INNER JOIN saDocumentoVenta as nfv on nfv.nro_doc = dcr.num_doc 
                 inner JOIN saCliente as cli on nfv.co_cli = cli.co_cli 
@@ -2984,14 +2982,13 @@
                 inner JOIN saZona as zon on zon.co_zon = ven.co_zon 
                 where dcr.num_doc in 
                 (select doc_num from saFacturaVenta as fv where fv.fec_emis >= '".$desde."' and fv.fec_emis <= '".$hasta." 23:59:59' and fv.anulado = 0)
-                and dcr.fe_us_in >= '".$desde."' and dcr.fe_us_in <= '".$hasta." 23:59:59' and nfv.anulado = 0
-                group by doc_num, nfv.co_ven,ven.ven_des,nfv.co_cli,cli.cli_des, 
+                and dcr.fe_us_in >= '".$this->inicioVentas."'  and nfv.anulado = 0  and ven.tipo = 'A'
+                group by dcr.doc_num, nfv.co_ven,ven.ven_des,cli.co_cli,cli.cli_des, 
                 seg.co_seg, seg.seg_des, zon.co_zon,seg.co_seg, seg.seg_des, zon.co_zon,
-                zon.zon_des, nfv.fec_emis, 
+                zon.zon_des, CONVERT(varchar, dcr.fe_us_in, 101), 
                 dcr.num_doc";
-              // echo $sq_ncr;
+       // echo $sq_ncr;
         $resulta=sqlsrv_query($conn,$sq_ncr);
-        //$pedidos = $this->listaPedidosBasico(null,$desde,$hasta);
 
          $notascr = array();
          $i=0;
@@ -3053,7 +3050,7 @@
             inner JOIN saSegmento as seg on cli.co_seg = seg.co_seg 
             inner JOIN saZona as zon on zon.co_zon = ven.co_zon 
             where dv.nro_orig in(". $fact_doc.") 
-            and dv.co_tipo_doc = 'N/CR' and dv.anulado = 0";
+            and dv.co_tipo_doc = 'N/CR' and dv.anulado = 0 and ven.tipo = 'A'";
 
      
           $resulta2=sqlsrv_query($conn,$sq_cr_n);
@@ -3159,6 +3156,7 @@
             dbo.fechasimple(DC.fec_emis) >= '".$desde."'
             AND dbo.fechasimple(DC.fec_emis) <= '".$hasta."'
             and DC.anulado=0
+            and  ven.tipo = 'A'
             and DC.co_tipo_doc IN('FACT')
            UNION ALL 
          SELECT
@@ -3206,9 +3204,9 @@
         WHERE
             dbo.fechasimple(DC.fec_emis) >= '".$desde."'
             AND dbo.fechasimple(DC.fec_emis) <= '".$hasta."'
-            and DC.anulado=0
+            and DC.anulado=0 and ven.tipo = 'A'
             and DC.co_tipo_doc NOT IN('FACT') ";
-     
+   
           $i=0;
         $conn = conectarSQlSERVER();
         $result=sqlsrv_query($conn,$sel_saldo);
@@ -3444,7 +3442,7 @@
             INNER JOIN saZona AS ZN ON ven.co_zon = ZN.co_zon
             INNER JOIN saSegmento AS seg ON P.co_seg = seg.co_seg
         WHERE
-            DC.nro_doc IN(".$cod_doc.")";
+            DC.nro_doc IN(".$cod_doc.") and ven.tipo = 'A'";
 
          $result=sqlsrv_query($conn,$sel_saldo);
 
@@ -3550,7 +3548,7 @@
                 LEFT JOIN saTipoDocumento AS TP ON TP.co_tipo_doc = DC.co_tipo_doc
                 INNER JOIN saSegmento AS seg ON P.co_seg = seg.co_seg
             WHERE saldo > 0 
-                AND dbo.fechasimple(DC.fec_venc) <= '".$hasta."'";
+                AND dbo.fechasimple(DC.fec_venc) <= '".$hasta."' and ven.tipo = 'A'";
          
          $result=sqlsrv_query($conn,$bsql);
 
@@ -3658,6 +3656,7 @@
                 dbo.fechasimple(DC.fec_venc) >= '".$desde."' AND dbo.fechasimple(DC.fec_venc) <= '".$hasta."'
                   and DC.anulado=0
                   and DC.co_tipo_doc IN('FACT')
+                  and ven.tipo = 'A'
                  UNION ALL 
                SELECT
                   DC.nro_doc, 
@@ -3703,7 +3702,8 @@
               WHERE
                   dbo.fechasimple(DC.fec_venc) >= '".$desde."' AND dbo.fechasimple(DC.fec_venc) <= '".$hasta."'
                   and DC.anulado=0
-                  and DC.co_tipo_doc NOT IN('FACT')";
+                  and DC.co_tipo_doc NOT IN('FACT')
+                  and ven.tipo = 'A'";
           $result=sqlsrv_query($conn,$sel_venc);
          $facturas_vencidas = array();
          $t = 0;
@@ -4109,9 +4109,10 @@
         }    
 
       for ($b=0; $b < count($facturas); $b++) { 
+
         $encontrado = $this->buscar($facturas,$facturas[$b]['nro_orig'],$facturas[$b]['co_tipo_doc']);
         $facturas[$b]['enc'] = $encontrado['veces'];
-         $facturas[$b]['pos'] = $encontrado['posicion'];
+        $facturas[$b]['pos'] = $encontrado['posicion'];
 
         if ( $encontrado['veces'] > 1 and ($facturas[$b]['co_tipo_doc']=="N/CR" or $facturas[$b]['co_tipo_doc']=="FACT" )) {
            unset($facturas[$encontrado['posicion']]);
@@ -4156,12 +4157,70 @@
 
         }
       }
-    $n_facturas = array_merge($doc_fac,$doc_ncr,$doc_ndb,$doc_res);      
-    
+     // $n_facturas = array_merge($doc_fac,$doc_ncr,$doc_ndb,$doc_res);      
+      $n_facturas = array_merge($doc_fac,$doc_ncr,$doc_ndb);      
+    //  $this->dump($doc_ndb);
+      //echo "<br><br><br>";
+      //$this->dump($doc_res);
       return $n_facturas;
       /* FINAlizado - LLENADO DE DATOS */
 
     }
+    public function dump($data, $title="", $background="#EEEEEE", $color="#000000"){
+
+    //=== Style  
+    echo "  
+    <style>
+        /* Styling pre tag */
+        pre {
+            padding:10px 20px;
+            white-space: pre-wrap;
+            white-space: -moz-pre-wrap;
+            white-space: -pre-wrap;
+            white-space: -o-pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* ===========================
+        == To use with XDEBUG 
+        =========================== */
+        /* Source file */
+        pre small:nth-child(1) {
+            font-weight: bold;
+            font-size: 14px;
+            color: #CC0000;
+        }
+        pre small:nth-child(1)::after {
+            content: '';
+            position: relative;
+            width: 100%;
+            height: 20px;
+            left: 0;
+            display: block;
+            clear: both;
+        }
+
+        /* Separator */
+        pre i::after{
+            content: '';
+            position: relative;
+            width: 100%;
+            height: 15px;
+            left: 0;
+            display: block;
+            clear: both;
+            border-bottom: 1px solid grey;
+        }  
+    </style>
+    ";
+
+    //=== Content            
+    echo "<pre style='background:$background; color:$color; padding:10px 20px; border:2px inset $color'>";
+    echo    "<h2>$title</h2>";
+            var_dump($data); 
+    echo "</pre>";
+
+}
     public function condicionTipoDefactura($idfactura) {
 
         $conn = conectarSQlSERVER();
