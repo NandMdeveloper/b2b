@@ -2973,7 +2973,7 @@
                    sum(dcr.monto_imp) as monto_imp,
                  sum(dcr.reng_neto) + sum(dcr.monto_imp)  as total_neto,
                 seg.co_seg, seg.seg_des, zon.co_zon,
-                zon.zon_des, CONVERT(varchar, dcr.fe_us_in, 101) as fec_emis , '' as fec_venc, '' as dias, '' as co_cond, '' as cond_des, '' as dias_cred,
+                zon.zon_des, CONVERT(varchar, dbo.fechasimple(dcr.fe_us_in), 120) as fec_emis , '' as fec_venc, '' as dias, '' as co_cond, '' as cond_des, '' as dias_cred,
                 dcr.num_doc as factura from saDevolucionClientereng as dcr 
                 INNER JOIN saDocumentoVenta as nfv on nfv.nro_doc = dcr.num_doc 
                 inner JOIN saCliente as cli on nfv.co_cli = cli.co_cli 
@@ -2985,8 +2985,7 @@
                 and dcr.fe_us_in >= '".$this->inicioVentas."'  and nfv.anulado = 0  and ven.tipo = 'A'
                 group by dcr.doc_num, nfv.co_ven,ven.ven_des,cli.co_cli,cli.cli_des, 
                 seg.co_seg, seg.seg_des, zon.co_zon,seg.co_seg, seg.seg_des, zon.co_zon,
-                zon.zon_des, CONVERT(varchar, dcr.fe_us_in, 101), 
-                dcr.num_doc";
+                zon.zon_des, CONVERT(varchar, dbo.fechasimple(dcr.fe_us_in), 120),dcr.num_doc";
        // echo $sq_ncr;
         $resulta=sqlsrv_query($conn,$sq_ncr);
 
