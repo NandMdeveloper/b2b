@@ -1,7 +1,7 @@
 <?php
   class comision {
     public $co_ven = null;
-    public  $servidor = 1; // 1 conecta servidor 134 0 servidor local 
+    public  $servidor = 0; // 1 conecta servidor 134 0 servidor local 
     public  $segmentoClave = '000004'; //  
     public  $segmentoTradicional = '000005'; // 
     public  $segmentoDetal = 'DET'; // 
@@ -5327,6 +5327,25 @@ WHERE MONTH(`desde`)=MONTH('".$desde."') AND YEAR(`desde`)=YEAR('".$desde."')";
       inner join cmsregion as r on r.id= gr.cmsRegion_id
       where hd.desde = '".$desde."' and hd.hasta = '".$hasta."'
       group by  r.nombre,gr.co_ven";
+     
+      $gerentes = array();
+
+      $conn = $this->getConMYSQL() ;
+      $rs = mysqli_query($conn,$sel) or die(mysqli_error($conn));
+      $i=0;
+      while($row=mysqli_fetch_array($rs)) {
+        foreach($row as $key=>$value) {
+          $gerentes[$i][$key]=$value;
+        }
+        $i++;
+      }
+
+      return $gerentes;
+
+  }
+  function getSaldos($desde,$hasta,$id,$tipo) {
+
+        $sel="SELECT * FROM `cmssaldo` ";
      
       $gerentes = array();
 
