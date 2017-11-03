@@ -361,8 +361,8 @@ WHERE
 	}
     function get_pedido_app($id=''){
         
-        $sQuery="SELECT pedidos_app.*,clientes.cli_des FROM pedidos_app INNER JOIN clientes ON pedidos_app.co_cli = clientes.co_cli WHERE 1 = 1 ";
-        if($id) {   $sQuery.=" AND  pedidos_app.doc_num= $id "; }
+        $sQuery="SELECT pedidos.*,clientes.cli_des FROM pedidos INNER JOIN clientes ON pedidos.co_cli = clientes.co_cli WHERE 1 = 1 ";
+        if($id) {   $sQuery.=" AND  pedidos.doc_num= $id "; }
         //  echo ($sQuery);
         $result=mysql_query($sQuery) or die(mysql_error());
         $i=0;
@@ -426,7 +426,7 @@ WHERE
 	
 	}
     function get_detalles_pedido_app($id=''){
-        $sQuery="SELECT * FROM pedidos_detalles_app WHERE 1 = 1 ";
+        $sQuery="SELECT * FROM pedidos_detalles WHERE 1 = 1 ";
        if($id) {    $sQuery.=" AND doc_num = '$id' ";   }
 
         $result=mysql_query($sQuery) or die(mysql_error());
@@ -537,7 +537,7 @@ function get_ped_det($id=''){
         return($res_array);
 }
 function get_ped_det_app($id=''){
-    $sQuery="SELECT pedidos_detalles_app.*,art.art_des FROM pedidos_detalles_app INNER JOIN art ON pedidos_detalles_app.co_art = art.co_art WHERE 1 = 1";
+    $sQuery="SELECT pedidos_detalles.*,art.art_des FROM pedidos_detalles INNER JOIN art ON pedidos_detalles.co_art = art.co_art WHERE 1 = 1";
     if($id) {	$sQuery.=" AND doc_num = '$id' ";	}
         $sQuery.="ORDER BY reng_num ASC ";
         $result=mysql_query($sQuery) or die(mysql_error());
@@ -593,10 +593,10 @@ function get_renglon($id=''){
         return($res_array);
 }
 function get_ped_app($st='',$sup=''){
-    $sQuery="SELECT pedidos_app.*,clientes.cli_des,usuario.nombre FROM pedidos_app INNER JOIN clientes ON pedidos_app.co_cli = clientes.co_cli INNER JOIN usuario ON pedidos_app.co_ven = usuario.uname WHERE 1 = 1 ";
+    $sQuery="SELECT pedidos.*,clientes.cli_des,usuario.nombre FROM pedidos INNER JOIN clientes ON pedidos.co_cli = clientes.co_cli INNER JOIN usuario ON pedidos.co_ven = usuario.uname WHERE 1 = 1 ";
     var_dump($sQuery);
-    if($st) {	$sQuery.=" AND pedidos_app.`status` = $st ";	}
-    if($sup) {	$sQuery.=" AND pedidos_app.co_ven IN (SELECT uname FROM usuario WHERE supervisor='$sup')";	}
+    if($st) {	$sQuery.=" AND pedidos.`status` = $st ";	}
+    if($sup) {	$sQuery.=" AND pedidos.co_ven IN (SELECT uname FROM pedidos WHERE supervisor='$sup')";	}
     $result=mysql_query($sQuery) or die(mysql_error());
     $i=0;
     while($row=mysql_fetch_array($result)){
