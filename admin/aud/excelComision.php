@@ -2,7 +2,7 @@
 		/*error_reporting(E_ALL);
 		ini_set('display_errors', TRUE);
 		ini_set('display_startup_errors', TRUE);*/
-		date_default_timezone_set('Europe/London');
+		date_default_timezone_set('America/Caracas');
 
 		if (PHP_SAPI == 'cli')
 			die('This example should only be run from a Web Browser');
@@ -350,13 +350,13 @@ $objPHPExcel->getActiveSheet()
         ->getAlignment()
         ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-
+  $impreso = date("j/m/Y  g:i a");
 
 
 	$objPHPExcel->setActiveSheetIndex(0);
 	// Redirect output to a client’s web browser (Excel2007)
 	header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-	header('Content-Disposition: attachment;filename="Comisiones-Pro Acce.xlsx"');
+	header('Content-Disposition: attachment;filename="Comisiones-Pro Acce '.$impreso.'.xlsx"');
 	header('Cache-Control: max-age=0');
 	// If you're serving to IE 9, then the following may be needed
 	header('Cache-Control: max-age=1');
