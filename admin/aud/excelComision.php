@@ -47,7 +47,7 @@
 						 ->setCategory("Resultado");
 
 
-		$styleArray = array(
+		$negrilla = array(
 			'font' => array(
 				'bold' => true,
 				'size'  => 10,
@@ -72,19 +72,19 @@
 			)
 		);
 
-		$objPHPExcel->getActiveSheet()->getStyle('A2')->applyFromArray($styleArray);
-		$objPHPExcel->getActiveSheet()->getStyle('B2')->applyFromArray($styleArray);
-		$objPHPExcel->getActiveSheet()->getStyle('C2')->applyFromArray($styleArray);
-		$objPHPExcel->getActiveSheet()->getStyle('D2')->applyFromArray($styleArray);
-		$objPHPExcel->getActiveSheet()->getStyle('E2')->applyFromArray($styleArray);
-		$objPHPExcel->getActiveSheet()->getStyle('F2')->applyFromArray($styleArray);
-		$objPHPExcel->getActiveSheet()->getStyle('G2')->applyFromArray($styleArray);
-		$objPHPExcel->getActiveSheet()->getStyle('H2')->applyFromArray($styleArray);
-		$objPHPExcel->getActiveSheet()->getStyle('I2')->applyFromArray($styleArray);
-		$objPHPExcel->getActiveSheet()->getStyle('J2')->applyFromArray($styleArray);
-		$objPHPExcel->getActiveSheet()->getStyle('k2')->applyFromArray($styleArray);
-		$objPHPExcel->getActiveSheet()->getStyle('L2')->applyFromArray($styleArray);
-		$objPHPExcel->getActiveSheet()->getStyle('M2')->applyFromArray($styleArray);
+		$objPHPExcel->getActiveSheet()->getStyle('A2')->applyFromArray($negrilla);
+		$objPHPExcel->getActiveSheet()->getStyle('B2')->applyFromArray($negrilla);
+		$objPHPExcel->getActiveSheet()->getStyle('C2')->applyFromArray($negrilla);
+		$objPHPExcel->getActiveSheet()->getStyle('D2')->applyFromArray($negrilla);
+		$objPHPExcel->getActiveSheet()->getStyle('E2')->applyFromArray($negrilla);
+		$objPHPExcel->getActiveSheet()->getStyle('F2')->applyFromArray($negrilla);
+		$objPHPExcel->getActiveSheet()->getStyle('G2')->applyFromArray($negrilla);
+		$objPHPExcel->getActiveSheet()->getStyle('H2')->applyFromArray($negrilla);
+		$objPHPExcel->getActiveSheet()->getStyle('I2')->applyFromArray($negrilla);
+		$objPHPExcel->getActiveSheet()->getStyle('J2')->applyFromArray($negrilla);
+		$objPHPExcel->getActiveSheet()->getStyle('k2')->applyFromArray($negrilla);
+		$objPHPExcel->getActiveSheet()->getStyle('L2')->applyFromArray($negrilla);
+		$objPHPExcel->getActiveSheet()->getStyle('M2')->applyFromArray($negrilla);
 
 
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('A1', "Info");
@@ -126,7 +126,7 @@
 		$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(11);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(11);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(70);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(12);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(22);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(17);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(17);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('P')->setWidth(17);
@@ -235,14 +235,15 @@ $objPHPExcel->getActiveSheet()
 	$objPHPExcel->getActiveSheet()->getStyle('N'.$suma.':S'.$suma)->applyFromArray($estilofactura);
 	$objPHPExcel->getActiveSheet()->getStyle('N'.$suma.':S'.$suma)->getNumberFormat()->setFormatCode('#,##0.00');
 	// Nombre la hoja de calculo
-	$nombre =  $desde." a ".$hasta;
-	$objPHPExcel->getActiveSheet()->setTitle($nombre);
+	
+	$objPHPExcel->getActiveSheet()->setTitle("Comisiones Cobros");
 
 	// Set active sheet index to the first sheet, so Excel opens this as the first sheet
 	$objPHPExcel->setActiveSheetIndex(0);
 	$saldos = $comision->getSaldos($desde,null,null);
 	$objPHPExcel->createSheet();
     $hoja = $objPHPExcel->setActiveSheetIndex(1);
+
     $hoja->setTitle("Saldos");
  	$hoja->setCellValue('A1', " Listado de saldos ");
 		$hoja->setCellValue('A2', "DOCUMENTO");
@@ -274,7 +275,7 @@ $objPHPExcel->getActiveSheet()
 		$hoja->getColumnDimension('I')->setWidth(11);
 		$hoja->getColumnDimension('J')->setWidth(11);
 		$hoja->getColumnDimension('K')->setWidth(78);
-		$hoja->getColumnDimension('M')->setWidth(12);
+		$hoja->getColumnDimension('M')->setWidth(30);
 		$hoja->getColumnDimension('N')->setWidth(17);
 		$hoja->getColumnDimension('O')->setWidth(17);
 		$hoja->getColumnDimension('P')->setWidth(17);
@@ -335,6 +336,22 @@ $objPHPExcel->getActiveSheet()
 		$hoja->setCellValue('Q'.$pos, $doc['saldo']);
 		$x++;
 	}
+	// estilo de la nueva hoja
+	$lineas = count($saldos);
+	//$suma =  $lineas + 3;
+
+	$hoja->setAutoFilter('A2:Q'.$lineas);
+	$hoja->freezePane( 'A3');
+	$hoja->getStyle('N3:Q'.$lineas)->getNumberFormat()->setFormatCode('#,##0.00');
+	$hoja->getStyle('A2:Q2')->applyFromArray($negrilla);
+	//$hoja->getStyle('N'.$suma.':Q'.$suma)->applyFromArray($estilofactura);
+
+	$hoja->getStyle('A3:J'.$lineas)
+        ->getAlignment()
+        ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+
+
+
 
 	$objPHPExcel->setActiveSheetIndex(0);
 	// Redirect output to a client’s web browser (Excel2007)
