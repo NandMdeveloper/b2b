@@ -5343,10 +5343,17 @@ WHERE MONTH(`desde`)=MONTH('".$desde."') AND YEAR(`desde`)=YEAR('".$desde."')";
       return $gerentes;
 
   }
-  function getSaldos($desde,$hasta,$id,$tipo) {
+  function getSaldos($periodo,$documento,$tipo) {
 
-        $sel="SELECT * FROM `cmssaldo` ";
+      $sel="SELECT * FROM `cmssaldo` where month($periodo) and year($periodo)";
      
+     if ($documento) {
+       $sel.=" and documento='$documento' "
+     }
+     
+     if ($documento) {
+       $sel.=" and documento='$documento' "
+     }
       $gerentes = array();
 
       $conn = $this->getConMYSQL() ;
