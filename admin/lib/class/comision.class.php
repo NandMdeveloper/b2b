@@ -5345,14 +5345,14 @@ WHERE MONTH(`desde`)=MONTH('".$desde."') AND YEAR(`desde`)=YEAR('".$desde."')";
   }
   function getSaldos($periodo,$documento,$tipo) {
 
-      $sel="SELECT * FROM `cmssaldo` where month($periodo) and year($periodo)";
-     
+      $sel="SELECT * FROM `cmssaldo` where month(periodo) = month('$periodo') and  year(periodo) = year('$periodo')";
+
      if ($documento) {
-       $sel.=" and documento='$documento' "
+       $sel.=" and documento='$documento' ";
      }
-     
-     if ($documento) {
-       $sel.=" and documento='$documento' "
+
+     if ($tipo) {
+       $sel.=" and tipo='$tipo' ";
      }
       $gerentes = array();
 
