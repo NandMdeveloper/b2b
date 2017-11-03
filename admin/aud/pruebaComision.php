@@ -10,7 +10,8 @@
 
    
 	$facturas = $comision->listadoFacturaComisionSaldoBasico2('2017-06-01','2017-06-30');
-	//var_dump($facturas); exit();
+	//var_dump($facturas);
+	 //exit();
 	/*$fcobro = $comision->fechaCobroDocumento(4610);
 	var_dump($fcobro);*/
 
