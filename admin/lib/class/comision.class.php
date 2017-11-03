@@ -1,7 +1,7 @@
 <?php
   class comision {
     public $co_ven = null;
-    public  $servidor = 0; // 1 conecta servidor 134 0 servidor local 
+    public  $servidor = 1; // 1 conecta servidor 134 0 servidor local 
     public  $segmentoClave = '000004'; //  
     public  $segmentoTradicional = '000005'; // 
     public  $segmentoDetal = 'DET'; // 
