@@ -72,23 +72,11 @@
 			)
 		);
 
-		$objPHPExcel->getActiveSheet()->getStyle('A2')->applyFromArray($negrilla);
-		$objPHPExcel->getActiveSheet()->getStyle('B2')->applyFromArray($negrilla);
-		$objPHPExcel->getActiveSheet()->getStyle('C2')->applyFromArray($negrilla);
-		$objPHPExcel->getActiveSheet()->getStyle('D2')->applyFromArray($negrilla);
-		$objPHPExcel->getActiveSheet()->getStyle('E2')->applyFromArray($negrilla);
-		$objPHPExcel->getActiveSheet()->getStyle('F2')->applyFromArray($negrilla);
-		$objPHPExcel->getActiveSheet()->getStyle('G2')->applyFromArray($negrilla);
-		$objPHPExcel->getActiveSheet()->getStyle('H2')->applyFromArray($negrilla);
-		$objPHPExcel->getActiveSheet()->getStyle('I2')->applyFromArray($negrilla);
-		$objPHPExcel->getActiveSheet()->getStyle('J2')->applyFromArray($negrilla);
-		$objPHPExcel->getActiveSheet()->getStyle('k2')->applyFromArray($negrilla);
-		$objPHPExcel->getActiveSheet()->getStyle('L2')->applyFromArray($negrilla);
-		$objPHPExcel->getActiveSheet()->getStyle('M2')->applyFromArray($negrilla);
+		$objPHPExcel->getActiveSheet()->getStyle('A2:U2')->applyFromArray($negrilla);
 
 
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('A1', "Info");
-		$objPHPExcel->getActiveSheet()->getComment('A1')->setAuthor('PowerSales '.$desde.' a '.$hasta);
+		
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('A1', "Calculos de ".$desde." al ".$hasta);
 		/*titulos
 		 Número	Emisión 	Venc.	Desp	Recepc	Vcto	Cobro	C.Neg.
 		 Días Calle	Cliente		Vend	Cond.Pag	Monto Base	I.V.A.	 Neto	Saldo
@@ -105,14 +93,17 @@
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('J2', "COD");
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('K2', "CLIENTE");
 		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('L2', "VEND");
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('M2', "COND.PAG");
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('N2', "MONTO BASE");
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('O2', "I.V.A.");
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('P2', "NETO");
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('Q2', "SALDO");
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('R2', "COMISION");
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('S2', "RESERVA");
-		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('T2', "PORCENTAJE");
+
+
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('M2', "VENDEDOR");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('N2', "COND.PAG");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('O2', "MONTO BASE");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('P2', "I.V.A.");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('Q2', "NETO");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('R2', "SALDO");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('S2', "COMISION");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('T2', "RESERVA");
+		$objPHPExcel->setActiveSheetIndex(0)->setCellValue('U2', "PORCENTAJE");
 
 		//anchos de columnas
 		$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(11);
@@ -126,7 +117,9 @@
 		$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(11);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(11);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(70);
-		$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(22);
+
+		$objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(22);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(35);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(17);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(17);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('P')->setWidth(17);
@@ -134,6 +127,7 @@
 		$objPHPExcel->getActiveSheet()->getColumnDimension('R')->setWidth(17);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('S')->setWidth(17);
 		$objPHPExcel->getActiveSheet()->getColumnDimension('T')->setWidth(15);
+		$objPHPExcel->getActiveSheet()->getColumnDimension('U')->setWidth(19);
 
 		$lineas = count($mDatos);
 		for($i=0;$i < $lineas; $i++){
@@ -158,38 +152,32 @@
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('J'.$pos, (int)$mDatos[$i]['co_cli']);
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('K'.$pos, utf8_encode($mDatos[$i]['cli_des']));
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('L'.$pos, $mDatos[$i]['co_ven']);
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('M'.$pos, $mDatos[$i]['cond']);
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('N'.$pos, $mDatos[$i]['total_bruto']);
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('O'.$pos, $mDatos[$i]['monto_imp']);
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('P'.$pos, $mDatos[$i]['total_neto']);
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('Q'.$pos, $mDatos[$i]['saldo']);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('M'.$pos, utf8_encode($mDatos[$i]['vendedor']));
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('N'.$pos, $mDatos[$i]['cond']);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('O'.$pos, $mDatos[$i]['total_bruto']);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('P'.$pos, $mDatos[$i]['monto_imp']);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('Q'.$pos, $mDatos[$i]['total_neto']);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('R'.$pos, $mDatos[$i]['saldo']);
 
 		
-				$objPHPExcel->setActiveSheetIndex(0)->setCellValue('R'.$pos, $mDatos[$i]['comision']);
-				$objPHPExcel->setActiveSheetIndex(0)->setCellValue('S'.$pos, $mDatos[$i]['reserva']);
+				$objPHPExcel->setActiveSheetIndex(0)->setCellValue('S'.$pos, $mDatos[$i]['comision']);
+				$objPHPExcel->setActiveSheetIndex(0)->setCellValue('T'.$pos, $mDatos[$i]['reserva']);
 			
-			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('T'.$pos, $mDatos[$i]['porcentaje']);
+			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('U'.$pos, $mDatos[$i]['porcentaje']);
 		}
 	//filtrado de informacion
-	$objPHPExcel->getActiveSheet()->setAutoFilter('A2:T'.$lineas);
+	$objPHPExcel->getActiveSheet()->setAutoFilter('A2:U'.$lineas);
 	$objPHPExcel->getActiveSheet()->freezePane( 'A3');
 
 	$lasuma = $lineas - 1;
 	$suma = $lineas + 3;
 	$hasta = $suma - 1;
 
-	$objPHPExcel->getActiveSheet()->getStyle('N3:N'.$lineas)->getNumberFormat()->setFormatCode('#,##0.00');
-	$objPHPExcel->getActiveSheet()->getStyle('O3:O'.$lineas)->getNumberFormat()->setFormatCode('#,##0.00');
-	$objPHPExcel->getActiveSheet()->getStyle('P3:P'.$lineas)->getNumberFormat()->setFormatCode('#,##0.00');
-	$objPHPExcel->getActiveSheet()->getStyle('Q3:Q'.$lineas)->getNumberFormat()->setFormatCode('#,##0.00');
-	$objPHPExcel->getActiveSheet()->getStyle('R3:R'.$lineas)->getNumberFormat()->setFormatCode('#,##0.00');
-	$objPHPExcel->getActiveSheet()->getStyle('S3:S'.$lineas)->getNumberFormat()->setFormatCode('#,##0.00');
+	$objPHPExcel->getActiveSheet()->getStyle('N3:U'.$lineas)->getNumberFormat()->setFormatCode('#,##0.00');
 
 
-	$objPHPExcel->setActiveSheetIndex(0)->setCellValue(
-			'N'.$suma,
-			'=SUM(N3:N'.$hasta.')'
-		);
+
+
 
 	$objPHPExcel->setActiveSheetIndex(0)->setCellValue(
 			'O'.$suma,
@@ -212,6 +200,10 @@
 	$objPHPExcel->setActiveSheetIndex(0)->setCellValue(
 			'S'.$suma,
 			'=SUM(S3:S'.$hasta.')'
+		);	
+	$objPHPExcel->setActiveSheetIndex(0)->setCellValue(
+			'T'.$suma,
+			'=SUM(T3:T'.$hasta.')'
 		);
 /* ALINEAMIENTO FORZADO DE COLUMNAS*/
 $objPHPExcel->getActiveSheet()
@@ -229,11 +221,9 @@ $objPHPExcel->getActiveSheet()
         ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
 
-
-
 	//#.##0,00
-	$objPHPExcel->getActiveSheet()->getStyle('N'.$suma.':S'.$suma)->applyFromArray($estilofactura);
-	$objPHPExcel->getActiveSheet()->getStyle('N'.$suma.':S'.$suma)->getNumberFormat()->setFormatCode('#,##0.00');
+	$objPHPExcel->getActiveSheet()->getStyle('O'.$suma.':U'.$suma)->applyFromArray($estilofactura);
+	$objPHPExcel->getActiveSheet()->getStyle('O'.$suma.':U'.$suma)->getNumberFormat()->setFormatCode('#,##0.00');
 	// Nombre la hoja de calculo
 	
 	$objPHPExcel->getActiveSheet()->setTitle("Comisiones Cobros");
