@@ -210,12 +210,6 @@ $objPHPExcel->getActiveSheet()
     $sheet = $objPHPExcel->setActiveSheetIndex(1);
     $sheet->setTitle("Parametros");
  	$sheet->setCellValue('A3', " Listado de parametros");
-
-
-
-
-
-
     $sheet = $objPHPExcel->setActiveSheetIndex(0);
 
     $impreso = date("j/m/Y  g:i a");
