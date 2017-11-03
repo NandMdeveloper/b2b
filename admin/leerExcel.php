@@ -107,11 +107,11 @@
          $cobro = $f[2]."-".$f[1]."-".$f[0];
       }
 
-      if (strpos($emision, "ch") or strpos($emision, "CH") ) {        
+      if (strstr($rowData[0][1], "CH") or strstr($rowData[0][1], "ch") ) {        
          $tipo = "cheque";
          $relacion = $vencido;
       }
-      if (strpos($emision, "nc") or strpos($emision, "NC")) {        
+      if (strstr($emision, "nc") or strstr($emision, "NC")) {        
          $tipo = "ncr";
          $relacion = $vencido;
       }
@@ -140,7 +140,7 @@
                            `iva`,
                             `neto`,
                              `saldo`,
-                              `estatus`,tipodoc,relacion)
+                              `estatus`,tipodoc,relacion,periodo)
                                  VALUES (
                                  null,
                                  '".$documento."',
@@ -162,9 +162,9 @@
                                  '".$saldo."',
                                  'activo',
                                  '".$tipo."',
-                                 '".$relacion."'
+                                 '".$relacion."',NOW()
                                )";
-        //$rs = mysqli_query($conn,$sel) or die(mysqli_error($conn));     
+        $rs = mysqli_query($conn,$sel) or die(mysqli_error($conn));     
 
    
 
