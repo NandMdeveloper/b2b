@@ -46,6 +46,7 @@ CAMPOS
             
     }
 function get_ped_new_cli_el($status=''){
+    $res_array =  array();
     $sQuery="SELECT pedidos_app.*, tmcustomernew.*, usuario.nombre FROM pedidos_app INNER JOIN tmcustomernew ON pedidos_app.co_cli = tmcustomernew.CustCode INNER JOIN usuario ON pedidos_app.co_ven = usuario.uname WHERE pedidos_app.status= $status";
  //echo $sQuery;
     $result=mysql_query($sQuery) or die(mysql_error());
