@@ -44,14 +44,16 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_F();
                                       </tr>
                                     </thead>
                                     <tbody>
-                                    <?php for($i=0;$i<sizeof($arr_pedidos);$i++){ ?>
+                                    <?php for($i=0;$i<sizeof($arr_pedidos);$i++){
+                                              $fecha = date_format(date_create($arr_pedidos[$i]['fecha_facturado']),'d/m/Y');
+                                     ?>
                                       <tr class="odd gradeX">
                                         <td><?php echo $arr_pedidos[$i]['doc_num']; ?></td>
                                         <td><?php echo $arr_pedidos[$i]['factura']; ?></td>
-                                        <td>Bs. F: <?php echo number_format($arr_pedidos[$i]['total_neto'], 2, ",", "."); ?></td>
+                                        <td><?php echo number_format($arr_pedidos[$i]['total_neto'], 2, ".", ","); ?></td>
                                         <td><?php echo $arr_pedidos[$i]['co_cli'].'-'.$arr_pedidos[$i]['cli_des']; ?></td>
                                         <td><?php echo $arr_pedidos[$i]['co_ven'].'-'.$arr_pedidos[$i]['ven_des']; ?></td>
-                                        <td><?php echo $arr_pedidos[$i]['fecha_facturado']; ?></td>
+                                        <td><?php echo $fecha; ?></td>
                                         <td><?php echo  utf8_encode($arr_pedidos[$i]['comentario']); ?></td>
                                         <td class="center">
                                           <form action="detallePedidoDesF.php" method="POST">
