@@ -63,6 +63,13 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_D();
                                       </tr>
                                     <?php } ?>
                                     </tbody>
+                                                                          <tfoot>
+                                          <tr>
+                                            <th  colspan="2" style="text-align:right">Totales:</th>
+                                            <th colspan="5" ><span style="float:left;"id ='Base'>0</span></th>
+                                
+                                          </tr>
+                                          </tfoot>
                                 </table>
                             </div>
                         </div>
@@ -93,8 +100,30 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_D();
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
     $(document).ready(function() {
-        $('#dataTables-example').DataTable({
-                responsive: true
+        
+        $("#dataTables-example").DataTable( {
+          responsive: true,
+          "footerCallback": function ( row, data, start, end, display ) {
+                var api = this.api(), data;  
+                           var intVal = function ( i ) {
+                    return typeof i === 'string' ? i.replace(/[\$,\$.]/g, '')*1 : typeof i === 'number' ?  i : 0;
+                };
+
+                 Base = api.column( 2, { page: 'current'} ).data().reduce( function (a, b) { return intVal(a) + intVal(b);}, 0 );
+                             
+                Number.prototype.formatMoney = function(c, d, t){
+                var n = this, 
+                    c = isNaN(c = Math.abs(c)) ? 2 : c, 
+                    d = d == undefined ? "." : d, 
+                    t = t == undefined ? "," : t, 
+                    s = n < 0 ? "-" : "", 
+                    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), 
+                    j = (j = i.length) > 3 ? j % 3 : 0;
+                   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+                 };
+                  Base = parseFloat(Math.round(Base) / 100);
+                   $('#Base').html(Base.formatMoney(2,'.',','));
+            }
         });
     });
     </script>

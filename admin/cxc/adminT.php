@@ -135,14 +135,16 @@ $user=$_SESSION["user"];
                             <?php switch($status){
                                     case "r":
                                         $arr_pedidos=$obj_pedidos->get_pedi(2); ?>
-                                        <?php for($i=0;$i<sizeof($arr_pedidos);$i++){ ?>
+                                        <?php for($i=0;$i<sizeof($arr_pedidos);$i++){ 
+                                             $fecha = date_format(date_create($arr_pedidos[$i]['fec_emis']),'d/m/Y');
+                                            ?>
                                             <tr class="odd gradeX">
                                                 <td class="center"><?php echo $arr_pedidos[$i]['doc_num']; ?></td>
                                                 <!-- <td><?php //echo $arr_pedidos[$i]['cli_des']; ?></td>-->
                                                 <td class="center"><span class="cliente-cxc btn btn-primary btn-xs"><?php echo $arr_pedidos[$i]['co_cli']; ?></span></td>
                                                 <td><?php echo $arr_pedidos[$i]['nombre']; ?></td>
-                                                <td class="center">Bs. F: <?php echo number_format($arr_pedidos[$i]['total_neto'], 2, ",", "."); ?></td>
-                                                <td class="center"><?php echo $arr_pedidos[$i]['fec_emis']; ?></td>
+                                                <td class="center"><?php echo number_format($arr_pedidos[$i]['total_neto'], 2, ".", ","); ?></td>
+                                                <td class="center"><?php echo $fecha; ?></td>
                                                 <td class="center"><?php echo $arr_pedidos[$i]['descrip']; ?></td>
                                                 <td class="center">
                                                 <form action="detallePedT.php" method="POST">
