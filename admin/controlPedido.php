@@ -58,8 +58,22 @@ switch ($opcion) {
     break;
 	case 'detPedidoReversar':
 
-		$id = $_POST['documento'];
-		
+    $id = $_POST['documento'];
+		$vista = $_POST['vista'];
+
+    $despachado = 0;
+    $entregado = 0;
+    $despachadoAct = "";
+    $entregadoAct = "active in";
+
+		if ($vista=="despachado") {
+      $reversar="2";
+      $despachadoAct = "active in";
+       $entregadoAct = "";
+      $despachado = 1;
+      $entregado = 1;
+    }
+    $reversar="3";
 		$arr_dp=$obj_pedidos->get_pd_d($id);
 		$arr_dat=$obj_pedidos->get_dat($id);
 		?>
@@ -96,7 +110,13 @@ switch ($opcion) {
                                 </table>
 
 <ul class="nav nav-tabs">
+  <?php if ($entregado==1) {
+   ?>
   <li class="active"><a href="#entregado" data-toggle="tab" aria-expanded="false">Entregado</a></li>
+    <?php 
+      } 
+    ?>
+
   <li class=""><a href="#modificar" data-toggle="tab" aria-expanded="true">Modificar</a></li>
   <li class=""><a href="#reversar" data-toggle="tab" aria-expanded="true">Reversar</a></li>
   <li class=""><a href="#anular" data-toggle="tab" aria-expanded="true">Anular</a></li>
@@ -105,11 +125,11 @@ switch ($opcion) {
   </li>
 </ul>
 <div id="myTabContent" class="tab-content">
-  <div class="tab-pane fade active in " id="entregado">
+  <div class="tab-pane fade <?php echo  $despachadoAct; ?>" id="entregado">
      <div class="panel-heading">
-                            <h5> <strong>Entregado al cliente</strong></h5>
+           <h5> <strong>Entregado al cliente</strong></h5>
 
-                        </div>
+       </div>
                             
                                 <form class="form-inline" action="" method="POST">
                                  
@@ -117,14 +137,14 @@ switch ($opcion) {
                                       <input type="date" name="fecha_old" class="form-control" value="<?php echo $as=date("d-m-Y"); ?>" required/>
                                       <label for="comentario">Comentario: </label>
                                       <input type="textarea" name="comentario" class="form-control" value="" required/>
-                                     <label><button name="id" type="button" class="btn btn-primary btn-block mod" value="<?php echo $id; ?>"onclick='anular_pedido(this.form,this.value,"aprobar" )'>
+                                     <label><button name="id" type="button" class="btn btn-primary btn-block mod" value="<?php echo $id; ?>"onclick='anular_pedido(this.form,this.value,"aprobar",null )'>
                                      <i class="fa fa-check-circle"></i> Enviar</button></label>
                                   
   
                                 </form>
                     </div>
-  <div class="tab-pane fade " id="modificar">
- <div class="panel-heading">
+                 <div class="tab-pane fade <?php echo  $entregadoAct; ?>" id="modificar">
+                  <div class="panel-heading">
                             <h5> <strong>Modificar fecha de despacho</strong></h5>
 
                         </div>                            
@@ -135,7 +155,7 @@ switch ($opcion) {
                   <input type="date" name="fecha_old" class="form-control" value="<?php echo $arr_dat[0]['fecha_despacho']; ?>" readonly required/>
                   <label for="fecha">Fecha Despacho Nueva: </label>
                   <input type="date" name="fecha_new" class="form-control" value="" required/>
-                                    <label> <button name="id" type="button" class="btn btn-primary btn-block mod" value="<?php echo $id; ?>"onclick='anular_pedido(this.form,this.value,"modificar" )'>
+                                    <label> <button name="id" type="button" class="btn btn-primary btn-block mod" value="<?php echo $id; ?>"onclick='anular_pedido(this.form,this.value,"modificar",null )'>
                                      <i class="fa fa-cog"></i> Modificar fecha</button></label>
                                  
                            </form>
@@ -153,7 +173,7 @@ switch ($opcion) {
                                       <input type="date" name="fecha_old" class="form-control" value="<?php echo $arr_dat[0]['fecha_despacho']; ?>" readonly required/>
                                         <label for="comentario">Motivo de Reversion: </label>
                                       <input type="textarea" name="comentario" id="comentario" class="form-control" value="" required/>
-                                    <label> <button name="id" type="button" class="btn btn-primary btn-block mod" value="<?php echo $id; ?>"onclick='anular_pedido(this.form,this.value,"reversar" )'>
+                                    <label> <button name="id" type="button" class="btn btn-primary btn-block mod" value="<?php echo $id; ?>"onclick='anular_pedido(this.form,this.value,"reversar",<?php echo $reversar ?> )'>
                                      <i class="fa fa-cog"></i> Reversar para despachar </button></label>
                                  
                            </form>
@@ -169,7 +189,7 @@ switch ($opcion) {
                                      <label for="comentario">Motivo de la Anulacion: </label>
                                       <input type="textarea" name="comentario" id="comentario" class="form-control" value="" required/>
                                       <input type="hidden" name="fecha_old" class="form-control" value="<?php echo $arr_dat[0]['fecha_despacho']; ?>"/>
-                                    <label> <button name="id" type="submit" class="btn btn-primary btn-block " value="<?php echo $id; ?>" onclick='anular_pedido(this.form,this.value,"anular")'>
+                                    <label> <button name="id" type="submit" class="btn btn-primary btn-block " value="<?php echo $id; ?>" onclick='anular_pedido(this.form,this.value,"anular",null)'>
                                      <i class="fa fa-ban"></i>Anular</button></label>
                                  
                            </form>
@@ -185,13 +205,14 @@ switch ($opcion) {
         <?php
 		break;
       case 'procesar_accion':
-$obj_log= new class_log;
+        $obj_log= new class_log;
 
-$user=$_SESSION["user"];
+        $user=$_SESSION["user"];
 
        $pedido=$_REQUEST["documento"];
        $tipo=$_REQUEST["tipo"];
-   if($tipo=="anular"){
+
+        if($tipo=="anular"){
            $anular=$_REQUEST["coment"];
 
 	      $sel= "UPDATE pedidos_des SET status=5,anulado=1, comentario='revesad$anular' where doc_num='$pedido'";
@@ -216,9 +237,9 @@ $user=$_SESSION["user"];
     elseif ($tipo=="reversar"){
        $anular=$_REQUEST["coment"];
        $fechaanterior=$_REQUEST["fechades"];
+       $estatus=$_REQUEST["estatus"];
 
-
-        $sel= "UPDATE pedidos_des SET status=2, comentario='$anular' where doc_num='$pedido'";
+        $sel= "UPDATE pedidos_des SET status='$estatus', comentario='$anular' where doc_num='$pedido'";
       $hecho =0;
 
       $rs = mysql_query($sel) or die(mysql_error());
