@@ -179,7 +179,7 @@ $user=$_SESSION["user"];
                                                 <td><?php echo $arr_pedidos[$i]['doc_num_p']; ?></td>
                                                 <td><?php echo $arr_pedidos[$i]['cli_des']; ?></td>
                                                 <td><?php echo $arr_pedidos[$i]['nombre']; ?></td>
-                                                <td class="center"><?php echo number_format($arr_pedidos[$i]['total_neto'], 2, ".", ","); ?></td>
+                                                <td class="text-right"><?php echo number_format($arr_pedidos[$i]['total_neto'], 2, ".", ","); ?></td>
                                                 <td class="center"><?php echo $fecha; ?></td>
                                                 <td class="center"><?php echo $arr_pedidos[$i]['comentario']; ?></td>
                                                 <td class="center">
@@ -210,13 +210,15 @@ $user=$_SESSION["user"];
                                     break;
                                     case "l":
                                         $arr_pedidos=$obj_pedidos->get_pedidos(6); ?>
-                                        <?php for($i=0;$i<sizeof($arr_pedidos);$i++){ ?>
+                                        <?php for($i=0;$i<sizeof($arr_pedidos);$i++){ 
+                                            $fecha = date_format(date_create($arr_pedidos[$i]['fecha_anulado']),'d/m/Y');
+                                            ?>
                                             <tr class="odd gradeX">
                                                 <td><?php echo $arr_pedidos[$i]['doc_num']; ?></td>
                                                 <td><?php echo $arr_pedidos[$i]['cli_des']; ?></td>
                                                 <td><?php echo $arr_pedidos[$i]['nombre']; ?></td>
-                                                <td class="center">Bs. F: <?php echo number_format($arr_pedidos[$i]['total_neto'], 2, ",", "."); ?></td>
-                                                <td class="center"><?php echo $arr_pedidos[$i]['fecha_anulado']; ?></td>
+                                                <td class="center"><?php echo number_format($arr_pedidos[$i]['total_neto'], 2, ".", ","); ?></td>
+                                                <td class="center"><?php echo $fecha; ?></td>
                                                 <td class="center"><?php echo $arr_pedidos[$i]['comentario_a']; ?></td>
                                                 <td class="center">
                                                 <form action="detallePedido.php" method="POST">
@@ -228,13 +230,15 @@ $user=$_SESSION["user"];
                                     break;
                                     case "n":
                                         $arr_pedidos=$obj_pedidos->get_pedidos_cn(8); ?>
-                                        <?php for($i=0;$i<sizeof($arr_pedidos);$i++){ ?>
+                                        <?php for($i=0;$i<sizeof($arr_pedidos);$i++){ 
+                                            $fecha = date_format(date_create($arr_pedidos[$i]['fec_emis']),'d/m/Y');
+                                            ?>
                                             <tr class="odd gradeX">
                                                 <td><?php echo $arr_pedidos[$i]['doc_num']; ?></td>
-                                                <td><?php echo $arr_pedidos[$i]['rif']."-".$arr_pedidos[$i]['nombre_emp']; ?></td>
+                                                <td><strong><?php echo $arr_pedidos[$i]['rif']." </strong>-".$arr_pedidos[$i]['nombre_emp']; ?></td>
                                                 <td><?php echo $arr_pedidos[$i]['nombre']; ?></td>
-                                                <td class="center">Bs. F: <?php echo number_format($arr_pedidos[$i]['total_neto'], 2, ",", "."); ?></td>
-                                                <td class="center"><?php echo $arr_pedidos[$i]['fec_emis']; ?></td>
+                                                <td class="text-right"><?php echo number_format($arr_pedidos[$i]['total_neto'], 2, ".", ","); ?></td>
+                                                <td class="center"><?php echo $fecha; ?></td>
                                                 <td class="center"><?php echo $arr_pedidos[$i]['comentario']; ?></td>
                                                 <td class="center">
                                                 <form action="detallePedidoN.php" method="POST">
@@ -323,9 +327,6 @@ $user=$_SESSION["user"];
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
     $(document).ready(function() {
-        $('#dataTables-example2').DataTable({
-                responsive: true
-        });
     $("#dataTables-example").DataTable(
     {
       responsive: true,
