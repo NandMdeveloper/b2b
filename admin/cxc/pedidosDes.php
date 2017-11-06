@@ -67,15 +67,16 @@ $arr_pedidos=$obj_pedidos->get_ped_sql();
                                     <tbody>
                                     <?php for($i=0;$i<sizeof($arr_pedidos);$i++){ 
                                       $sq="SELECT doc_num FROM pedidos_des WHERE doc_num=".$arr_pedidos[$i]['doc_num'];
+                                      $fecha = date_format(date_create($arr_pedidos[$i]['fec_emis']->format('Y-m-d H:m:s')),'d/m/Y');
                                       $result=mysql_query($sq);
                                       $a=mysql_num_rows($result);
                                       if($a==0){ ?>
                                         <tr class="odd gradeX">
                                           <td><?php echo $arr_pedidos[$i]['doc_num']; ?></td>
-                                          <td class="text-right"><?php echo number_format($arr_pedidos[$i]['total_neto'], 2, ",", "."); ?></td>
+                                          <td class="text-right"><?php echo number_format($arr_pedidos[$i]['total_neto'], 2, ".", ","); ?></td>
                                           <td> <span class="cliente-cxc btn btn-primary btn-xs"><?php echo $arr_pedidos[$i]['co_cli']; ?></span></td>
                                           <td><?php echo $arr_pedidos[$i]['co_ven']."-".$arr_pedidos[$i]['cli_des']; ?></td>
-                                          <td><?php echo $arr_pedidos[$i]['fec_emis']->format('Y-m-d H:m:s'); ?></td>
+                                          <td><?php echo  $fecha; ?></td>
                                           <td><?php echo  utf8_encode($arr_pedidos[$i]['descrip']); ?></td>
                                           <td class="center">
                                             <form action="detallePedidoDes.php" method="POST">
@@ -86,12 +87,13 @@ $arr_pedidos=$obj_pedidos->get_ped_sql();
                                       <?php }
                                     } ?>
                                     </tbody>
-                                                   <tfoot>
-                      <tr>
-                        <th  class="text-right">Totales:</th>
-                        <th colspan="6" class="text-left lead"><span id ='Base'>0</span></th>
-                      </tr>
-                      </tfoot>
+                                         <tfoot>
+                                          <tr>
+                                            <th style="text-align:right">Totales:</th>
+                                            <th colspan="6" ><span style="float:left;"id ='Base'>0</span></th>
+                                
+                                          </tr>
+                                          </tfoot>
                                 </table>
                             </div>
                         </div>
@@ -123,26 +125,32 @@ $arr_pedidos=$obj_pedidos->get_ped_sql();
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
     $(document).ready(function() {
-        $('#dataTables-example').DataTable({
-                responsive: true,
-                        "footerCallback": function ( row, data, start, end, display ) {
+    $("#dataTables-example").DataTable(
+    {
+      responsive: true,
+      "footerCallback": function ( row, data, start, end, display ) {
             var api = this.api(), data;  
-            // Remove the formatting to get integer data for summation
-            var intVal = function ( i ) {
+                       var intVal = function ( i ) {
                 return typeof i === 'string' ? i.replace(/[\$,\$.]/g, '')*1 : typeof i === 'number' ?  i : 0;
             };
 
-            Base = api.column( 1, { page: 'current'} ).data().reduce( function (a, b) { return intVal(a) + intVal(b);}, 0 );
+             Base = api.column( 1, { page: 'current'} ).data().reduce( function (a, b) { return intVal(a) + intVal(b);}, 0 );
+                         
+            Number.prototype.formatMoney = function(c, d, t){
+            var n = this, 
+                c = isNaN(c = Math.abs(c)) ? 2 : c, 
+                d = d == undefined ? "." : d, 
+                t = t == undefined ? "," : t, 
+                s = n < 0 ? "-" : "", 
+                i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), 
+                j = (j = i.length) > 3 ? j % 3 : 0;
+               return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+             };
+              Base = parseFloat(Math.round(Base) / 100);
+               $('#Base').html(Base.formatMoney(2,'.',','));
+        }
+    });
 
-            //Base = parseFloat(Base);
-            Base = parseFloat(Math.round(Base) / 100);
-
-            //Base = formatNumber.new(Base.toFixed(2));
-
-            // Update footer
-            $('#Base').html(Base.toFixed(2));         
-        },
-        });
     });
     </script>
 </body>
