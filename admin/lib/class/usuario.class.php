@@ -104,7 +104,7 @@ class usuario {
              $msn = array(
             "error"=>"no");
              $this->setMensajes('success','Usuario Ingresado');
-              $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Agrego","Creo el <strong>#usuario</strong> ".$registrousuario);  exit();  
+              $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Agrego","Creo el <strong>#usuario</strong> ".$registrousuario);
                    }
       }//if tipo vendedor
       else {
@@ -126,7 +126,7 @@ class usuario {
   }//funcion 
     /*editas los  usuarios*/
     public function editarusuario($campos) {
-      //var_dump($campos); exit();
+     // var_dump($campos); exit();
       $id = $campos['id'];
    $usuario=$_SESSION['user'];
       $registrousuario = $campos['usuario'];
@@ -298,21 +298,21 @@ $mensa = "No tiene permisos para realizar esta accion";
     }  
     /*envia los datos del usuario a editar*/
  public function detalledeusuarios($id) {
-      $sel ="SELECT * FROM `usuario` as u 
-      inner join usuario_tipo as t on t.id=u.tipo
-      WHERE u.id = ".$id."";
-      $conn = $this->getConMYSQL() ;
+      $sel ="SELECT usuario.id as id_usuario ,usuario.uname,usuario.nombres,usuario.apellido,
+      usuario.team,usuario.sucursal,usuario.email,usuario.tipo, 
+      usuario.supervisor,usuario_tipo.id, usuario_tipo.descripcion 
+      FROM b2bfc.usuario, b2bfc.usuario_tipo where usuario.status=1 and usuario.id=$id and usuario.tipo = usuario_tipo.id";
+            $conn = $this->getConMYSQL() ;
         $rs = mysqli_query($conn,$sel) or die(mysqli_error($conn));
         $res_array = array();
-
-        $i=0;
+        $i=0; 
         while($row=mysqli_fetch_array($rs)) {
           foreach($row as $key=>$value) {
             $res_array[$i][$key]=$value;
           }
           $i++;
         }
-       
+//var_dump($res_array);exit;
         return $res_array;
 
     }/*envia los mensajes*/

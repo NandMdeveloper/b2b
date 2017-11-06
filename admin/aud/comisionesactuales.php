@@ -1,4 +1,5 @@
 <?php
+ini_set('display_errors', '1');
 require_once("../lib/seg.php");
 if($_SESSION['tipo']!='9') header('Location: ../lib/php/common/logout.php');
 require_once('../lib/conex.php');
@@ -430,6 +431,7 @@ $mDatos = $comision->listadoFacturaComisionSaldoBasico2($desde,$hasta);
             Saldo = api.column( 5, { page: 'current'} ).data().reduce( function (a, b) { return intVal(a) + intVal(b);}, 0 );
             Comision = api.column( 6, { page: 'current'} ).data().reduce( function (a, b) { return intVal(a) + intVal(b);}, 0 );
             Reserva = api.column( 7, { page: 'current'} ).data().reduce( function (a, b) { return intVal(a) + intVal(b);}, 0 );
+            
             Number.prototype.formatMoney = function(c, d, t){
             var n = this, 
                 c = isNaN(c = Math.abs(c)) ? 2 : c, 
@@ -440,6 +442,7 @@ $mDatos = $comision->listadoFacturaComisionSaldoBasico2($desde,$hasta);
                 j = (j = i.length) > 3 ? j % 3 : 0;
                return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
              };
+             
             //Base = parseFloat(Base);
             Base = parseFloat(Math.round(Base) / 100);
             Saldo = parseFloat(Math.round(Saldo) / 100);

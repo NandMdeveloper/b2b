@@ -1,7 +1,7 @@
 <?php
 		session_start();
 
-	if ($_SESSION['tipo'] != 9 ) {
+	if ($_SESSION['tipo'] != 3 ) {
 		header("Location: ../../index.php"); 
   		exit();
 	}

@@ -135,6 +135,7 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_R();
                                     </tbody>
                                   <tfoot>
                                   <tr>
+                                  
                                     <th colspan="2" style="text-align:right">Totales:</th>
                                     <th colspan="6" ><span style="float:left;"id ='Saldo'>0</span></th>
                                 
@@ -163,7 +164,7 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_R();
 
     <!-- Custom Theme JavaScript -->
     <script src="../../dist/js/sb-admin-2.js"></script>
-        <script src="../../bower_components/jQuery/jquery.number.js"></script>
+        <script src="../../bower_components/jquery/jquery.number.js"></script>
     <script src="../../bower_components/fc.js"></script>
     
     <!-- DataTables JavaScript -->

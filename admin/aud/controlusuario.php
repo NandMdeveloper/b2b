@@ -2,11 +2,7 @@
 
 		session_start();
 
-	if ($_SESSION['tipo'] != 9 ) {
-		header("Location: ../../index.php"); 
-  		exit();
-	}
-		include('../lib/conecciones.php');
+			include('../lib/conecciones.php');
 	    include('../lib/class/usuario.class.php');
 
 	$opcion = $_GET['opcion'];

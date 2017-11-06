@@ -34,7 +34,7 @@
 		/* Pedidos con fecha de despacho en tabla despachos_des*/
 		$mDatos = $comision->listadoFacturaComisionVentas($desde,$hasta);
 		$cantidad = count($mDatos);
-
+		//$comision->dump($mDatos); exit();
 		$objPHPExcel->getProperties()->setCreator("PowerSales")
 						 ->setLastModifiedBy("Javier rodriguez")
 						 ->setTitle("Office 2007 XLSX ")
@@ -121,7 +121,15 @@
 			//ingreso de datos
 			$pos = 3 + $i;
 			$nro_orig = str_pad(trim($mDatos[$i]['doc_num']),  6, "0", STR_PAD_LEFT); 
- 			$fec_emis = date_format(date_create($mDatos[$i]['fec_emis']->format("Y-m-d")),'d/m/Y');
+
+			$fec_emis = "";
+			if (is_object($mDatos[$i]['fec_emis'])) {
+				$fec_emis = date_format(date_create($mDatos[$i]['fec_emis']->format("Y-m-d")),'d/m/Y');
+			}else{
+				$fec_emis = date_format(date_create($mDatos[$i]['fec_emis']),'d/m/Y');
+
+			}
+ 			
 
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$pos, $nro_orig);
 			$objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$pos, $mDatos[$i]['tipodoc']);
@@ -202,12 +210,6 @@ $objPHPExcel->getActiveSheet()
     $sheet = $objPHPExcel->setActiveSheetIndex(1);
     $sheet->setTitle("Parametros");
  	$sheet->setCellValue('A3', " Listado de parametros");
-
-
-
-
-
-
     $sheet = $objPHPExcel->setActiveSheetIndex(0);
 
     $impreso = date("j/m/Y  g:i a");

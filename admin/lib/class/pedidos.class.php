@@ -107,7 +107,7 @@ function get_ped_det_sql($id=''){
 	}
 	return($res_array);
 }
-function get_pd_d($id=''){
+function get_pd_d($id){
 	 $res_array =  array();
         $sQuery="SELECT * FROM pedidos_detalles_des WHERE doc_num = $id";
         $result=mysql_query($sQuery) or die(mysql_error());
@@ -292,6 +292,7 @@ function get_ped_desp($id=''){
 	pedidos_des.fecha_aprobado,
 	pedidos_des.factura,
 	pedidos_des.imp,
+	pedidos_des.anulado,
 	vendedor.ven_des,
 (SELECT cli_des FROM clientes WHERE clientes.co_cli=pedidos_des.co_cli) as cli_des,
 (SELECT ciudad FROM clientes WHERE clientes.co_cli=pedidos_des.co_cli) as ciudad
@@ -299,7 +300,7 @@ FROM
 	pedidos_des
 INNER JOIN vendedor ON pedidos_des.co_ven = vendedor.co_ven
 WHERE
-	STATUS = 1 ";
+	STATUS = 1 and pedidos_des.anulado= 0";
             if($id){ $sQuery.="AND doc_num = '$id' ";      }
             $result=mysql_query($sQuery) or die(mysql_error());
 		$i=0;
@@ -598,6 +599,7 @@ function get_ped_app($st='',$sup=''){
     if($sup) {	$sQuery.=" AND pedidos.co_ven IN (SELECT uname FROM pedidos WHERE supervisor='$sup')";	}
     $result=mysql_query($sQuery) or die(mysql_error());
     $i=0;
+    $res_array = array();
     while($row=mysql_fetch_array($result)){
         foreach($row as $key=>$value){
             $res_array[$i][$key]=$value;

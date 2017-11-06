@@ -86,15 +86,15 @@ $usuarios = new usuario ();
             <div class="form-group">
               <label for="select" class="col-lg-2 control-label" >Equipo</label>
               <div class="col-lg-4">
-                <select class="form-control" name="equipo" required>
-                   <?php if ($usuario=="manuel" ) {?>
-                  <option value=""></option>
+                 <select class="form-control" name="equipo" required>
+                   <?php if ($usuario=="manuel" or $usuario=="enmary" ) {?>
+                  <option value="<?php echo utf8_encode($edituser[0]['team']); ?>"><?php echo utf8_encode($edituser[0]['team']); ?></option>
                   <option value="Vendedor">Vendedor</option>
                   <option value="Ventas">Ventas</option>
                   <option value="Telemarketing">Telemarketing</option>
 
                    <?php }else{?>
-                   <option value=""></option>
+                   <option value="<?php echo utf8_encode($edituser[0]['team']); ?>"><?php echo utf8_encode($edituser[0]['team']); ?></option>
                   <option value="Vendedor">Vendedor</option>
                   <option value="Ventas">Ventas</option>
                   <option value="Coordinador">Coordinador</option>
@@ -110,13 +110,13 @@ $usuarios = new usuario ();
               <label for="select" class="col-lg-2 control-label" >Tipo</label>
               <div class="col-lg-4">
                 <select class="form-control" name="tipo" required>
-                <?php if ($usuario=="manuel" ) {?>
-                  <option value=""></option>
+                <?php if ($usuario=="manuel" or $usuario=="enmary" ) {?>
+                  <option value="<?php echo utf8_encode($edituser[0]['tipo']); ?>"><?php echo utf8_encode($edituser[0]['descripcion']); ?></option>
                   <option value="1">Vendedor</option>
                   <option value="12">Ventas</option>
                   <option value="11">Telemercadeo</option>
                    <?php }else{?>
-                   <option value=""></option>
+                  <option value="<?php echo utf8_encode($edituser[0]['tipo']); ?>"><?php echo utf8_encode($edituser[0]['descripcion']); ?></option>
                   <option value="1">Vendedor</option>
                   <option value="2">Coordinador</option>
                   <option value="3">Gerente de Ventas</option>
@@ -129,7 +129,6 @@ $usuarios = new usuario ();
                   <option value="10">Eventual</option>
                   <option value="11">Telemercadeo</option>
                   <option value="12">Ventas</option>
-
                    <?php }?>
                 </select>
               </div>
