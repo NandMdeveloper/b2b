@@ -31,7 +31,7 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_R();
 
 <body>
 
-    <?php require_once('../lib/php/common/menuD.php'); ?>
+    <?php require_once('../lib/php/common/menuT.php'); ?>
 
         <div id="content">
 
