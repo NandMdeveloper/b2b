@@ -1,4 +1,5 @@
 <?php
+ini_set('display_errors', '1');
 require_once("../lib/seg.php");
 if($_SESSION['tipo']!='9') header('Location: ../lib/php/common/logout.php');
 require_once('../lib/conex.php');

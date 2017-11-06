@@ -31,19 +31,19 @@ function get_pedidos_detalles($id){
 		}
 		return($res_array);
 }
-function add_pedidos_nuevos($doc_num,$co_ven,$descrip,$co_cli,$status,$fecha_emis,$total_bruto,$total_neto,$monto_imp,$OrderNumberTax){
-		
-		$query = "INSERT INTO pedidos_app (doc_num,co_ven,descrip,co_cli,status,fec_emis,total_bruto,total_neto,monto_imp,OrderNumberTax) 
-				  VALUES ($doc_num,'$co_ven','$descrip','$co_cli',$status,'$fecha_emis',$total_bruto,$total_neto,$monto_imp,$OrderNumberTax)";
-		$result=mysql_query($query);
-		return $result;
+function add_pedidos_nuevos($co_ven,$descrip,$co_cli,$status,$fecha_emis,$total_bruto,$total_neto,$monto_imp,$OrderNumberTax){
+
+    $query = "INSERT INTO pedidos (co_ven,descrip,co_cli,status,fec_emis,total_bruto,total_neto,monto_imp,OrderNumberTax) 
+                      VALUES ('$co_ven','$descrip','$co_cli',$status,'$fecha_emis',$total_bruto,$total_neto,$monto_imp,$OrderNumberTax)";
+    $result=mysql_query($query);
+    return $result;
 }
 function add_pedidos_detalles($reng_num,$doc_num,$co_art,$des_art,$total_art,$prec_vta,$total_sub,$monto_imp,$reng_neto,$uniCodPrincipal){
-		
-		$query = "INSERT INTO pedidos_detalles_app (reng_num,doc_num,co_art,des_art,total_art,prec_vta,total_sub,monto_imp,reng_neto,UniCodPrincipal) 
-				  VALUES ($reng_num,$doc_num,'$co_art','$des_art',$total_art,$prec_vta,$total_sub,$monto_imp,$reng_neto,'$uniCodPrincipal')";
-		$result=mysql_query($query);
-		return $result;
+
+    $query = "INSERT INTO pedidos_detalles (reng_num,doc_num,co_art,des_art,total_art,prec_vta,total_sub,monto_imp,reng_neto,UniCodPrincipal) 
+                      VALUES ($reng_num,$doc_num,'$co_art','$des_art',$total_art,$prec_vta,$total_sub,$monto_imp,$reng_neto,'$uniCodPrincipal')";;
+    $result=mysql_query($query);
+    return $result;
 }
 function add_log($fecha,$user,$accion){
 	$query = "INSERT INTO log_data_pow (id,fecha,user,accion)";
@@ -54,7 +54,7 @@ function add_log($fecha,$user,$accion){
 function update_pedidos_nuevos($id){
 	$query = " UPDATE wttorder SET  OrderSincStatus=2 ";
 	$query .= "  WHERE  OrderIdW = $id";
-	$result=mysql_query($query);
+	$result = mysql_query($query);
 	return $result;
 }
 function update_pedidos_detalles($id,$UnitCodeMain){
@@ -69,6 +69,7 @@ $ano = date('Y');
 //$qq="UPDATE wttorderd, tmitem SET wttorderd.UnitCodeMain = tmitem.ItemUnit WHERE wttorderd.ItemCode = tmitem.ItemCode";
 //mysql_query($qq);
 $arr_pedidos_nuevos=get_pedidos_nuevos();
+$id_pedido_nuevo = 0 ;
 for($i=0;$i<sizeof($arr_pedidos_nuevos);$i++){
     $id=$arr_pedidos_nuevos[$i]['OrderIdW'];
     $co_ven=$arr_pedidos_nuevos[$i]['UserCode'];
@@ -80,7 +81,8 @@ for($i=0;$i<sizeof($arr_pedidos_nuevos);$i++){
     $total_neto=$arr_pedidos_nuevos[$i]['OrderTotal'];
     $monto_imp=$arr_pedidos_nuevos[$i]['OrderTotalTax'];
     $OrderNumberTax=$arr_pedidos_nuevos[$i]['OrderNumberTax'];
-    $insert=add_pedidos_nuevos($id,$co_ven,$descrip,$co_cli,1,$fecha_emis,$sub_total,$total_neto,$monto_imp,$OrderNumberTax);
+    $insert=add_pedidos_nuevos($co_ven,$descrip,$co_cli,9,$fecha_emis,$sub_total,$total_neto,$monto_imp,$OrderNumberTax);
+    $id_pedido_nuevo = mysql_insert_id();
     if($insert){
         $udp=update_pedidos_nuevos($id);
         $fecha=date("Y-m-d H:i:s");
@@ -101,7 +103,7 @@ for($i=0;$i<sizeof($arr_pedidos_nuevos);$i++){
         $reng_neto=$arr_pedidos_detalles[$j]['OrderItemTotal'];
         $monto_imp=$arr_pedidos_detalles[$j]['OrderItemTax'];
         $uniCodPrincipal=$row[0];
-        $insert_d=add_pedidos_detalles($j+1,$id_pedido,$co_art,$des_art,$total_art,$prec_vta,$total_sub,$monto_imp,$reng_neto,$uniCodPrincipal);
+        $insert_d=add_pedidos_detalles($j+1,$id_pedido_nuevo,$co_art,$des_art,$total_art,$prec_vta,$total_sub,$monto_imp,$reng_neto,$uniCodPrincipal);
         if($insert_d){
             $udp=update_pedidos_detalles($id_d,$uniCodPrincipal);
             $fecha=date("Y-m-d H:i:s");
@@ -112,7 +114,7 @@ for($i=0;$i<sizeof($arr_pedidos_nuevos);$i++){
 $fecha=date("Y-m-d H:i:s");
 add_log($fecha, 'Administrador', 'Ejecucion del archivo add.php');
 $pp="UPDATE meta_art_vende,art  SET meta_art_vende.asignada = art.stock WHERE meta_art_vende.mes = $mes AND meta_art_vende.ano = $ano AND meta_art_vende.co_art = art.co_art AND meta_art_vende.asignada <> art.stock ";
-mysql_query($pp);
+//mysql_query($pp);
 $ppq="UPDATE meta_art_vende,art  SET meta_art_vende.monto = art.monto WHERE meta_art_vende.mes = $mes AND meta_art_vende.ano = $ano AND meta_art_vende.co_art = art.co_art AND meta_art_vende.monto <> art.monto ";
-mysql_query($ppq);
+//mysql_query($ppq);
 ?>

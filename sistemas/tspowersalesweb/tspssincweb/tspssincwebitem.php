@@ -107,14 +107,14 @@ LEFT JOIN ttsincitemuser ON
 $where2="(ttsincitemuser.ItemCode IS NULL )";            
             
 
-            $query = "SELECT rtrim(ltrim(tmitem.ItemCode)) as ItemCode, tmitem.ItemDesc, tmitem.ItemUnit, tmitem.ItemRefe, tmitem.ItemStatus, 
-                art.monto AS ItemPrec1, tmitem.TaxCode, tmitem.TaxRate, tmitem.LineCode, 
-                tmitem.ModeCode, tmitem.CateCode, tmitem.SublCode, tmitem.ColoCode, tmitem.TypeCode, tmitem.ItemDesc2, 
-                tmitem.ItemNote, 
-                tmitem.ItemStockAct,
-                2 AS ItemSincStatus,tmitem.ItemSIT  FROM tmitem Inner Join art ON 
-                tmitem.ItemCode = art.co_art and 
-                art.co_precio = 'P1' group by art.co_art";
+                $query = "SELECT rtrim(ltrim(tmitem.ItemCode)) as ItemCode, art.art_des as ItemDesc, tmitem.ItemUnit, tmitem.ItemRefe, tmitem.ItemStatus, 
+                    art.monto AS ItemPrec1, tmitem.TaxCode, tmitem.TaxRate, tmitem.LineCode, 
+                    tmitem.ModeCode, tmitem.CateCode, tmitem.SublCode, tmitem.ColoCode, tmitem.TypeCode, tmitem.ItemDesc2, 
+                    tmitem.ItemNote, 
+                    art.stock as ItemStockAct,
+                    2 AS ItemSincStatus,tmitem.ItemSIT  FROM tmitem Inner Join art ON 
+                    tmitem.ItemCode = art.co_art and art.stock > 0 and
+                    art.co_precio = 'P1'group by art.co_art;";
 
             
             //$where2="ItemSincStatus = 1 AND SellCode = '".$tsr."'";

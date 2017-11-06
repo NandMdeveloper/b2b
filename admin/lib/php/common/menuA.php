@@ -78,12 +78,13 @@
                             <ul class="nav nav-second-level">
                                <li><a href="comisionActividad.php">Actividad Vendedores</a></li>
                                 <li><a href="comisionrango.php"><span>Comisiones I</span></a></li>
+                                <li><a href="comisionsaldos.php"><span>Saldos</span></a></li>
 					            <!-- <li><a href="comisionagregargerenteregional.php">Gerente Regional</a></li> -->
 					            <li><a href="comisionagregargerenteventa.php">Gerente Ventas</a></li> 
                                 <li><a href="comisonparametros.php"><span>Parametros Básicos</span></a></li>
                                 <li><a href="comisionMetaClave.php">Presupuesto Claves</a></li> -->
-                                 <!-- <li><a href="comisionMetaVendedor.php"><span>Presupuesto Vendedores</span></a></li> -->
-                                <!--  <li><a href="comisionesRegiones.php"><span>Presupuesto vs Ventas</span></a></li> -->
+                                 <li><a href="comisionMetaVendedor.php"><span>Presupuesto Vendedores</span></a></li>
+                                <li><a href="comisionesRegiones.php"><span>Presupuesto vs Ventas</span></a></li>
           						  <li><a href="comisionregion.php">Regiones</a></li>
                             </ul>
                             <!-- /.nav-second-level -->
