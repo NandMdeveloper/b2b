@@ -225,11 +225,11 @@ $tot=0;
 <script>
 
       $('.pedido-entregado').click(function() {
-        
+        var vista = "despachado";
         var documento = $(this).val();  
        
           $.ajax({
-          data: {"documento" : documento},
+          data: {"documento" : documento,"vista": vista},
           type: "POST",
           url: "../controlPedido.php?opcion=detPedidoReversar",
             success: function(data){
@@ -244,8 +244,8 @@ $tot=0;
 </script>
 
 <script>
-function anular_pedido(elform,documento,tipo){
-   alert(elform.fecha_old.value);
+function anular_pedido(elform,documento,tipo,estatus){
+  // alert(estatus);
  eliminar=confirm("¿Desea procesar esta accion ?");
         if (eliminar){
 
@@ -254,7 +254,7 @@ function anular_pedido(elform,documento,tipo){
       var fech_new = elform.fecha_new.value;
       console.log(moment(fech_old).format('DD/MM/YYYY'));
       console.log(moment(fech_new).format('DD/MM/YYYY'));
-              alert(fech_old);
+              //alert(fech_old);
     }
     else{
 
@@ -263,7 +263,7 @@ function anular_pedido(elform,documento,tipo){
            console.log(moment(fech_old).format('DD/MM/YYYY'));  
  }
                 $.ajax({
-          data: {"documento" : documento,"coment":coment,"tipo":tipo,"fechades":fech_old,"fechanew":fech_new},
+          data: {"documento" : documento,"coment":coment,"tipo":tipo,"fechades":fech_old,"fechanew":fech_new,"estatus":estatus},
           type: "POST",
           url: "../controlPedido.php?opcion=procesar_accion",
             success: function(data){
