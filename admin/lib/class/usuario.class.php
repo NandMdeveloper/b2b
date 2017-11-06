@@ -104,7 +104,7 @@ class usuario {
              $msn = array(
             "error"=>"no");
              $this->setMensajes('success','Usuario Ingresado');
-              $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Agrego","Creo el <strong>#usuario</strong> ".$registrousuario);  exit();  
+              $this->add_log(date("Y-m-d h:i:sa"),$usuario,"Agrego","Creo el <strong>#usuario</strong> ".$registrousuario);
                    }
       }//if tipo vendedor
       else {

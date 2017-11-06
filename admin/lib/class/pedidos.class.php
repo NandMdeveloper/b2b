@@ -107,7 +107,7 @@ function get_ped_det_sql($id=''){
 	}
 	return($res_array);
 }
-function get_pd_d($id=''){
+function get_pd_d($id){
 	 $res_array =  array();
         $sQuery="SELECT * FROM pedidos_detalles_des WHERE doc_num = $id";
         $result=mysql_query($sQuery) or die(mysql_error());
@@ -300,7 +300,7 @@ FROM
 	pedidos_des
 INNER JOIN vendedor ON pedidos_des.co_ven = vendedor.co_ven
 WHERE
-	STATUS = 1 and pedidos_des.anulado= 1";
+	STATUS = 1 and pedidos_des.anulado= 0";
             if($id){ $sQuery.="AND doc_num = '$id' ";      }
             $result=mysql_query($sQuery) or die(mysql_error());
 		$i=0;
