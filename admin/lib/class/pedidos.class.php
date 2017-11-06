@@ -594,7 +594,6 @@ function get_renglon($id=''){
 }
 function get_ped_app($st='',$sup=''){
     $sQuery="SELECT pedidos.*,clientes.cli_des,usuario.nombre FROM pedidos INNER JOIN clientes ON pedidos.co_cli = clientes.co_cli INNER JOIN usuario ON pedidos.co_ven = usuario.uname WHERE 1 = 1 ";
-    var_dump($sQuery);
     if($st) {	$sQuery.=" AND pedidos.`status` = $st ";	}
     if($sup) {	$sQuery.=" AND pedidos.co_ven IN (SELECT uname FROM pedidos WHERE supervisor='$sup')";	}
     $result=mysql_query($sQuery) or die(mysql_error());
