@@ -11,9 +11,17 @@ $obj_pedidos= new class_pedidos;//LLAMADO A LA CLASE DE PEDIDOS
 switch ($opcion) {
   case 'detPedidoAnulado':
     $id = $_POST['documento'];
+    $tipo = $_POST['tipo'];
     
      $arr_dp = $obj_pedidos->get_ped_det($id); 
      $arr_pedidos = $obj_pedidos->get_pedido($id);
+     if ($tipo == "nuevo") {
+       $arr_pedidos = $obj_pedidos->get_pedido_N($id);
+       
+     }else{
+       $arr_pedidos = $obj_pedidos->get_pedido($id);
+     }
+
 
         ?>
       <div class="panel-body">    
@@ -101,8 +109,13 @@ switch ($opcion) {
     $id = $_POST['documento'];
     
     $arr_dp=$obj_pedidos->get_pd_d($id);
+
+
     $arr_dat=$obj_pedidos->get_dat($id);
-    //var_dump($arr_dat);
+
+
+    //var_dump($arr_dp);
+
     ?>
   
              
