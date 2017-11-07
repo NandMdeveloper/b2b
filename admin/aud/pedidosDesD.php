@@ -63,6 +63,27 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_D();
                     <h1 class="page-header">Pedidos
                       <small>Despachados</small></h1>
                 </div>
+                 <div class="col-lg-12">                              
+                   <form action="pedidosDesR.php" method="GET" id="rango">
+                     <div class="col-xs-6">
+                      <div class="col-xs-6">
+                        <div class="input-group input-group-sm">
+                          <span class="input-group-addon" id="sizing-addon3"><span class="glyphicon glyphicon-calendar"></span></span>
+                          <input name="desde" type="text" class="form-control fecha" placeholder="Inicio" aria-describedby="sizing-addon3" required>
+                        </div>
+                      </div>
+                      <div class="col-xs-6">
+                        <div class="input-group input-group-sm">
+                          <span class="input-group-addon" id="sizing-addon3"><span class="glyphicon glyphicon-calendar"></span></span>
+                          <input name="hasta" type="text" class="form-control hasta" placeholder="Cierre" aria-describedby="sizing-addon3">
+                        </div>
+                      </div>
+
+                    </div>
+                </form>
+                <br>
+                <br>
+                </div>
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -121,7 +142,7 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_D();
 
     <!-- jQuery -->
     <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
-
+     <script src="../../bower_components/calendario/jquery-ui.min.js"></script>
     <!-- Bootstrap Core JavaScript -->
     <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
@@ -130,7 +151,8 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_D();
 
     <!-- Custom Theme JavaScript -->
     <script src="../../dist/js/sb-admin-2.js"></script>
-    
+            <script src="../../bower_components/jquery/jquery.number.js"></script>
+    <script src="../../bower_components/fc.js"></script>
     <!-- DataTables JavaScript -->
     <script src="../../bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="../../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
