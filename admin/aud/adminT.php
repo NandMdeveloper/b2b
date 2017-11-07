@@ -17,7 +17,36 @@ $user=$_SESSION["user"];
 <?php require_once('../lib/php/common/headA.php'); ?>
 
 <body>
+<style>
+  .modal-cxc{
+  width: auto !important;
+   width: 1600px !important;
+  margin: 10px;
+  }
+  .modal-dialog {
+    width: 1011px;
+    margin: 30px auto;
+}
+  
+</style>
+            <div id="modal-pedido" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <!-- Modal content-->
+                    <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Detalles de Pedido</h4>        
+                </div>
+                <div class="modal-body">
+                  
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+              </div>
 
+            </div>
+          </div>
     <?php require_once('../lib/php/common/menuA.php'); ?>
 
         <div id="content">
@@ -139,22 +168,17 @@ $user=$_SESSION["user"];
                                         $arr_pedidos=$obj_pedidos->get_pedidos(6); ?>
                                         <?php for($i=0;$i<sizeof($arr_pedidos);$i++){ 
                                                 $total+= $arr_pedidos[$i]['total_neto'];
+                                                 $fecha = date_format(date_create($arr_pedidos[$i]['fecha_anulado']),'d/m/Y');
                                             ?>
                                             <tr class="odd gradeX">
                                                 <td><?php echo $arr_pedidos[$i]['doc_num']; ?></td>
                                                 <td><?php echo $arr_pedidos[$i]['cli_des']; ?></td>
                                                 <td><?php echo $arr_pedidos[$i]['nombre']; ?></td>
-                                                <td class="center">
-                                                    
-                                                    <b><span class="pull-right"><?php echo number_format($arr_pedidos[$i]['total_neto'], 2, ",", "."); ?></span></b>
-
-                                                    </td>
-                                                <td class="center"><?php echo $arr_pedidos[$i]['fecha_anulado']; ?></td>
+                                                <td class="text-center"><?php echo number_format($arr_pedidos[$i]['total_neto'], 2, ".", ","); ?></td>
+                                                <td class="center"><?php echo $fecha; ?></td>
                                                 <td class="center"><?php echo $arr_pedidos[$i]['comentario_a']; ?></td>
                                                 <td class="center">
-                                                <form action="detallePedido.php" method="POST">
-                                                    <button name="id" type="submit" class="btn btn-success btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>"><i class="fa fa-eye"></i> Ver</button>
-                                                </form>
+                                                <button name="id" type="submit"   class="btn btn-primary btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>" onclick="ver_detalles_pedido(this.value)"><i class="fa fa-eye"></i> Ver</button>
                                                 </td>
                                             </tr>
                                         <?php }
@@ -330,6 +354,25 @@ $user=$_SESSION["user"];
         });
 
       });
+      function ver_detalles_pedido(documento) {
+              
+        $.ajax({
+          data: {"documento" : documento},
+          type: "POST",
+          url: "../controlPedido.php?opcion=detPedidoAnulado",
+          beforeSend: function() {
+              
+               $('#modal-pedido .modal-body').html('<div class="text-center"><img src="../../image/preload.gif" class="text-center"/></div>');
+           },
+            success: function(data){             
+              
+              $('#modal-pedido .modal-body').html(data);
+              
+            }
+        });
+        $("#modal-pedido").modal();  
+
+    }
     </script>
 </body>
 

@@ -64,14 +64,12 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_R();
     <?php require_once('../lib/php/common/menuA.php'); ?>
 
         <div id="content">
-
-
                 <div class="col-lg-12">
                     <h1 class="page-header">Pedidos
                       <small>Entregados</small></h1>
                 </div>
                 <div class="col-lg-12">                              
-                   <form action="pedidosDesR.php" method="GET" id="rango">
+                   <form action="pedidosDesD.php" method="GET" id="rango">
                      <div class="col-xs-6">
                       <div class="col-xs-6">
                         <div class="input-group input-group-sm">
