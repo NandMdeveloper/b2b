@@ -109,20 +109,20 @@ function get_ped_det_sql($id=''){
 	return($res_array);
 }
 function get_pd_d($id){
-	 $res_array =  array();
-        $sQuery="SELECT * FROM pedidos_detalles_des WHERE doc_num = $id";
+	 	$nresultado =  array();
+        $sQuery="SELECT * FROM pedidos_detalles_des WHERE doc_num = '$id' ";
         $result=mysql_query($sQuery) or die(mysql_error());
 		$i=0;
 		while($row=mysql_fetch_array($result)){
 			foreach($row as $key=>$value){
-				$res_array[$i][$key]=$value;
-				
+				$nresultado[$i][$key]=$value;				
 			}
 			$i++;
 		}
-		return($res_array);
+		
+		return($nresultado);
     }
-    function get_dat($id=''){
+    function get_dat($id){
     	 $res_array =  array();
         $sQuery="SELECT pedidos_des.*,clientes.ciudad,clientes.cli_des,vendedor.ven_des FROM pedidos_des INNER JOIN clientes ON pedidos_des.co_cli = clientes.co_cli INNER JOIN vendedor ON pedidos_des.co_ven = vendedor.co_ven WHERE 1 = 1 ";
             if($id){ $sQuery.=" AND doc_num = '$id' ";      }
@@ -284,6 +284,7 @@ WHERE
         return($res_array);
     }
 function get_ped_desp($id=''){
+	 $res_array =  array();
         $sQuery="SELECT
 	pedidos_des.id,
 	pedidos_des.doc_num,
@@ -316,7 +317,7 @@ WHERE
 		return($res_array);
     }
 	function get_pedidos_cn($status=''){
-		
+		 $res_array =  array();
 		$sQuery="SELECT pedidos.*,cliente_evento.rif,pedidos_tipos.tipo,cliente_evento.nombre_emp,usuario.nombre FROM pedidos INNER JOIN cliente_evento ON pedidos.co_cli = cliente_evento.rif INNER JOIN pedidos_tipos ON pedidos.doc_num = pedidos_tipos.doc_num INNER JOIN usuario ON pedidos.co_ven = usuario.uname WHERE 1 = 1 ";
 		if($status) {	$sQuery.=" AND  pedidos.`status`= $status ";	}
 		$sQuery.=" ORDER BY doc_num";
@@ -333,6 +334,7 @@ WHERE
 			
 	}
 	function get_ped_new_cli_c($status='',$sup=''){
+		 $res_array =  array();
     $sQuery="SELECT pedidos_app.*, tmcustomernew.*, usuario.nombre FROM pedidos_app INNER JOIN tmcustomernew ON pedidos_app.co_cli = tmcustomernew.CustCode INNER JOIN usuario ON pedidos_app.co_ven = usuario.uname WHERE pedidos_app.status= $status AND tmcustomernew.SellCode
  IN (SELECT uname FROM usuario WHERE supervisor='$sup')";
  //echo $sQuery;
@@ -347,7 +349,7 @@ WHERE
     return($res_array);
 }
 	function get_pedido($id=''){
-		
+		 $res_array =  array();
 		$sQuery="SELECT pedidos.*,clientes.cli_des FROM pedidos INNER JOIN clientes ON pedidos.co_cli = clientes.co_cli WHERE 1 = 1 ";
 		if($id) {	$sQuery.=" AND  pedidos.doc_num= $id ";	}
         //	echo ($sQuery);
@@ -363,7 +365,7 @@ WHERE
 			
 	}
     function get_pedido_app($id=''){
-        
+         $res_array =  array();
         $sQuery="SELECT pedidos.*,clientes.cli_des FROM pedidos INNER JOIN clientes ON pedidos.co_cli = clientes.co_cli WHERE 1 = 1 ";
         if($id) {   $sQuery.=" AND  pedidos.doc_num= $id "; }
         //  echo ($sQuery);
