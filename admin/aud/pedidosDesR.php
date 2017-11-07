@@ -48,10 +48,10 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_R();
           <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Detalles de Pedido</h4>
+        <h4 class="modal-title">Detalles de Pedido</h4>        
       </div>
       <div class="modal-body">
-        <p>Cargando...</p>
+        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -62,7 +62,7 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_R();
 
       </div>
     </div>
-    <?php require_once('../lib/php/common/menuD.php'); ?>
+    <?php require_once('../lib/php/common/menuA.php'); ?>
 
         <div id="content">
 
@@ -215,14 +215,20 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_R();
       $('.pedido-entregado').click(function() {
         
         var documento = $(this).val();  
-       
-          $.ajax({
+
+         
+        $.ajax({
           data: {"documento" : documento},
           type: "POST",
           url: "../controlPedido.php?opcion=detPedidoDetalle",
-            success: function(data){
-              $('#modal-cxc .modal-body').empty();
-              $('#modal-cxc .modal-body').append(data);
+          beforeSend: function() {
+              
+               $('#modal-cxc .modal-body').html('<div class="text-center"><img src="../../image/preload.gif" class="text-center"/></div>');
+           },
+            success: function(data){             
+              
+              $('#modal-cxc .modal-body').html(data);
+              
             }
         });
         $("#modal-cxc").modal()
