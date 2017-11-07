@@ -30,37 +30,36 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_R();
 <?php require_once('../lib/php/common/headD.php'); ?>
 
 <body>
-  <style>
-  .modal-cxc{
-  width: auto !important;
-   width: 1600px !important;
-  margin: 10px;
+    <style>
+    .modal-cxc{
+    width: auto !important;
+     width: 1600px !important;
+    margin: 10px;
+    }
+    .modal-dialog {
+      width: 1011px;
+      margin: 30px auto;
   }
-  .modal-dialog {
-    width: 1011px;
-    margin: 30px auto;
-}
-  
-</style>
-  <div id="modal-cxc" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-        <!-- Modal content-->
-          <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Detalles de Pedido</h4>        
+    
+  </style>
+    <div id="modal-cxc" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+            <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Detalles de Pedido</h4>        
+        </div>
+        <div class="modal-body">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        </div>
       </div>
-      <div class="modal-body">
-        
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-      </div>
+
     </div>
-
   </div>
-
-      </div>
     </div>
     <?php require_once('../lib/php/common/menuA.php'); ?>
 
@@ -114,7 +113,7 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_R();
                                     </thead>
                                     <tbody>
                                     <?php for($i=0;$i<sizeof($arr_pedidos);$i++){ ?>
-                                      <tr class="odd gradeX">
+                                      <tr>
                                         <td><?php echo $arr_pedidos[$i]['doc_num']; ?></td>
                                         <td><?php echo $arr_pedidos[$i]['factura']; ?></td>
                                         <td class="text-right">
@@ -125,7 +124,7 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_R();
                                         <td><?php echo  utf8_encode($arr_pedidos[$i]['comentario_r']); ?></td>
                                         <td class="center">
                                          
-                                            <button name="id" type="submit"   class="btn btn-primary btn-xs btn-block pedido-entregado" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>"><i class="fa fa-eye"></i> Ver</button>
+                                            <button name="id" type="submit"   class="btn btn-primary btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>" onclick="ver_detalles_pedido(this.value)"><i class="fa fa-eye"></i> Ver</button>
                                            
                                         </td>
                                       </tr>
@@ -177,8 +176,8 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_R();
         $('#dataTables-example').DataTable({
                 responsive: true,
                 aLengthMenu: [
-        [-1,25,50,100],
-        ["Todo",25,50,100]
+        [50,100,150,-1],
+        [50,100,150,"Todo"]
       ],       
 
        "footerCallback": function ( row, data, start, end, display ) {
@@ -209,14 +208,10 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_R();
           
         },
         });
+ });
 
-
-
-      $('.pedido-entregado').click(function() {
-        
-        var documento = $(this).val();  
-
-         
+    function ver_detalles_pedido(documento) {
+              
         $.ajax({
           data: {"documento" : documento},
           type: "POST",
@@ -231,14 +226,9 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_R();
               
             }
         });
-        $("#modal-cxc").modal()
-      });
+        $("#modal-cxc").modal();  
 
-
-
-
-
-    });
+    }
     </script>
 </body>
 
