@@ -83,7 +83,7 @@ $arr_pedidos=$obj_pedidos->get_ped_desp();
                                         <td><?php echo $fecha; ?></td>
                                         <td><?php echo  utf8_encode($arr_pedidos[$i]['descrip']); ?></td>
                                         <td class="center">
-                                          <button name="id" type="submit"   class="btn btn-primary btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>" onclick="ver_detalles_pedido(this.value)"><i class="fa fa-eye"></i> Ver</button>
+                                          <button name="id" type="submit"  class="btn btn-primary btn-xs btn-block" value="<?php echo trim($arr_pedidos[$i]['doc_num']); ?>" onclick="ver_detalles_pedido(this.value)"><i class="fa fa-eye"></i> Ver</button>
                                         </td>
                                       </tr>
                                     <?php } ?>
@@ -92,7 +92,7 @@ $arr_pedidos=$obj_pedidos->get_ped_desp();
                                         <tr>                                  
                                             <th  style="text-align:right">Totales:</th>
                                             <th class="text-right"><span style="float:right;"id ='Saldo'>0</span></th>                                
-                                            <th colspan="6" ></th>                                
+                                            <th colspan="5" ></th>                                
                                         </tr>   
                                     </tfoot>
                                 </table>
@@ -156,9 +156,8 @@ $arr_pedidos=$obj_pedidos->get_ped_desp();
                return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
              };
             // Update footer
-            $('#Saldo').html(Saldo.formatMoney(2,'.',','));
-          
-        },
+            $('#Saldo').html(Saldo.formatMoney(2,'.',','));          
+          }
         });
     });
     function ver_detalles_pedido(documento) {
