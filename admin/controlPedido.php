@@ -4,10 +4,98 @@ ini_set('display_errors', '1');
 $opcion = $_GET['opcion'];
 include("lib/class/pedidos.class.php");
 require_once('lib/conex.php');
+require_once('lib/conecciones.php');
 include("lib/class/log.class.php");
 conectar();
 $obj_pedidos= new class_pedidos;//LLAMADO A LA CLASE DE PEDIDOS
 switch ($opcion) {
+  case 'detPedidoAnulado':
+    $id = $_POST['documento'];
+    
+     $arr_dp = $obj_pedidos->get_ped_det($id); 
+     $arr_pedidos = $obj_pedidos->get_pedido($id);
+
+        ?>
+      <div class="panel-body">    
+        
+          <div class="dataTable_wrapper">
+              <table class="table table-striped table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th>N°</th>
+                      <th>Producto</th>
+                      <th>Cantidad</th>
+                      <th>Precio</th>
+                      <th>Total-Neto</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <?php for($i=0;$i<sizeof($arr_dp);$i++){ ?>
+                    <tr>
+                      <td><?php echo $arr_dp[$i]['reng_num']; ?></td>
+                      <td><?php echo $arr_dp[$i]['co_art']."-".utf8_encode($arr_dp[$i]['art_des']); ?></td>
+                      <td><?php echo $arr_dp[$i]['total_art']." ".$arr_dp[$i]['UniCodPrincipal']; ?></td>
+                      <td class="text-right"><?php echo number_format($arr_dp[$i]['prec_vta'], 2, ",", "."); ?></td>
+                      <td class="text-right"><?php echo number_format($arr_dp[$i]['total_sub'], 2, ",", "."); ?></td>
+                    </tr>
+                  <?php } ?>
+
+                      <tr>
+                        <td colspan="4" class="text-right"><strong>Base:</strong></td> 
+                        <td class="text-right"><?php echo number_format($arr_pedidos[0]['total_bruto'], 2, ",", "."); ?></td>
+                      </tr>
+                      <tr>
+                        <td colspan="4" class="text-right"><strong>Impuesto:</strong></td> 
+                        <td class="text-right"><?php echo number_format($arr_pedidos[0]['monto_imp'], 2, ",", "."); ?></td>
+                      </tr>
+                      <tr>
+                        <td colspan="4" class="text-right"><strong>Total neto:</strong></td> 
+                        <td class="text-right"><?php echo number_format($arr_pedidos[0]['total_neto'], 2, ",", "."); ?></td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+      </div>             
+               
+        <?php
+
+  break;
+  case 'detPedidoDetalleXFacturacion':
+    $id = $_POST['documento'];
+    $arr_detalles_pedido=$obj_pedidos->get_ped_det_sql($id);
+        ?>
+      <div class="panel-body">
+       
+        
+          <div class="dataTable_wrapper">
+              <table class="table table-striped table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th>N°</th>
+                      <th>Producto</th>
+                      <th>Cantidad</th>
+                      <th>Precio</th>
+                      <th>Total-Neto</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <?php for($i=0;$i<sizeof($arr_detalles_pedido);$i++){ ?>
+                    <tr>
+                      <td><?php echo $arr_detalles_pedido[$i]['reng_num']; ?></td>
+                      <td><?php echo $arr_detalles_pedido[$i]['co_art']."-".utf8_encode($arr_detalles_pedido[$i]['art_des']); ?></td>
+                      <td><?php echo $arr_detalles_pedido[$i]['total_art']." ".$arr_detalles_pedido[$i]['co_uni']; ?></td>
+                      <td class="text-right"><?php echo number_format($arr_detalles_pedido[$i]['prec_vta'], 2, ",", "."); ?></td>
+                      <td class="text-right"><?php echo number_format($arr_detalles_pedido[$i]['reng_neto'], 2, ",", "."); ?></td>
+                    </tr>
+                  <?php } ?>
+                  </tbody>
+              </table>
+          </div>
+      </div>             
+               
+        <?php
+
+  break;
   case 'detPedidoDetalle':
 
     $id = $_POST['documento'];
