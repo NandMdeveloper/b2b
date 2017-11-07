@@ -33,7 +33,7 @@
         12 => "1"
     );
 
-    $server = "192.168.0.11";
+    $server = "192.168.0.10";
     $options = array("UID" => "ps",  "PWD" => "#hGbkWpdeSD;",  "Database" => "ACCE");
     $conn = sqlsrv_connect($server, $options);
     /* Iniciar la transacción. */

@@ -16,7 +16,8 @@
     <link href="../../bower_components/datatables/media/css/dataTables.bootstrap.min.css" rel="stylesheet">
 
     <!-- Timeline CSS -->
-    <link href="../../dist/css/timeline.css" rel="stylesheet">
+    <link href="../../dist/css/AdminLTE.min.css" rel="stylesheet">
+    <!-- <link href="../../dist/css/timeline.css" rel="stylesheet">-->
 
     <!-- Custom CSS -->
     <link href="../../dist/css/sb-admin-2.css" rel="stylesheet">
