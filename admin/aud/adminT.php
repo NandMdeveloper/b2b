@@ -133,9 +133,7 @@ $user=$_SESSION["user"];
                                                 <td class="center"><?php echo $fecha; ?></td>
                                                 <td class="center"><?php echo $arr_pedidos[$i]['comentario']; ?></td>
                                                 <td class="center">
-                                                <form action="detallePedido.php" method="POST">
-                                                    <button name="id" type="submit" class="btn btn-success btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>"><i class="fa fa-eye"></i> Ver</button>
-                                                </form>
+                                                <button name="id" type="submit"   class="btn btn-primary btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>" onclick="ver_detalles_pedido(this.value,null)"><i class="fa fa-eye"></i> Ver</button>
                                                 </td>
                                             </tr>
                                         <?php }
@@ -154,7 +152,7 @@ $user=$_SESSION["user"];
                                                 <td class="center"><?php echo $fecha; ?></td>
                                                 <td class="center"><?php echo $arr_pedidos[$i]['comentario']; ?></td>
                                                 <td class="center">
-                                                <button name="id" type="submit"   class="btn btn-primary btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>" onclick="ver_detalles_pedido(this.value)"><i class="fa fa-eye"></i> Ver</button>
+                                                <button name="id" type="submit"   class="btn btn-primary btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>" onclick="ver_detalles_pedido(this.value,null)"><i class="fa fa-eye"></i> Ver</button>
                                                 </td>
                                             </tr>
                                         <?php }
@@ -173,7 +171,7 @@ $user=$_SESSION["user"];
                                                 <td class="center"><?php echo $fecha; ?></td>
                                                 <td class="center"><?php echo $arr_pedidos[$i]['comentario_a']; ?></td>
                                                 <td class="center">
-                                                <button name="id" type="submit"   class="btn btn-primary btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>" onclick="ver_detalles_pedido(this.value)"><i class="fa fa-eye"></i> Ver</button>
+                                                <button name="id" type="submit"   class="btn btn-primary btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>" onclick="ver_detalles_pedido(this.value,null)"><i class="fa fa-eye"></i> Ver</button>
                                                 </td>
                                             </tr>
                                         <?php }
@@ -182,23 +180,19 @@ $user=$_SESSION["user"];
                                         $arr_pedidos=$obj_pedidos->get_pedidos_cn(8); ?>
                                         <?php for($i=0;$i<sizeof($arr_pedidos);$i++){
                                                 $total+= $arr_pedidos[$i]['total_neto'];
+                                                 $fecha = date_format(date_create($arr_pedidos[$i]['fec_emis']),'d/m/Y');
                                             ?> 
                                             <tr class="odd gradeX">
                                                 <td><?php echo $arr_pedidos[$i]['doc_num']; ?></td>
                                                 <td><?php echo $arr_pedidos[$i]['rif']."-".$arr_pedidos[$i]['nombre_emp']; ?></td>
                                                 <td><?php echo $arr_pedidos[$i]['nombre']; ?></td>
-                                                   <td class="center">
-                                                    
-                                                    <b><span class="pull-right"><?php echo number_format($arr_pedidos[$i]['total_neto'], 2, ",", "."); ?></span></b>
-
-                                                    </td>
-                                                <td class="center"><?php echo $arr_pedidos[$i]['fec_emis']; ?></td>
+                                                   <td class="center"><?php echo number_format($arr_pedidos[$i]['total_neto'], 2, ",", "."); ?></td>
+                                                <td class="center"><?php echo  $fecha; ?></td>
                                                 <td class="center"><?php echo $arr_pedidos[$i]['comentario']; ?></td>
                                                 <td class="center">
-                                                <form action="detallePedidoN.php" method="POST">
-                                                    <input type="hidden" name="co_cli" value="<?php echo $arr_pedidos[$i]['rif']; ?>"/>
-                                                    <button name="id" type="submit" class="btn btn-success btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>"><i class="fa fa-eye"></i> Ver</button>
-                                                </form>
+
+                                                <button name="id" type="submit"   class="btn btn-primary btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>" onclick="ver_detalles_pedido(this.value,'nuevo')"><i class="fa fa-eye"></i> Ver</button>
+                                                </td>
                                                 </td>
                                             </tr>
                                         <?php }
@@ -218,10 +212,8 @@ $user=$_SESSION["user"];
                                                     </td>
                                                 <td class="center"><?php echo  $fecha; ?></td>
                                                 <td class="center"><?php echo $arr_pedidos[$i]['comentario']; ?></td>
-                                                <td class="center">
-                                                <form action="detallePedido.php" method="POST">
-                                                    <button name="id" type="submit" class="btn btn-success btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>"><i class="fa fa-eye"></i> Ver</button>
-                                                </form>
+                                                <td class="center">                          
+                                                <button name="id" type="submit"   class="btn btn-primary btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>" onclick="ver_detalles_pedido(this.value,null)"><i class="fa fa-eye"></i> Ver</button>
                                                 </td>
                                             </tr>
                                         <?php }
@@ -349,10 +341,10 @@ $user=$_SESSION["user"];
         });
 
       });
-      function ver_detalles_pedido(documento) {
+      function ver_detalles_pedido(documento,tipo) {
               
         $.ajax({
-          data: {"documento" : documento},
+          data: {"documento" : documento,"tipo" : tipo},
           type: "POST",
           url: "../controlPedido.php?opcion=detPedidoAnulado",
           beforeSend: function() {
