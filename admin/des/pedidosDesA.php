@@ -15,8 +15,41 @@ $tot=0;
 <?php require_once('../lib/php/common/headD.php'); ?>
 
 <body>
+     <style>
+  .modal-cxc{
+  width: auto !important;
+   width: 1600px !important;
+  margin: 10px;
+  }
+  .modal-dialog {
+    width: 1300px;
+    margin: 30px auto;
+}
+  
+</style>
+
 
     <?php require_once('../lib/php/common/menuD.php'); ?>
+  <div id="modal-cxc" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+          <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Detalles de Pedido</h4>
+      </div>
+      <div class="modal-body">
+        <p>Cargando...</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+
+      </div>
+    </div>
 
         <div id="content">
                 <div class="col-lg-12">
@@ -60,7 +93,7 @@ $tot=0;
 										<td><?php echo utf8_encode($arr_pedidos[$i]['descrip']); ?></td>
                                         <td><?php echo utf8_encode($arr_pedidos[$i]['ciudad']); ?></td>
                                         <td class="center"><span class="btn-group">
-                                    <button name="id" type="button" class="btn btn-primary btn-xs det" data-id="<?php echo $arr_pedidos[$i]['doc_num']; ?>"><i class="fa fa-eye"></i> Ver</button>
+                                    <button name="id" type="submit"   class="btn btn-primary btn-xs btn-block pedido-entregado" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>"><i class="fa fa-eye"></i> Ver</button>
                                     <button name="id" type="button" class="btn btn-info btn-xs desp" data-id="<?php echo $arr_pedidos[$i]['doc_num']; ?>"><i class="fa fa-check-circle"></i> Fact</button>
                                     <?php if($class==''){ ?>
                                     <button name="id" type="button" class="btn btn-warning btn-xs imp" data-id="<?php echo $arr_pedidos[$i]['doc_num']; ?>" ><i class="fa fa-check-circle"></i> Imp</button> <?php } ?>
@@ -101,7 +134,7 @@ $tot=0;
 
     <!-- Custom Theme JavaScript -->
     <script src="../../dist/js/sb-admin-2.js"></script>
-    <script src="../../bower_components/jQuery/jquery.number.js"></script>
+    <script src="../../bower_components/jquery/jquery.number.js"></script>
     <script src="../../bower_components/fc.js"></script>
     
     <!-- DataTables JavaScript -->
@@ -171,6 +204,63 @@ $tot=0;
         window.location.href = "detallePedidoDesA.php?id="+id;
     });
 </script>
+<script>
+
+      $('.pedido-entregado').click(function() {
+        var vista = "facturar";
+        var documento = $(this).val();  
+       
+          $.ajax({
+          data: {"documento" : documento,"vista": vista},
+          type: "POST",
+          url: "../controlPedido.php?opcion=detPedidoReversar",
+            success: function(data){
+              $('#modal-cxc .modal-body').empty();
+              $('#modal-cxc .modal-body').append(data);
+            }
+        });
+        $("#modal-cxc").modal()
+      });
+
+
+function anular_pedido(elform,documento,tipo,estatus){
+  // alert(estatus);
+ eliminar=confirm("¿Desea procesar esta accion ?");
+        if (eliminar){
+
+    if (tipo=="modificar") {
+      var fech_old = elform.fecha_old.value;  
+      var fech_new = elform.fecha_new.value;
+      console.log(moment(fech_old).format('DD/MM/YYYY'));
+      console.log(moment(fech_new).format('DD/MM/YYYY'));
+              //alert(fech_old);
+    }
+        if (tipo=="facturar"){
+          var factura= elform.factura.value;
+          var coment = elform.comentario.value; 
+      } else {
+           var coment = elform.comentario.value; 
+           var fech_old = elform.fecha_old.value;
+           console.log(moment(fech_old).format('DD/MM/YYYY'));  
+           } 
+                $.ajax({
+          data: {"documento" : documento,"coment":coment,"tipo":tipo,"fechades":fech_old,"fechanew":fech_new,"estatus":estatus,"factura":factura},
+          type: "POST",
+          url: "../controlPedido.php?opcion=procesar_accion",
+            success: function(data){
+              alert(data);
+
+            }
+        });
+       // $("#modal-cxc").modal()
+    }
+
+      };
+
+
+
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
 </body>
 
 </html>

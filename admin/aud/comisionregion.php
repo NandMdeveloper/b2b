@@ -183,7 +183,7 @@ $gerente = $comision->getGerentesRegional($id);
 
     <!-- Custom Theme JavaScript -->
     <script src="../../dist/js/sb-admin-2.js"></script>
-    <script src="../../bower_components/jQuery/jquery.number.js"></script>
+    <script src="../../bower_components/jquery/jquery.number.js"></script>
     <script src="../../bower_components/fc.js"></script>
     <!-- DataTables JavaScript -->
     <script src="../../bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
