@@ -214,7 +214,7 @@ function registrarComisionesUno(desde,hasta) {
     txt = "Cancelar!";
   }
 }
-Notification.requestPermission();
+/*Notification.requestPermission();*/
 
 function spawnNotification(theBody,theIcon,theTitle,tiempo) {
   var options = {
@@ -292,7 +292,7 @@ function agregarDocumentosConCambios() {
     return false;
 
  } 
-function prueba_notificacion(titulo,cuerpo,tiempo) {
+function prueba_notificacion2(titulo,cuerpo,tiempo) {
 
         if (Notification) {
 
