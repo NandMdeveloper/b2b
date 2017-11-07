@@ -123,6 +123,7 @@ function get_pd_d($id){
 		return($res_array);
     }
     function get_dat($id=''){
+    	 $res_array =  array();
         $sQuery="SELECT pedidos_des.*,clientes.ciudad,clientes.cli_des,vendedor.ven_des FROM pedidos_des INNER JOIN clientes ON pedidos_des.co_cli = clientes.co_cli INNER JOIN vendedor ON pedidos_des.co_ven = vendedor.co_ven WHERE 1 = 1 ";
             if($id){ $sQuery.=" AND doc_num = '$id' ";      }
             $result=mysql_query($sQuery) or die(mysql_error());
@@ -238,7 +239,7 @@ WHERE
 
     function get_ped_desp_R($id=''){
 		
-		  
+		   $res_array =  array();
         $sQuery="SELECT
 				pedidos_des.id,
 				pedidos_des.doc_num,
