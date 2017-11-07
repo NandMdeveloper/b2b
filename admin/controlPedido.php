@@ -14,6 +14,7 @@ switch ($opcion) {
     
     $arr_dp=$obj_pedidos->get_pd_d($id);
     $arr_dat=$obj_pedidos->get_dat($id);
+    //var_dump($arr_dat);
     ?>
   
              
@@ -41,10 +42,22 @@ switch ($opcion) {
                                         <td><?php echo $arr_dp[$i]['reng_num']; ?></td>
                                         <td><?php echo $arr_dp[$i]['co_art']."-".utf8_encode($arr_dp[$i]['art_des']); ?></td>
                                         <td><?php echo $arr_dp[$i]['total_art']." ".$arr_dp[$i]['co_uni']; ?></td>
-                                        <td>Bs. F: <?php echo number_format($arr_dp[$i]['prec_vta'], 2, ",", "."); ?></td>
-                                        <td>Bs. F: <?php echo number_format($arr_dp[$i]['reng_neto'], 2, ",", "."); ?></td>
+                                        <td class="text-right"><?php echo number_format($arr_dp[$i]['prec_vta'], 2, ",", "."); ?></td>
+                                        <td class="text-right"><?php echo number_format($arr_dp[$i]['reng_neto'], 2, ",", "."); ?></td>
                                       </tr>
                                     <?php } ?>
+                                      <tr>
+                                        <td colspan="4" class="text-right"><strong>Base:</strong></td> 
+                                        <td class="text-right"><?php echo number_format($arr_dat[0]['total_bruto'], 2, ",", "."); ?></td>
+                                      </tr>
+                                      <tr>
+                                        <td colspan="4" class="text-right"><strong>Impuesto:</strong></td> 
+                                        <td class="text-right"><?php echo number_format($arr_dat[0]['monto_imp'], 2, ",", "."); ?></td>
+                                      </tr>
+                                      <tr>
+                                        <td colspan="4" class="text-right"><strong>Total neto:</strong></td> 
+                                        <td class="text-right"><?php echo number_format($arr_dat[0]['total_neto'], 2, ",", "."); ?></td>
+                                      </tr>
                                     </tbody>
                                 </table>
                             </div>
