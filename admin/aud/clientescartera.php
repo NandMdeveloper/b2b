@@ -185,7 +185,7 @@ $cartera = $cliente->getClientescartera($getzona,null,$hasta);
 
     <!-- Custom Theme JavaScript -->
     <script src="../../dist/js/sb-admin-2.js"></script>
-        <script src="../../bower_components/jQuery/jquery.number.js"></script>
+        <script src="../../bower_components/jquery/jquery.number.js"></script>
     <!-- DataTables JavaScript -->
     <script src="../../bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="../../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
