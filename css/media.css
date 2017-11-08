@@ -1,0 +1,30 @@
+/*media queries for small devices*/
+@media screen and (max-width: 678px){
+  	body{
+  		font-size:x-small;
+	}
+}
+
+
+
+@media(max-width:767px){
+	body{
+  		font-size:x-small;
+	}
+	
+}
+@media(min-width:768px) and (max-width:991px){
+	body{
+  		font-size:small;
+	}
+	
+}
+/* Medium */
+@media(min-width:992px) and (max-width:1199px){
+	body{
+  		font-size:small;
+	}
+}
+
+/* Large */
+@media(min-width:1200px){}
