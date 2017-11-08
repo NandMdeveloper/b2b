@@ -5,6 +5,16 @@ require_once('../lib/conex.php');
 conectar();
 include("../lib/class/pedidos.class.php");
 $obj_pedidos= new class_pedidos;//LLAMADO A LA CLASE DE PEDIDOS
+ $desde = null;
+ $hasta = null;
+if(isset($_GET['desde'])){
+
+        $desde = $_GET['desde'];
+        $hasta = $_GET['hasta'];
+
+        $_SESSION["desde"]=$desde;
+        $_SESSION["hasta"]=$hasta;
+ }
 $arr_pedidos=$obj_pedidos->get_ped_desp_D();
 
 ?>
@@ -39,11 +49,33 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_D();
                     <h1 class="page-header">Pedidos
                       <small>Despachados</small></h1>
                 </div>
+                                 <div class="col-lg-12">                              
+                   <form action="pedidosDesD.php" method="GET" id="rango">
+                     <div class="col-xs-6">
+                      <div class="col-xs-6">
+                        <div class="input-group input-group-sm">
+                          <span class="input-group-addon" id="sizing-addon3"><span class="glyphicon glyphicon-calendar"></span></span>
+                          <input name="desde" type="text" class="form-control fecha" placeholder="Inicio" aria-describedby="sizing-addon3" required>
+                        </div>
+                      </div>
+                      <div class="col-xs-6">
+                        <div class="input-group input-group-sm">
+                          <span class="input-group-addon" id="sizing-addon3"><span class="glyphicon glyphicon-calendar"></span></span>
+                          <input name="hasta" type="text" class="form-control hasta" placeholder="Cierre" aria-describedby="sizing-addon3">
+                        </div>
+                      </div>
+
+                    </div>
+                </form>
+                <br>
+                <br>
+                </div>
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                              Pedidos Despachados
                         </div>
+
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="dataTable_wrapper">

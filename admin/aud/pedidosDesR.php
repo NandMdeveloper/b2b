@@ -3,10 +3,6 @@ require_once("../lib/seg.php");
 if($_SESSION['tipo']!='9') header('Location: ../lib/php/common/logout.php');
 require_once('../lib/conex.php');
 conectar();
-
-
-
-
 include("../lib/class/pedidos.class.php");
 $obj_pedidos= new class_pedidos;//LLAMADO A LA CLASE DE PEDIDOS
 $tot=0;
