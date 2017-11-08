@@ -94,7 +94,7 @@ $tot=0;
                                         <td><?php echo utf8_encode($arr_pedidos[$i]['ciudad']); ?></td>
                                         <td class="center"><span class="btn-group">
                                     <button name="id" type="submit"   class="btn btn-primary btn-xs btn-block pedido-entregado" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>"><i class="fa fa-eye"></i> Ver</button>
-                                    <button name="id" type="button" class="btn btn-info btn-xs desp" data-id="<?php echo $arr_pedidos[$i]['doc_num']; ?>"><i class="fa fa-check-circle"></i> Fact</button>
+                                    
                                     <?php if($class==''){ ?>
                                     <button name="id" type="button" class="btn btn-warning btn-xs imp" data-id="<?php echo $arr_pedidos[$i]['doc_num']; ?>" ><i class="fa fa-check-circle"></i> Imp</button> <?php } ?>
                                     </span>
@@ -214,9 +214,12 @@ $tot=0;
           data: {"documento" : documento,"vista": vista},
           type: "POST",
           url: "../controlPedido.php?opcion=detPedidoReversar",
+           beforeSend: function() {
+              
+               $('#modal-cxc .modal-body').html('<div class="text-center"><img src="../../image/preload.gif" class="text-center"/></div>');
+           },
             success: function(data){
-              $('#modal-cxc .modal-body').empty();
-              $('#modal-cxc .modal-body').append(data);
+              $('#modal-cxc .modal-body').html(data);
             }
         });
         $("#modal-cxc").modal()
@@ -243,19 +246,17 @@ function anular_pedido(elform,documento,tipo,estatus){
            var fech_old = elform.fecha_old.value;
            console.log(moment(fech_old).format('DD/MM/YYYY'));  
            } 
-                $.ajax({
+          $.ajax({
           data: {"documento" : documento,"coment":coment,"tipo":tipo,"fechades":fech_old,"fechanew":fech_new,"estatus":estatus,"factura":factura},
           type: "POST",
           url: "../controlPedido.php?opcion=procesar_accion",
             success: function(data){
               alert(data);
-
             }
         });
        // $("#modal-cxc").modal()
     }
-
-      };
+};
 
 
 

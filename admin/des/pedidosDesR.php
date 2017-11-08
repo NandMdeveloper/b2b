@@ -29,7 +29,7 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_R();
 
 <?php require_once('../lib/php/common/headD.php'); ?>
 
-body>
+<body>
   <style>
   .modal-cxc{
   width: auto !important;
@@ -227,6 +227,10 @@ body>
           data: {"documento" : documento,"vista": vista},
           type: "POST",
           url: "../controlPedido.php?opcion=detPedidoReversar",
+            beforeSend: function() {
+              
+               $('#modal-cxc .modal-body').html('<div class="text-center"><img src="../../image/preload.gif" class="text-center"/></div>');
+           },
             success: function(data){
               $('#modal-cxc .modal-body').empty();
               $('#modal-cxc .modal-body').append(data);
@@ -246,14 +250,13 @@ function anular_pedido(elform,documento,tipo,estatus){
       console.log(moment(fech_old).format('DD/MM/YYYY'));
       console.log(moment(fech_new).format('DD/MM/YYYY'));
              // alert(fech_old);
-    }
-    else{
+    } else {
 
           var coment = elform.comentario.value; 
            var fech_old = elform.fecha_old.value;
            console.log(moment(fech_old).format('DD/MM/YYYY'));  
- }
-                $.ajax({
+    }
+      $.ajax({
           data: {"documento" : documento,"coment":coment,"tipo":tipo,"fechades":fech_old,"fechanew":fech_new,"estatus":estatus},
           type: "POST",
           url: "../controlPedido.php?opcion=procesar_accion",
@@ -266,13 +269,9 @@ function anular_pedido(elform,documento,tipo,estatus){
     }
 
       };
-
-
-
-        </script>
+         </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
-</script>
-
-</body>
+    </script>
+  </body>
 
 </html>
