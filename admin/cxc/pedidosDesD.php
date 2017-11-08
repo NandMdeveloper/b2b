@@ -11,10 +11,42 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_D();
 <!DOCTYPE html>
 <html lang="es">
 
-<?php require_once('../lib/php/common/headT.php'); ?>
+<?php require_once('../lib/php/common/headD.php'); ?>
 
 <body>
 
+   
+    <style>
+    .modal-cxc{
+    width: auto !important;
+     width: 1600px !important;
+    margin: 10px;
+    }
+    .modal-dialog {
+      width: 1011px;
+      margin: 30px auto;
+  }
+    
+    
+  </style>
+    <div id="modal-cxc" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+            <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Detalles de Pedido</h4>        
+        </div>
+        <div class="modal-body">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
     <?php require_once('../lib/php/common/menuT.php'); ?>
 
         <div id="content">
@@ -56,9 +88,7 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_D();
                                         <td><?php echo $fecha; ?></td>
                                         <td><?php echo  utf8_encode($arr_pedidos[$i]['descrip']); ?></td>
                                         <td class="center">
-                                          <form action="detallePedidoDesD.php" method="POST">
-                                            <button name="id" type="submit" class="btn btn-primary btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>"><i class="fa fa-eye"></i> Ver</button>
-                                          </form>
+                                          <button name="id" type="submit"   class="btn btn-primary btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>" onclick="ver_detalles_pedido(this.value)"><i class="fa fa-eye"></i> Ver</button>
                                         </td>
                                       </tr>
                                     <?php } ?>
@@ -126,6 +156,25 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_D();
             }
         });
     });
+    function ver_detalles_pedido(documento) {
+              
+        $.ajax({
+          data: {"documento" : documento},
+          type: "POST",
+          url: "../controlPedido.php?opcion=detPedidoDetalle",
+          beforeSend: function() {
+              
+               $('#modal-cxc .modal-body').html('<div class="text-center"><img src="../../image/preload.gif" class="text-center"/></div>');
+           },
+            success: function(data){             
+              
+              $('#modal-cxc .modal-body').html(data);
+              
+            }
+        });
+        $("#modal-cxc").modal();  
+
+    }
     </script>
 </body>
 
