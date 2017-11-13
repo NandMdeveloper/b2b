@@ -249,6 +249,7 @@ WHERE
 				pedidos_des.total_neto,
 				pedidos_des.comentario_r,
 				pedidos_des.fecha_recibido,
+				pedidos_des.fecha_despacho,
 				pedidos_des.factura,
 				vendedor.ven_des,
 			(SELECT cli_des FROM clientes WHERE clientes.co_cli=pedidos_des.co_cli) as cli_des

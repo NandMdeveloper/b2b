@@ -14,6 +14,24 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_F();
 <?php require_once('../lib/php/common/headT.php'); ?>
 
 <body>
+    <div id="modal-cxc" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+            <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Detalles de Pedido</h4>        
+        </div>
+        <div class="modal-body">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
     <?php require_once('../lib/php/common/menuT.php'); ?>
 
@@ -56,9 +74,7 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_F();
                                         <td><?php echo $fecha; ?></td>
                                         <td><?php echo  utf8_encode($arr_pedidos[$i]['comentario']); ?></td>
                                         <td class="center">
-                                          <form action="detallePedidoDesF.php" method="POST">
-                                            <button name="id" type="submit" class="btn btn-primary btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>"><i class="fa fa-eye"></i> Ver</button>
-                                          </form>
+                                           <button name="id" type="submit"   class="btn btn-primary btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>" onclick="ver_detalles_pedido(this.value)"><i class="fa fa-eye"></i> Ver</button>
                                         </td>
                                       </tr>
                                     <?php } ?>
@@ -94,9 +110,61 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_F();
     <script>
     $(document).ready(function() {
         $('#dataTables-example').DataTable({
-                responsive: true
+           responsive: true,
+            scrollX: true,
+            aLengthMenu: [
+                [50,100,150,-1],
+                [50,100,150,"Todo"]
+              ],       
+
+       "footerCallback": function ( row, data, start, end, display ) {
+            var api = this.api(), data;  
+            // Remove the formatting to get integer data for summation
+            var intVal = function ( i ) {
+                return typeof i === 'string' ? i.replace(/[\$.\$,]/g, '')*1 : typeof i === 'number' ?  i : 0;
+            };
+
+           Saldo = api.column( 2, { page: 'current'} ).data().reduce( function (a, b) { return intVal(a) + intVal(b);}, 0 );
+            //Base = parseFloat(Base);
+            Saldo = parseFloat(Math.round(Saldo) / 100);
+
+
+            //Base = formatNumber.new(Base.toFixed(2));
+            Number.prototype.formatMoney = function(c, d, t){
+            var n = this, 
+                c = isNaN(c = Math.abs(c)) ? 2 : c, 
+                d = d == undefined ? "." : d, 
+                t = t == undefined ? "," : t, 
+                s = n < 0 ? "-" : "", 
+                i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), 
+                j = (j = i.length) > 3 ? j % 3 : 0;
+               return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+             };
+            // Update footer
+            $('#Saldo').html(Saldo.formatMoney(2,'.',','));
+          
+        },
         });
     });
+    function ver_detalles_pedido(documento) {
+              
+        $.ajax({
+          data: {"documento" : documento},
+          type: "POST",
+          url: "../controlPedido.php?opcion=detPedidoDetalle",
+          beforeSend: function() {
+              
+               $('#modal-cxc .modal-body').html('<div class="text-center"><img src="../../image/preload.gif" class="text-center"/></div>');
+           },
+            success: function(data){             
+              
+              $('#modal-cxc .modal-body').html(data);
+              
+            }
+        });
+        $("#modal-cxc").modal();  
+
+    }
     </script>
 </body>
 

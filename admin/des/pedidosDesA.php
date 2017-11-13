@@ -251,10 +251,11 @@ function anular_pedido(elform,documento,tipo,estatus){
           type: "POST",
           url: "../controlPedido.php?opcion=procesar_accion",
             success: function(data){
-              alert(data);
+             // alert(data);
+             $('#dataTables-example').DataTable().row().fnReloadAjax().draw();
             }
         });
-       // $("#modal-cxc").modal()
+        $("#modal-cxc").modal('hide');
     }
 };
 

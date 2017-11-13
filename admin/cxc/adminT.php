@@ -15,40 +15,42 @@ $user=$_SESSION["user"];
 <!DOCTYPE html>
 <html lang="es">
 
-<?php require_once('../lib/php/common/headT.php'); ?>
+<?php require_once('../lib/php/common/headD.php'); ?>
 
 <body>
-    <style>
-      .modal-cxc{
-      width: auto !important;
-       width: 1600px !important;
-      margin: 10px;
-      }
-      .modal-dialog {
-        width: 1011px;
-        margin: 30px auto;
-    }
-      
-    </style>
+<style>
+  .modal-cxc{
+  width: auto !important;
+   width: 1600px !important;
+  margin: 10px;
+  }
+  .modal-dialog {
+    width: 1011px;
+    margin: 30px auto;
+}
+  
+</style>
+            <div id="modal-pedido" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <!-- Modal content-->
+                    <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Detalles de Pedido</h4>        
+                </div>
+                <div class="modal-body">
+                  
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
     <?php require_once('../lib/php/common/menuT.php'); ?>
 
         <div id="content">
-            <div id="modal-cxc" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                  <!-- Modal content-->
-                  <div class="modal-content">
-                    
-
-
-                   
-                        
-                   
-
-               
-                  </div>
-
-                </div>
-            </div>
                 <div class="col-lg-12">
                     <h1 class="page-header">Pedidos</h1>
                 </div>
@@ -148,7 +150,7 @@ $user=$_SESSION["user"];
                                                 <td class="center"><?php echo $arr_pedidos[$i]['descrip']; ?></td>
                                                 <td class="center">
                                                 <form action="detallePedT.php" method="POST">
-                                                    <button name="id" type="submit" class="btn btn-success btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>"><i class="fa fa-eye"></i> Ver</button>
+                                                     <button name="id" type="submit"   class="btn btn-primary btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>" onclick="ver_detalles_pedido(this.value,null)"><i class="fa fa-eye"></i> Ver</button>
                                                 </form>
                                                 </td>
                                             </tr>
@@ -223,9 +225,7 @@ $user=$_SESSION["user"];
                                                 <td class="center"><?php echo $fecha; ?></td>
                                                 <td class="center"><?php echo $arr_pedidos[$i]['comentario_a']; ?></td>
                                                 <td class="center">
-                                                <form action="detallePedido.php" method="POST">
-                                                    <button name="id" type="submit" class="btn btn-success btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>"><i class="fa fa-eye"></i> Ver</button>
-                                                </form>
+                                                      <button name="id" type="submit"   class="btn btn-primary btn-xs btn-block" value="<?php echo $arr_pedidos[$i]['doc_num']; ?>" onclick="ver_detalles_pedido(this.value,null)"><i class="fa fa-eye"></i> Ver</button>
                                                 </td>
                                             </tr>
                                         <?php }
@@ -320,62 +320,66 @@ $user=$_SESSION["user"];
 
     <!-- Custom Theme JavaScript -->
     <script src="../../dist/js/sb-admin-2.js"></script>
-        <script src="../../bower_components/jQuery/jquery.number.js"></script>
+        <script src="../../bower_components/jquery/jquery.number.js"></script>
     <script src="../../bower_components/fc.js"></script>
     <!-- DataTables JavaScript -->
     <script src="../../bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="../../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
 
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
     $(document).ready(function() {
-    $("#dataTables-example").DataTable(
-    {
-      responsive: true,
-      "footerCallback": function ( row, data, start, end, display ) {
-            var api = this.api(), data;  
-                       var intVal = function ( i ) {
-                return typeof i === 'string' ? i.replace(/[\$,\$.]/g, '')*1 : typeof i === 'number' ?  i : 0;
-            };
+        $('#dataTables-example').DataTable({
+                responsive: true,
+                scrollX: true,
+                aLengthMenu: [
+        [50,100,150,-1],
+        [50,100,150,"Todo"]
+      ],       
+          "footerCallback": function ( row, data, start, end, display ) {
+                var api = this.api(), data;  
+                           var intVal = function ( i ) {
+                    return typeof i === 'string' ? i.replace(/[\$,\$.]/g, '')*1 : typeof i === 'number' ?  i : 0;
+                };
 
-             Base = api.column( 3, { page: 'current'} ).data().reduce( function (a, b) { return intVal(a) + intVal(b);}, 0 );
-                         
-            Number.prototype.formatMoney = function(c, d, t){
-            var n = this, 
-                c = isNaN(c = Math.abs(c)) ? 2 : c, 
-                d = d == undefined ? "." : d, 
-                t = t == undefined ? "," : t, 
-                s = n < 0 ? "-" : "", 
-                i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), 
-                j = (j = i.length) > 3 ? j % 3 : 0;
-               return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-             };
-              Base = parseFloat(Math.round(Base) / 100);
-               $('#Base').html(Base.formatMoney(2,'.',','));
-        }
-    });
-
-
-        $('.cliente-cxc').click(function() {
-            var co_cli = $(this).text();
-            
-            $.ajax({
-            data: {"co_cli" : co_cli },
-            type: "POST",
-            url: "../controlclientes.php?opcion=cxccliente",
-                success: function(data){
-                    $('#modal-cxc .modal-content').empty();
-                    $('#modal-cxc .modal-content').append(data);
-              }
-        });
-            $("#modal-cxc").modal()
+                 Base = api.column( 3, { page: 'current'} ).data().reduce( function (a, b) { return intVal(a) + intVal(b);}, 0 );
+                             
+                Number.prototype.formatMoney = function(c, d, t){
+                var n = this, 
+                    c = isNaN(c = Math.abs(c)) ? 2 : c, 
+                    d = d == undefined ? "." : d, 
+                    t = t == undefined ? "," : t, 
+                    s = n < 0 ? "-" : "", 
+                    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), 
+                    j = (j = i.length) > 3 ? j % 3 : 0;
+                   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+                 };
+                  Base = parseFloat(Math.round(Base) / 100);
+                   $('#Base').html(Base.formatMoney(2,'.',','));
+            }
         });
 
+      });
+      function ver_detalles_pedido(documento,tipo) {
+              
+        $.ajax({
+          data: {"documento" : documento,"tipo" : tipo},
+          type: "POST",
+          url: "../controlPedido.php?opcion=detPedidoAnulado",
+          beforeSend: function() {
+              
+               $('#modal-pedido .modal-body').html('<div class="text-center"><img src="../../image/preload.gif" class="text-center"/></div>');
+           },
+            success: function(data){             
+              
+              $('#modal-pedido .modal-body').html(data);
+              
+            }
+        });
+        $("#modal-pedido").modal();  
 
-
-
-
-    });
+    }
     </script>
 </body>
 

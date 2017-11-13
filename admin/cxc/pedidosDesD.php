@@ -13,22 +13,7 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_D();
 
 <?php require_once('../lib/php/common/headD.php'); ?>
 
-<body>
-
-   
-    <style>
-    .modal-cxc{
-    width: auto !important;
-     width: 1600px !important;
-    margin: 10px;
-    }
-    .modal-dialog {
-      width: 1011px;
-      margin: 30px auto;
-  }
-    
-    
-  </style>
+    <body>
     <div id="modal-cxc" class="modal fade" role="dialog">
         <div class="modal-dialog">
           <!-- Modal content-->
@@ -131,8 +116,13 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_D();
     <script>
     $(document).ready(function() {
         
-        $("#dataTables-example").DataTable( {
-          responsive: true,
+        $('#dataTables-example').DataTable({
+                    responsive: true,
+                    scrollX: true,
+                    aLengthMenu: [
+            [50,100,150,-1],
+            [50,100,150,"Todo"]
+          ],       
           "footerCallback": function ( row, data, start, end, display ) {
                 var api = this.api(), data;  
                            var intVal = function ( i ) {
@@ -156,25 +146,25 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_D();
             }
         });
     });
-    function ver_detalles_pedido(documento) {
-              
-        $.ajax({
-          data: {"documento" : documento},
-          type: "POST",
-          url: "../controlPedido.php?opcion=detPedidoDetalle",
-          beforeSend: function() {
-              
-               $('#modal-cxc .modal-body').html('<div class="text-center"><img src="../../image/preload.gif" class="text-center"/></div>');
-           },
-            success: function(data){             
-              
-              $('#modal-cxc .modal-body').html(data);
-              
-            }
-        });
-        $("#modal-cxc").modal();  
+      function ver_detalles_pedido(documento) {
+                  
+            $.ajax({
+              data: {"documento" : documento},
+              type: "POST",
+              url: "../controlPedido.php?opcion=detPedidoDetalle",
+              beforeSend: function() {
+                  
+                   $('#modal-cxc .modal-body').html('<div class="text-center"><img src="../../image/preload.gif" class="text-center"/></div>');
+               },
+                success: function(data){             
+                  
+                  $('#modal-cxc .modal-body').html(data);
+                  
+                }
+            });
+            $("#modal-cxc").modal();  
 
-    }
+        }
     </script>
 </body>
 

@@ -243,7 +243,7 @@ $tot=0;
         $("#modal-cxc").modal()
       });
 function anular_pedido(elform,documento,tipo,estatus){
-  alert(tipo);
+ // alert(tipo);
  eliminar=confirm("¿Desea procesar esta accion ?");
         if (eliminar){
 
@@ -265,11 +265,11 @@ function anular_pedido(elform,documento,tipo,estatus){
           type: "POST",
           url: "../controlPedido.php?opcion=procesar_accion",
             success: function(data){
-              alert(data);
-
+             //alert(data);
+          $('#dataTables-example').DataTable().row().remove().draw();
             }
         });
-       // $("#modal-cxc").modal()
+        $("#modal-cxc").modal('hide');
     }
 
       };

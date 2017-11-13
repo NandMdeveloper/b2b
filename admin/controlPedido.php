@@ -196,33 +196,7 @@ switch ($opcion) {
                   
                
                         <!-- /.panel-heading -->
-                        <div class="panel-body">
-                          <div class="col-sm-4"><h5 class="box-title"><strong>Pedido # <?php echo $id. '| Factura #' .utf8_encode( $arr_dat[0]['factura']); ?></strong></h5></div>     <div class="col-sm-4"><h5 class="box-title"><strong>Cliente: <?php echo $arr_dat[0]['co_cli'].'-'.utf8_encode($arr_dat[0]['cli_des']); ?></strong></h5></div>
-                          <div class="col-sm-4"><h5 class="box-title"><strong>Vendedor: <?php echo $arr_dat[0]['co_ven'].'-'.$arr_dat[0]['ven_des']; ?></strong></h5></div>
-                            <div class="dataTable_wrapper">
-                                <table class="table table-striped table-bordered table-hover">
-                                    <thead>
-                                      <tr>
-                                        <th>N°</th>
-                                        <th>Producto</th>
-                                        <th>Cantidad</th>
-                                        <th>Precio</th>
-                                        <th>Total-Neto</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php for($i=0;$i<sizeof($arr_dp);$i++){ ?>
-                                      <tr>
-                                        <td><?php echo $arr_dp[$i]['reng_num']; ?></td>
-                                        <td><?php echo $arr_dp[$i]['co_art']."-".utf8_encode($arr_dp[$i]['art_des']); ?></td>
-                                        <td><?php echo $arr_dp[$i]['total_art']." ".$arr_dp[$i]['co_uni']; ?></td>
-                                        <td>Bs. F: <?php echo number_format($arr_dp[$i]['prec_vta'], 2, ",", "."); ?></td>
-                                        <td>Bs. F: <?php echo number_format($arr_dp[$i]['reng_neto'], 2, ",", "."); ?></td>
-                                      </tr>
-                                    <?php } ?>
-                                    </tbody>
-                                </table>
-
+                       
                            <ul class="nav nav-tabs">
                             <?php if ($vista=="facturar") {
                                       ?>
@@ -242,9 +216,18 @@ switch ($opcion) {
                                      <?php 
                                           }
                                         ?>
-                                      <li class=""><a href="#modificar" data-toggle="tab" aria-expanded="true">Modificar</a></li>
+                                        <?php if ($vista=="paradespachar" or $vista=="entregado"or "despachado") {
+                                         ?> 
+                                      <li class=""><a href="#modificarfactura" data-toggle="tab" aria-expanded="true">Modificar Factura</a></li>
+                                        <?php 
+                                       } 
+                                       ?>
                                       <?php if ($vista!="paradespachar") {
                                          ?> 
+                                      <li class=""><a href="#modificar" data-toggle="tab" aria-expanded="true">Modificar Fecha</a></li>
+                                       
+                                      
+
                                    <li class=""><a href="#reversar" data-toggle="tab" aria-expanded="true">Reversar</a></li>
                                     <?php }
                                        ?>
@@ -313,10 +296,8 @@ switch ($opcion) {
                          
                          <?php } 
                                ?>                      
-                          
-                       <?php if ($vista=="paradespachar") {
-                               ?> 
-                               <div class="tab-pane fade" id="modificar">
+                           
+                               <div class="tab-pane fade " id="modificarfactura">
                                <div class="panel-heading">
                                <h5> <strong>Modificar factura de despacho</strong></h5>
                                  </div>                           
@@ -332,10 +313,25 @@ switch ($opcion) {
                            </form>
                          </div>
                          
-                         <?php } else {
-                               ?>
+                        <?php if ($vista!="paradespachar") {
+                                         ?> 
+                                          <div class="tab-pane fade <?php echo  $entregadoAct; ?>" id="modificarfactura">
+                               <div class="panel-heading">
+                               <h5> <strong>Modificar factura de despacho</strong></h5>
+                                 </div>                           
+                           <form class="form-inline" action="" method="POST">
+                                        <label for="fecha">Factura #: </label>
+                                        <input type="text" name="factura_old" class="form-control" value="<?php echo $arr_dat[0]['factura']; ?>" readonly required/>
+                                        <label for="fecha">Factura Nueva: </label>
+                                        <input type="text" name="factura_new" class="form-control" value="" required/>
+                  
+               <label> <button name="id" type="button" class="btn btn-primary btn-block mod" value="<?php echo $id; ?>"onclick='anular_pedido(this.form,this.value,"modificarfactura",null )'>
+                <i class="fa fa-cog"></i> Modificar factura</button></label>
+                                 
+                           </form>
+                         </div>
 
-                               <div class="tab-pane fade <?php echo  $entregadoAct; ?>" id="modificar">
+                               <div class="tab-pane fade " id="modificar">
                                  <div class="panel-heading">
                                 <h5> <strong>Modificar fecha de despacho</strong></h5>
                                  </div>
@@ -344,14 +340,13 @@ switch ($opcion) {
                                     <input type="date" name="fecha_old" class="form-control" value="<?php echo $arr_dat[0]['fecha_despacho']; ?>" readonly required/>
                                     <label for="fecha">Fecha Despacho Nueva: </label>
                                     <input type="date" name="fecha_new" class="form-control" value="" required/>
+                                    <input type="hidden" name="comentario" id="comentario" class="form-control" value="" />
                                     <label> <button name="id" type="button" class="btn btn-primary btn-block mod" value="<?php echo $id; ?>"onclick='anular_pedido(this.form,this.value,"modificar",null )'>
                                      <i class="fa fa-cog"></i> Modificar fecha</button></label>  
                            </form>
                          </div>
-                         <?php }
-                               ?>
-                               <?php if ($vista!="paradespachar") {
-                               ?> 
+                        
+                               
                      <div class="tab-pane fade " id="reversar">
                       <div class="panel-heading">
                             <h5> <strong>Reversar despacho</strong></h5>
@@ -387,6 +382,35 @@ switch ($opcion) {
                          </div>
                              <?php } 
                                ?>  
+                               <div class="modal-footer">
+                                </div>
+                                <div class="panel-body">
+                          <div class="col-sm-4"><h5 class="box-title"><strong>Pedido # <?php echo $id. '| Factura #' .utf8_encode( $arr_dat[0]['factura']); ?></strong></h5></div>     <div class="col-sm-4"><h5 class="box-title"><strong>Cliente: <?php echo $arr_dat[0]['co_cli'].'-'.utf8_encode($arr_dat[0]['cli_des']); ?></strong></h5></div>
+                          <div class="col-sm-4"><h5 class="box-title"><strong>Vendedor: <?php echo $arr_dat[0]['co_ven'].'-'.$arr_dat[0]['ven_des']; ?></strong></h5></div>
+                            <div class="dataTable_wrapper">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                      <tr>
+                                        <th>N°</th>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio</th>
+                                        <th>Total-Neto</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php for($i=0;$i<sizeof($arr_dp);$i++){ ?>
+                                      <tr>
+                                        <td><?php echo $arr_dp[$i]['reng_num']; ?></td>
+                                        <td><?php echo $arr_dp[$i]['co_art']."-".utf8_encode($arr_dp[$i]['art_des']); ?></td>
+                                        <td><?php echo $arr_dp[$i]['total_art']." ".$arr_dp[$i]['co_uni']; ?></td>
+                                        <td>Bs. F: <?php echo number_format($arr_dp[$i]['prec_vta'], 2, ",", "."); ?></td>
+                                        <td>Bs. F: <?php echo number_format($arr_dp[$i]['reng_neto'], 2, ",", "."); ?></td>
+                                      </tr>
+                                    <?php } ?>
+                                    </tbody>
+                                </table>
+
                       </div>
                     </div>
                    <!-- /.panel-body -->

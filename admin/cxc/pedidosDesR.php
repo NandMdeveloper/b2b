@@ -168,64 +168,65 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_R();
     <script src="../../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
 
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
-    <script>
-    $(document).ready(function() {
-        $('#dataTables-example').DataTable({
-                responsive: true,
-                aLengthMenu: [
-        [-1,25,50,100],
-        ["Todo",25,50,100]
-      ],       
+     <script>
+        $(document).ready(function() {
+            $('#dataTables-example').DataTable({
+                    responsive: true,
+                    scrollX: true,
+                    aLengthMenu: [
+            [50,100,150,-1],
+            [50,100,150,"Todo"]
+          ],       
 
-       "footerCallback": function ( row, data, start, end, display ) {
-            var api = this.api(), data;  
-            // Remove the formatting to get integer data for summation
-            var intVal = function ( i ) {
-                return typeof i === 'string' ? i.replace(/[\$.\$,]/g, '')*1 : typeof i === 'number' ?  i : 0;
-            };
+           "footerCallback": function ( row, data, start, end, display ) {
+                var api = this.api(), data;  
+                // Remove the formatting to get integer data for summation
+                var intVal = function ( i ) {
+                    return typeof i === 'string' ? i.replace(/[\$.\$,]/g, '')*1 : typeof i === 'number' ?  i : 0;
+                };
 
-           Saldo = api.column( 2, { page: 'current'} ).data().reduce( function (a, b) { return intVal(a) + intVal(b);}, 0 );
-            //Base = parseFloat(Base);
-            Saldo = parseFloat(Math.round(Saldo) / 100);
+               Saldo = api.column( 2, { page: 'current'} ).data().reduce( function (a, b) { return intVal(a) + intVal(b);}, 0 );
+                //Base = parseFloat(Base);
+                Saldo = parseFloat(Math.round(Saldo) / 100);
 
 
-            //Base = formatNumber.new(Base.toFixed(2));
-            Number.prototype.formatMoney = function(c, d, t){
-            var n = this, 
-                c = isNaN(c = Math.abs(c)) ? 2 : c, 
-                d = d == undefined ? "." : d, 
-                t = t == undefined ? "," : t, 
-                s = n < 0 ? "-" : "", 
-                i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), 
-                j = (j = i.length) > 3 ? j % 3 : 0;
-               return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-             };
-            // Update footer
-            $('#Saldo').html(Saldo.formatMoney(2,'.',','));
-          
-        },
+                //Base = formatNumber.new(Base.toFixed(2));
+                Number.prototype.formatMoney = function(c, d, t){
+                var n = this, 
+                    c = isNaN(c = Math.abs(c)) ? 2 : c, 
+                    d = d == undefined ? "." : d, 
+                    t = t == undefined ? "," : t, 
+                    s = n < 0 ? "-" : "", 
+                    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), 
+                    j = (j = i.length) > 3 ? j % 3 : 0;
+                   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+                 };
+                // Update footer
+                $('#Saldo').html(Saldo.formatMoney(2,'.',','));
+              
+            },
+            });
         });
-    });
-      function ver_detalles_pedido(documento) {
-              
-        $.ajax({
-          data: {"documento" : documento},
-          type: "POST",
-          url: "../controlPedido.php?opcion=detPedidoDetalle",
-          beforeSend: function() {
-              
-               $('#modal-cxc .modal-body').html('<div class="text-center"><img src="../../image/preload.gif" class="text-center"/></div>');
-           },
-            success: function(data){             
-              
-              $('#modal-cxc .modal-body').html(data);
-              
-            }
-        });
-        $("#modal-cxc").modal();  
 
-    }
- 
+        function ver_detalles_pedido(documento) {
+                  
+            $.ajax({
+              data: {"documento" : documento},
+              type: "POST",
+              url: "../controlPedido.php?opcion=detPedidoDetalle",
+              beforeSend: function() {
+                  
+                   $('#modal-cxc .modal-body').html('<div class="text-center"><img src="../../image/preload.gif" class="text-center"/></div>');
+               },
+                success: function(data){             
+                  
+                  $('#modal-cxc .modal-body').html(data);
+                  
+                }
+            });
+            $("#modal-cxc").modal();  
+
+        }
     </script>
 
 

@@ -23,8 +23,8 @@ if(isset($_GET['desde'])){
         $_SESSION["hasta"]=$hasta;
  }
 $arr_pedidos=$obj_pedidos->get_ped_desp_R();
+//var_dump($arr_pedidos);exit();
 ?>
-<!DOCTYPE html>
 <html lang="es">
 
 <?php require_once('../lib/php/common/headD.php'); ?>
@@ -112,6 +112,7 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_R();
                                         <th>Neto</th>
                                         <th>Cliente</th>
                                         <th>Vendedor</th>
+                                        <th>Fecha Des.</th>
                                         <th>Fecha Rec.</th>
                                         <th>Observaciones</th>
                                         <th>Opciones</th>
@@ -121,11 +122,13 @@ $arr_pedidos=$obj_pedidos->get_ped_desp_R();
                                     <?php for($i=0;$i<sizeof($arr_pedidos);$i++){ ?>
                                       <tr class="odd gradeX">
                                         <td><?php echo $arr_pedidos[$i]['doc_num']; ?></td>
-                                        <td><?php echo $arr_pedidos[$i]['factura']; ?></td>
+                                        <td><span id="fct-<?php echo $arr_pedidos[$i]['doc_num']; ?>"><?php echo $arr_pedidos[$i]['factura']; ?></span></td>
+
                                         <td class="text-right">
                                             <?php echo number_format($arr_pedidos[$i]['total_neto'], 2, ".", ","); ?></td>
                                         <td><b><?php echo $arr_pedidos[$i]['co_cli'].'</b>'.$arr_pedidos[$i]['cli_des']; ?></td>
                                         <td><b><?php echo $arr_pedidos[$i]['co_ven'].' </b>'.$arr_pedidos[$i]['ven_des']; ?></td>
+                                        <td><span id="fech-<?php echo $arr_pedidos[$i]['doc_num']; ?>"><?php echo date_format(date_create($arr_pedidos[$i]['fecha_despacho']), 'd/m/Y'); ?></span></td>
                                         <td><?php echo date_format(date_create($arr_pedidos[$i]['fecha_recibido']), 'd/m/Y'); ?></td>
                                         <td><?php echo  utf8_encode($arr_pedidos[$i]['comentario_r']); ?></td>
                                                                                 <td class="center">
@@ -250,22 +253,34 @@ function anular_pedido(elform,documento,tipo,estatus){
       console.log(moment(fech_old).format('DD/MM/YYYY'));
       console.log(moment(fech_new).format('DD/MM/YYYY'));
              // alert(fech_old);
-    } else {
+    } 
+ if (tipo=="modificarfactura") {
+      var factura_old = elform.factura_old.value;  
+      var factura_new = elform.factura_new.value;
+      }
+    else {
 
           var coment = elform.comentario.value; 
            var fech_old = elform.fecha_old.value;
            console.log(moment(fech_old).format('DD/MM/YYYY'));  
     }
       $.ajax({
-          data: {"documento" : documento,"coment":coment,"tipo":tipo,"fechades":fech_old,"fechanew":fech_new,"estatus":estatus},
+          data: {"documento" : documento,"coment":coment,"tipo":tipo,"fechades":fech_old,"fechanew":fech_new,"estatus":estatus,
+           "factura_old":factura_old,"factura_new":factura_new},
           type: "POST",
           url: "../controlPedido.php?opcion=procesar_accion",
             success: function(data){
-              alert(data);
-
+              //alert(data);
+              if (tipo=="reversar") {
+                $('#dataTables-example').DataTable().row().remove().draw();
+              } else {
+                $("#fct-"+documento+"").html(factura_new).css({ "color": "#3373A5"});
+                $("#fech-"+documento+"").html(moment(fech_new).format('DD/MM/YYYY')).css({ "color": "#3373A5"});
+             // $('#dataTables-example').DataTable().row().fnReloadAjax().draw();
+            }
             }
         });
-       // $("#modal-cxc").modal()
+      $("#modal-cxc").modal('hide')
     }
 
       };
